@@ -24,7 +24,7 @@
 
 MODULE gckpp_Global
 
-  USE gckpp_Parameters, ONLY: dp, NSPEC, NVAR, NFIX, NREACT
+  USE gckpp_Parameters, ONLY: dp, NSPEC, NVAR, NFIX, NREACT,LU_NONZERO
   PUBLIC
   SAVE
 
@@ -42,7 +42,7 @@ MODULE gckpp_Global
 !      EQUIVALENCE( C(235),FIX(1) )
 ! RCONST - Rate constants (global)
   REAL(kind=dp) :: RCONST(NREACT)
-  REAL(kind=dp) :: lshen_test_global(NREACT)
+  REAL(kind=dp) :: lshen_B(1231)
 ! TIME - Current integration time
   REAL(kind=dp) :: TIME
 ! SUN - Sunlight intensity between [0,1]
@@ -67,8 +67,11 @@ MODULE gckpp_Global
   REAL(kind=dp) :: STEPMAX
 ! CFACTOR - Conversion factor for concentration units
   REAL(kind=dp) :: CFACTOR
-  
+  REAL(kind=dp) :: lshen_JVS(LU_NONZERO)  
 ! INLINED global variable declarations
+
+  REAL(kind=dp) :: lshen_Vdot(NVAR)
+  REAL(kind=dp) :: lshen_A(NREACT)
 
       REAL(kind=dp) :: HET(NSPEC,7), PHOTOL(1000)
       REAL(kind=dp) :: NUMDEN, H2O, PRESS
@@ -77,9 +80,9 @@ MODULE gckpp_Global
 ! NOTE: The following variables need to be declared THREADPRIVATE
 ! because they get written to within an OpenMP parallel loop
 !-----------------------------------------------------------------------
-!$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP  )
-!$OMP THREADPRIVATE( CFACTOR, HET, PHOTOL, NUMDEN, H2O,  PRESS )
-
+!$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP)
+!$OMP THREADPRIVATE( CFACTOR, HET, PHOTOL, NUMDEN, H2O,  PRESS)
+!$OMP THREADPRIVATE(lshen_B,lshen_JVS,lshen_Vdot,lshen_A)
 ! INLINED global variable declarations
 
 

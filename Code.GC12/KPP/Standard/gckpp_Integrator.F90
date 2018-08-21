@@ -1304,7 +1304,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun( Y, FIX, RCONST, Ydot )
+   CALL Fun( Y, FIX, RCONST, Ydot, lshen_A, lshen_Vdot)
    TIME = Told
 
 END SUBROUTINE FunTemplate
@@ -1337,7 +1337,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP(Y, FIX, RCONST, JV)
+    CALL Jac_SP(Y, FIX, RCONST, JV, lshen_B, lshen_JVS)
     DO j=1,NVAR
       DO i=1,NVAR
          Jcb(i,j) = 0.0_dp
@@ -1347,7 +1347,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
        Jcb(LU_IROW(i),LU_ICOL(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP( Y, FIX, RCONST, Jcb )
+    CALL Jac_SP( Y, FIX, RCONST, Jcb, lshen_B, lshen_JVS )
 #endif   
     TIME = Told
 

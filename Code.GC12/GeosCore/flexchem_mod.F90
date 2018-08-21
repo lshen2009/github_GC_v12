@@ -1239,7 +1239,8 @@ CONTAINS
 
     ! Set FIRSTCHEM = .FALSE. -- we have gone thru one chem step
     FIRSTCHEM = .FALSE.
-
+  print *,'lshen_B', lshen_B
+  print *,'lshen_A', lshen_A
   END SUBROUTINE Do_FlexChem
 !EOC
 !------------------------------------------------------------------------------

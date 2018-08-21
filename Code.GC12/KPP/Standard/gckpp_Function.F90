@@ -45,7 +45,7 @@ CONTAINS
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE Fun ( V, F, RCT, Vdot )
+SUBROUTINE Fun ( V, F, RCT, Vdot, lshen_A, lshen_Vdot)
 
 ! V - Concentrations of variable species (local)
   REAL(kind=dp) :: V(NVAR)
@@ -56,6 +56,8 @@ SUBROUTINE Fun ( V, F, RCT, Vdot )
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(NVAR)
 
+  REAL(kind=dp) :: lshen_Vdot(NVAR)
+  REAL(kind=dp) :: lshen_A(NREACT)
 
 ! Computation of equation rates
   A(1) = RCT(1)*V(221)*V(222)
@@ -1201,7 +1203,8 @@ SUBROUTINE Fun ( V, F, RCT, Vdot )
   Vdot(234) = -0.91*A(299)+A(321)-A(324)+A(336)+A(337)+A(339)+A(340)+A(341)+2*A(361)+A(362)+A(363)+A(364)+A(366)+A(367)&
                 &+A(369)+A(370)+A(371)+A(372)+A(373)+A(374)+A(375)+A(376)+A(377)-A(540)-A(543)-A(545)-A(549)-A(552)-A(558)&
                 &-A(559)
-      
+lshen_A(:)=A(:)
+lshen_Vdot(:)=Vdot(:)      
 END SUBROUTINE Fun
 
 ! End of Fun function
