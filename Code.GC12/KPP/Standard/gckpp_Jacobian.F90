@@ -26,7 +26,7 @@ MODULE gckpp_Jacobian
 
   USE gckpp_Parameters
   USE gckpp_JacobianSP
-
+  USE gckpp_Global, ONLY: lshen_B, lshen_JVS
   IMPLICIT NONE
 
 CONTAINS
@@ -43,8 +43,7 @@ CONTAINS
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE Jac_SP ( V, F, RCT, JVS, lshen_B, lshen_JVS )
-
+SUBROUTINE Jac_SP ( V, F, RCT, JVS)
 ! V - Concentrations of variable species (local)
   REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
@@ -53,12 +52,12 @@ SUBROUTINE Jac_SP ( V, F, RCT, JVS, lshen_B, lshen_JVS )
   REAL(kind=dp) :: RCT(NREACT)
 ! JVS - sparse Jacobian of variables
   REAL(kind=dp) :: JVS(LU_NONZERO)
-  REAL(kind=dp) :: lshen_JVS(LU_NONZERO)
+!  REAL(kind=dp) :: lshen_JVS(LU_NONZERO)
 
 ! Local variables
 ! B - Temporary array
   REAL(kind=dp) :: B(1231)
-  REAL(kind=dp) :: lshen_B(1231)
+!  REAL(kind=dp) :: lshen_B(1231)
 
 ! B(1) = dA(1)/dV(221)
   B(1) = RCT(1)*V(222)

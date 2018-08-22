@@ -139,6 +139,11 @@ CONTAINS
     USE UCX_MOD,              ONLY : SO4_PHOTFRAC
     USE UCX_MOD,              ONLY : UCX_NOX
     USE UCX_MOD,              ONLY : UCX_H2SO4PHOT
+    USE TIME_MOD
+    REAL(dp)               :: lshen_all_JVS(36,23,24,LU_NONZERO)
+    REAL(dp)               :: lshen_all_Vdot(36,23,24,NVAR)
+    INTEGER :: ilon,ilat,ilev
+    character(len=1024) :: outputname1,outputname2,outputname3,outputname4
 #if   defined( TOMAS )
     USE TOMAS_MOD,            ONLY : H2SO4_RATE
 #endif
@@ -240,7 +245,8 @@ CONTAINS
 
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
-
+    INTEGER :: NHMS
+    LOGICAL :: new_hour
     ! For testing only, may be removed later (mps, 4/26/16)
     LOGICAL                :: DO_HETCHEM
     REAL(fp)               :: TimeStart,timeEnd
@@ -956,7 +962,15 @@ CONTAINS
        ! Copy VAR and FIX back into C (mps, 2/24/16)
        C(1:NVAR)       = VAR(:)
        C(NVAR+1:NSPEC) = FIX(:)
-
+       
+       !lshen add this to archive all B
+       ilon=I/2
+       ilat=J/2
+       ilev=L/3
+       if(MOD(I,2)==1 .and. MOD(J,2)==1 .and. MOD(L,3)==1) THEN
+         lshen_all_JVS(ilon,ilat,ilev,:)=lshen_JVS
+         lshen_all_Vdot(ilon,ilat,ilev,:)=lshen_Vdot
+       ENDIF
        ! Save for next integration time step
        HSAVE_KPP(I,J,L) = RSTATE(Nhnew)
 
@@ -1239,8 +1253,27 @@ CONTAINS
 
     ! Set FIRSTCHEM = .FALSE. -- we have gone thru one chem step
     FIRSTCHEM = .FALSE.
-  print *,'lshen_B', lshen_B
-  print *,'lshen_A', lshen_A
+  !print *,'lshen_B', lshen_B
+  !print *,'lshen_A', lshen_A
+  NHMS=GET_NHMS()
+  new_hour=ITS_A_NEW_HOUR()
+  print *,'lshen_test_new_hour',NHMS,new_hour
+  if (new_hour) then
+    write (outputname1, "(A9,I5,A4)") "lshen_JVS", NHMS,'.txt'
+    write (outputname2, "(A10,I5,A4)") "lshen_Vdot", NHMS,'.txt'
+    OPEN(unit=1101,file=outputname1)
+    OPEN(unit=1102,file=outputname2)
+         DO L=1,24
+           DO J=1,23
+            DO I=1,36
+              write(1101,'(3I4,3413E10.2)'),I,J,L,lshen_all_JVS(I,J,L,:)
+              write(1102,'(3I4,234E12.4)'), I,J,L,lshen_all_Vdot(I,J,L,:)
+            ENDDO
+           ENDDO
+         ENDDO
+    close(1101)!lshen
+    close(1102)
+  endif
   END SUBROUTINE Do_FlexChem
 !EOC
 !------------------------------------------------------------------------------

@@ -23,7 +23,8 @@
 
 
 MODULE gckpp_Function
-
+  USE gckpp_Global, ONLY: lshen_A, lshen_Vdot
+  !USE gckpp_Global
   USE gckpp_Parameters
   IMPLICIT NONE
 
@@ -45,8 +46,7 @@ CONTAINS
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE Fun ( V, F, RCT, Vdot, lshen_A, lshen_Vdot)
-
+SUBROUTINE Fun ( V, F, RCT, Vdot)
 ! V - Concentrations of variable species (local)
   REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
@@ -56,9 +56,8 @@ SUBROUTINE Fun ( V, F, RCT, Vdot, lshen_A, lshen_Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(NVAR)
 
-  REAL(kind=dp) :: lshen_Vdot(NVAR)
-  REAL(kind=dp) :: lshen_A(NREACT)
-
+!  REAL(kind=dp) :: lshen_Vdot(NVAR)
+!  REAL(kind=dp) :: lshen_A(NREACT)
 ! Computation of equation rates
   A(1) = RCT(1)*V(221)*V(222)
   A(2) = RCT(2)*V(221)*V(231)

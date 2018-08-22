@@ -1293,7 +1293,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot )
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Parameters, ONLY: NVAR, LU_NONZERO
- USE gckpp_Global, ONLY: FIX, RCONST, TIME
+ USE gckpp_Global, ONLY: FIX, RCONST, TIME, lshen_A, lshen_Vdot
  USE gckpp_Function, ONLY: Fun
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(NVAR)
@@ -1304,7 +1304,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun( Y, FIX, RCONST, Ydot, lshen_A, lshen_Vdot)
+   CALL Fun( Y, FIX, RCONST, Ydot)
    TIME = Told
 
 END SUBROUTINE FunTemplate
@@ -1317,7 +1317,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Parameters, ONLY: NVAR, LU_NONZERO
- USE gckpp_Global, ONLY: FIX, RCONST, TIME
+ USE gckpp_Global, ONLY: FIX, RCONST, TIME, lshen_B, lshen_JVS
  USE gckpp_Jacobian, ONLY: Jac_SP, LU_IROW, LU_ICOL
  USE gckpp_LinearAlgebra
 !~~~> Input variables
@@ -1337,7 +1337,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP(Y, FIX, RCONST, JV, lshen_B, lshen_JVS)
+    CALL Jac_SP(Y, FIX, RCONST, JV)
     DO j=1,NVAR
       DO i=1,NVAR
          Jcb(i,j) = 0.0_dp
@@ -1347,7 +1347,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
        Jcb(LU_IROW(i),LU_ICOL(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP( Y, FIX, RCONST, Jcb, lshen_B, lshen_JVS )
+    CALL Jac_SP( Y, FIX, RCONST, Jcb)
 #endif   
     TIME = Told
 
