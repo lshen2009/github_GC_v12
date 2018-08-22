@@ -142,6 +142,7 @@ CONTAINS
     USE TIME_MOD
     REAL(dp)               :: lshen_all_JVS(36,23,24,LU_NONZERO)
     REAL(dp)               :: lshen_all_Vdot(36,23,24,NVAR)
+	REAL(dp)               :: lshen_all_VAR(36,23,24,NVAR)
     INTEGER :: ilon,ilat,ilev
     character(len=1024) :: outputname1,outputname2,outputname3,outputname4
 #if   defined( TOMAS )
@@ -275,7 +276,10 @@ CONTAINS
     ! Turn heterogeneous chemistry and photolysis on/off here
     ! This is for testing only and may be removed later (mps, 4/26/16)
     DO_HETCHEM  = .TRUE.
-
+	
+    NHMS=GET_NHMS()!lshen
+    new_hour=ITS_A_NEW_HOUR()!lshen
+  
     ! Remove debug output
     !IF ( FIRSTCHEM .AND. am_I_Root ) THEN
     !   WRITE( 6, '(a)' ) REPEAT( '#', 32 )
@@ -970,6 +974,8 @@ CONTAINS
        if(MOD(I,2)==1 .and. MOD(J,2)==1 .and. MOD(L,3)==1) THEN
          lshen_all_JVS(ilon,ilat,ilev,:)=lshen_JVS
          lshen_all_Vdot(ilon,ilat,ilev,:)=lshen_Vdot
+		 lshen_all_VAR(ilon,ilat,ilev,:)=VAR
+		 print *,'lshen_test_VAR',ilon,ilat,ilev,VAR
        ENDIF
        ! Save for next integration time step
        HSAVE_KPP(I,J,L) = RSTATE(Nhnew)
@@ -1255,24 +1261,26 @@ CONTAINS
     FIRSTCHEM = .FALSE.
   !print *,'lshen_B', lshen_B
   !print *,'lshen_A', lshen_A
-  NHMS=GET_NHMS()
-  new_hour=ITS_A_NEW_HOUR()
   print *,'lshen_test_new_hour',NHMS,new_hour
   if (new_hour) then
     write (outputname1, "(A9,I5,A4)") "lshen_JVS", NHMS,'.txt'
     write (outputname2, "(A10,I5,A4)") "lshen_Vdot", NHMS,'.txt'
+	write (outputname3, "(A9,I5,A4)") "lshen_VAR", NHMS,'.txt'
     OPEN(unit=1101,file=outputname1)
     OPEN(unit=1102,file=outputname2)
+	OPEN(unit=1102,file=outputname3)
          DO L=1,24
            DO J=1,23
             DO I=1,36
               write(1101,'(3I4,3413E10.2)'),I,J,L,lshen_all_JVS(I,J,L,:)
               write(1102,'(3I4,234E12.4)'), I,J,L,lshen_all_Vdot(I,J,L,:)
+			  write(1103,'(3I4,234E12.4)'), I,J,L,lshen_all_VAR(I,J,L,:)
             ENDDO
            ENDDO
          ENDDO
     close(1101)!lshen
-    close(1102)
+    close(1102
+	close(1103)
   endif
   END SUBROUTINE Do_FlexChem
 !EOC
