@@ -142,9 +142,9 @@ CONTAINS
     USE TIME_MOD
     !REAL(dp)               :: lshen_all_JVS(36,23,24,LU_NONZERO)
     REAL(dp)               :: lshen_all_Vdot(36,23,24,NVAR)
-    !REAL(dp)               :: lshen_all_VAR(36,23,24,NVAR)
-    !REAL(dp)               :: lshen_all_Prate(36,23,24,NVAR)
-    !REAL(dp)               :: lshen_all_Lrate(36,23,24,NVAR)
+    REAL(dp)               :: lshen_all_VAR(36,23,24,NVAR)
+    REAL(dp)               :: lshen_all_Prate(36,23,24,NVAR)
+    REAL(dp)               :: lshen_all_Lrate(36,23,24,NVAR)
     INTEGER :: ilon,ilat,ilev
     character(len=1024) :: outputname1,outputname2,outputname3,outputname4
 #if   defined( TOMAS )
@@ -282,7 +282,10 @@ CONTAINS
     NHMS=GET_NHMS()!lshen
     NYMD  = GET_NYMD()!lshen
     new_hour=ITS_A_NEW_HOUR()!lshen
-    lshen_all_Vdot(:,:,:,:)=0  
+    lshen_all_Vdot(:,:,:,:)=0 
+    lshen_all_VAR(:,:,:,:)=0
+    lshen_all_Prate(:,:,:,:)=0
+    lshen_all_Lrate(:,:,:,:)=0
     ! Remove debug output
     !IF ( FIRSTCHEM .AND. am_I_Root ) THEN
     !   WRITE( 6, '(a)' ) REPEAT( '#', 32 )
@@ -979,9 +982,9 @@ CONTAINS
          !ilev=L
          !lshen_all_JVS(ilon,ilat,ilev,:)=lshen_JVS
          lshen_all_Vdot(ilon,ilat,ilev,:)=lshen_Vdot
-         !lshen_all_Prate(ilon,ilat,ilev,:)=lshen_Prate
-         !lshen_all_Lrate(ilon,ilat,ilev,:)=lshen_Lrate
-         !lshen_all_VAR(ilon,ilat,ilev,:)=VAR
+         lshen_all_Prate(ilon,ilat,ilev,:)=lshen_Prate
+         lshen_all_Lrate(ilon,ilat,ilev,:)=lshen_Lrate
+         lshen_all_VAR(ilon,ilat,ilev,:)=VAR
          !print *,'lshen_test_VAR',ilon,ilat,ilev,VAR
        ENDIF
        ! Save for next integration time step
@@ -1272,27 +1275,27 @@ CONTAINS
     YMDH=NYMD*100+NHMS/10000
     print *,NYMD,NHMS,YMDH
     write (outputname1, "(A11,I10,A4)") "lshen_Vdot_", YMDH,'.txt'
-    !write (outputname2, "(A10,I10,A4)") "lshen_VAR_", YMDH,'.txt'
-    !write (outputname3, "(A12,I10,A4)") "lshen_Prate_", YMDH,'.txt'
-    !write (outputname4, "(A12,I10,A4)") "lshen_Lrate_", YMDH,'.txt'
+    write (outputname2, "(A10,I10,A4)") "lshen_VAR_", YMDH,'.txt'
+    write (outputname3, "(A12,I10,A4)") "lshen_Prate_", YMDH,'.txt'
+    write (outputname4, "(A12,I10,A4)") "lshen_Lrate_", YMDH,'.txt'
     OPEN(unit=1101,file=outputname1)
-    !OPEN(unit=1102,file=outputname2)
-    !OPEN(unit=1103,file=outputname3)
-    !OPEN(unit=1104,file=outputname4)
+    OPEN(unit=1102,file=outputname2)
+    OPEN(unit=1103,file=outputname3)
+    OPEN(unit=1104,file=outputname4)
          DO L=1,24
            DO J=1,23
             DO I=1,36
               write(1101,'(3I4,234E12.4)'), I,J,L,lshen_all_Vdot(I,J,L,:)
-              !write(1102,'(3I4,234E12.4)'), I,J,L,lshen_all_VAR(I,J,L,:)
-              !write(1103,'(3I4,234E12.4)'), I,J,L,lshen_all_Prate(I,J,L,:)
-              !write(1104,'(3I4,234E12.4)'), I,J,L,lshen_all_Lrate(I,J,L,:)
+              write(1102,'(3I4,234E12.4)'), I,J,L,lshen_all_VAR(I,J,L,:)
+              write(1103,'(3I4,234E12.4)'), I,J,L,lshen_all_Prate(I,J,L,:)
+              write(1104,'(3I4,234E12.4)'), I,J,L,lshen_all_Lrate(I,J,L,:)
             ENDDO
            ENDDO
          ENDDO
     close(1101)!lshen
-    !close(1102)
-    !close(1103)
-    !close(1104)
+    close(1102)
+    close(1103)
+    close(1104)
   endif
   END SUBROUTINE Do_FlexChem
 !EOC
