@@ -282,7 +282,7 @@ CONTAINS
     NHMS=GET_NHMS()!lshen
     NYMD  = GET_NYMD()!lshen
     new_hour=ITS_A_NEW_HOUR()!lshen
-  
+    lshen_all_Vdot(:,:,:,:)=0  
     ! Remove debug output
     !IF ( FIRSTCHEM .AND. am_I_Root ) THEN
     !   WRITE( 6, '(a)' ) REPEAT( '#', 32 )
@@ -972,9 +972,11 @@ CONTAINS
        
        !lshen add this to archive all B
        if(MOD(I,2)==1 .and. MOD(J,2)==1 .and. MOD(L,3)==1) THEN
+       !if(MOD(I,2)==1 .and. MOD(J,2)==1) THEN
          ilon=I/2+1
          ilat=J/2+1
          ilev=L/3+1
+         !ilev=L
          !lshen_all_JVS(ilon,ilat,ilev,:)=lshen_JVS
          lshen_all_Vdot(ilon,ilat,ilev,:)=lshen_Vdot
          !lshen_all_Prate(ilon,ilat,ilev,:)=lshen_Prate
