@@ -141,7 +141,7 @@ CONTAINS
     USE UCX_MOD,              ONLY : UCX_H2SO4PHOT
     USE TIME_MOD
     !REAL(dp)               :: lshen_all_JVS(36,23,24,LU_NONZERO)
-    REAL(dp)               :: lshen_all_Vdot(36,23,LLPAR,NVAR)
+    REAL(dp)               :: lshen_all_Vdot(36,23,24,NVAR)
     !REAL(dp)               :: lshen_all_VAR(36,23,24,NVAR)
     !REAL(dp)               :: lshen_all_Prate(36,23,24,NVAR)
     !REAL(dp)               :: lshen_all_Lrate(36,23,24,NVAR)
