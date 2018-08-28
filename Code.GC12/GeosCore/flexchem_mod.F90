@@ -1285,10 +1285,10 @@ CONTAINS
          DO L=1,24
            DO J=1,23
             DO I=1,36
-              write(1101,'(3I4,234E12.4)'), I,J,L,lshen_all_Vdot(I,J,L,:)
-              write(1102,'(3I4,234E12.4)'), I,J,L,lshen_all_VAR(I,J,L,:)
-              write(1103,'(3I4,234E12.4)'), I,J,L,lshen_all_Prate(I,J,L,:)
-              write(1104,'(3I4,234E12.4)'), I,J,L,lshen_all_Lrate(I,J,L,:)
+              write(1101,'(3I4,234E15.3)'), I,J,L,lshen_all_Vdot(I,J,L,:)
+              write(1102,'(3I4,234E15.3)'), I,J,L,lshen_all_VAR(I,J,L,:)
+              write(1103,'(3I4,234E15.3)'), I,J,L,lshen_all_Prate(I,J,L,:)
+              write(1104,'(3I4,234E15.3)'), I,J,L,lshen_all_Lrate(I,J,L,:)
             ENDDO
            ENDDO
          ENDDO

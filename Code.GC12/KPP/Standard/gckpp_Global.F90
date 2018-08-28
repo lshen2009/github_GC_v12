@@ -84,7 +84,8 @@ MODULE gckpp_Global
 !-----------------------------------------------------------------------
 !$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP)
 !$OMP THREADPRIVATE( CFACTOR, HET, PHOTOL, NUMDEN, H2O,  PRESS)
-!$OMP THREADPRIVATE(lshen_B,lshen_JVS,lshen_Vdot,lshen_A,lshen_Prate,lshen_Lrate)
+!$OMP THREADPRIVATE(lshen_B,lshen_JVS,lshen_Vdot)
+!$OMP THREADPRIVATE(lshen_A,lshen_Prate,lshen_Lrate)
 ! INLINED global variable declarations
 
 
