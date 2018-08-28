@@ -141,10 +141,10 @@ CONTAINS
     USE UCX_MOD,              ONLY : UCX_H2SO4PHOT
     USE TIME_MOD
     !REAL(dp)               :: lshen_all_JVS(36,23,24,LU_NONZERO)
-    REAL(dp)               :: lshen_all_Vdot(36,23,24,NVAR)
-    REAL(dp)               :: lshen_all_VAR(36,23,24,NVAR)
-    REAL(dp)               :: lshen_all_Prate(36,23,24,NVAR)
-    REAL(dp)               :: lshen_all_Lrate(36,23,24,NVAR)
+    REAL(dp)               :: lshen_all_Vdot(IIPAR,JJPAR,24,NVAR)
+    REAL(dp)               :: lshen_all_VAR(IIPAR,JJPAR,24,NVAR)
+    REAL(dp)               :: lshen_all_Prate(IIPAR,JJPAR,24,NVAR)
+    REAL(dp)               :: lshen_all_Lrate(IIPAR,JJPAR,24,NVAR)
     INTEGER :: ilon,ilat,ilev
     character(len=1024) :: outputname1,outputname2,outputname3,outputname4
 #if   defined( TOMAS )
@@ -974,12 +974,14 @@ CONTAINS
        C(NVAR+1:NSPEC) = FIX(:)
        
        !lshen add this to archive all B
-       if(MOD(I,2)==1 .and. MOD(J,2)==1 .and. MOD(L,3)==1) THEN
-       !if(MOD(I,2)==1 .and. MOD(J,2)==1) THEN
-         ilon=I/2+1
-         ilat=J/2+1
+       !if(MOD(I,2)==1 .and. MOD(J,2)==1 .and. MOD(L,3)==1) THEN
+       if( MOD(L,3)==1 ) THEN
+         !ilon=I/2+1
+         !ilat=J/2+1
+         !ilev=L/3+1
+         ilon=I
+         ilat=J
          ilev=L/3+1
-         !ilev=L
          !lshen_all_JVS(ilon,ilat,ilev,:)=lshen_JVS
          lshen_all_Vdot(ilon,ilat,ilev,:)=lshen_Vdot
          lshen_all_Prate(ilon,ilat,ilev,:)=lshen_Prate
@@ -1283,8 +1285,8 @@ CONTAINS
     OPEN(unit=1103,file=outputname3)
     OPEN(unit=1104,file=outputname4)
          DO L=1,24
-           DO J=1,23
-            DO I=1,36
+           DO J=1,JJPAR
+            DO I=1,IIPAR
               write(1101,'(3I4,234E15.3)'), I,J,L,lshen_all_Vdot(I,J,L,:)
               write(1102,'(3I4,234E15.3)'), I,J,L,lshen_all_VAR(I,J,L,:)
               write(1103,'(3I4,234E15.3)'), I,J,L,lshen_all_Prate(I,J,L,:)
