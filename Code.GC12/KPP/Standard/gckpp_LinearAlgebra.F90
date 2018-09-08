@@ -13,8 +13,8 @@
 !        R. Sander, Max-Planck Institute for Chemistry, Mainz, Germany
 ! 
 ! File                 : gckpp_LinearAlgebra.f90
-! Time                 : Tue Jul 31 16:32:37 2018
-! Working directory    : /n/regal/jacob_lab/lshen/GC_speedup/merra2_4x5_standard/Code.GC12/KPP/Standard
+! Time                 : Thu Apr 12 15:20:38 2018
+! Working directory    : /n/home08/elundgren/GC/Code.v11-02f_gcc/KPP/Standard
 ! Equation file        : gckpp.kpp
 ! Output root filename : gckpp
 ! 

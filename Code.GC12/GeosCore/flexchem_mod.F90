@@ -139,14 +139,6 @@ CONTAINS
     USE UCX_MOD,              ONLY : SO4_PHOTFRAC
     USE UCX_MOD,              ONLY : UCX_NOX
     USE UCX_MOD,              ONLY : UCX_H2SO4PHOT
-    USE TIME_MOD
-    !REAL(dp)               :: lshen_all_JVS(36,23,24,LU_NONZERO)
-    REAL(dp)               :: lshen_all_Vdot(IIPAR,JJPAR,2,NVAR)
-    REAL(dp)               :: lshen_all_VAR(IIPAR,JJPAR,2,NVAR)
-    REAL(dp)               :: lshen_all_Prate(IIPAR,JJPAR,2,NVAR)
-    REAL(dp)               :: lshen_all_Lrate(IIPAR,JJPAR,2,NVAR)
-    INTEGER :: ilon,ilat,ilev
-    character(len=1024) :: outputname1,outputname2,outputname3,outputname4
 #if   defined( TOMAS )
     USE TOMAS_MOD,            ONLY : H2SO4_RATE
 #endif
@@ -243,16 +235,16 @@ CONTAINS
     REAL(dp)               :: RSTATE     (                  20               )
     REAL(dp)               :: GLOB_RCONST(IIPAR,JJPAR,LLPAR,NREACT           )
     REAL(fp)               :: Before     (IIPAR,JJPAR,LLPAR,State_Chm%nAdvect)
+
     ! For tagged CO saving
     REAL(fp)               :: LCH4, PCO_TOT, PCO_CH4, PCO_NMVOC
 
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
-    INTEGER :: NHMS,NYMD,YMDH
-    LOGICAL :: new_hour
+
     ! For testing only, may be removed later (mps, 4/26/16)
     LOGICAL                :: DO_HETCHEM
-    REAL(fp)               :: TimeStart,timeEnd
+
     !=======================================================================
     ! Do_FlexChem begins here!
     !=======================================================================
@@ -278,14 +270,7 @@ CONTAINS
     ! Turn heterogeneous chemistry and photolysis on/off here
     ! This is for testing only and may be removed later (mps, 4/26/16)
     DO_HETCHEM  = .TRUE.
-	
-    NHMS=GET_NHMS()!lshen
-    NYMD  = GET_NYMD()!lshen
-    new_hour=ITS_A_NEW_HOUR()!lshen
-    lshen_all_Vdot(:,:,:,:)=0 
-    lshen_all_VAR(:,:,:,:)=0
-    lshen_all_Prate(:,:,:,:)=0
-    lshen_all_Lrate(:,:,:,:)=0
+
     ! Remove debug output
     !IF ( FIRSTCHEM .AND. am_I_Root ) THEN
     !   WRITE( 6, '(a)' ) REPEAT( '#', 32 )
@@ -591,6 +576,7 @@ CONTAINS
 
     ! 0 - adjoint, 1 - no adjoint
     ICNTRL(7) = 1
+
     !=======================================================================
     ! %%%%% SOLVE CHEMISTRY -- This is the main KPP solver loop %%%%%
     !=======================================================================
@@ -608,6 +594,7 @@ CONTAINS
            '       computed Y upon return:            ', f11.4, /,          &
            'Hexit, last accepted step before exit:    ', f11.4, /,          &
            'Hnew, last predicted step (not yet taken):', f11.4 )
+
     !-----------------------------------------------------------------------
     ! NOTE: The following variables are held THREADPRIVATE and 
     ! therefore do not need to be included in the !$OMP+PRIVATE 
@@ -630,9 +617,9 @@ CONTAINS
     !$OMP REDUCTION( +:TOTNUMLU                                             )&
     !$OMP SCHEDULE ( DYNAMIC,  1                                            )
     DO L = 1, LLPAR
-       CALL CPU_TIME(time=timeStart)
     DO J = 1, JJPAR
     DO I = 1, IIPAR
+
        !====================================================================
        ! For safety's sake, initialize certain variables for each grid
        ! box (I,J,L), whether or not chemistry will be done there.
@@ -921,7 +908,6 @@ CONTAINS
        CALL Integrate( TIN,    TOUT,    ICNTRL,      &
                        RCNTRL, ISTATUS, RSTATE, IERR )
 
-
        ! Print grid box indices to screen if integrate failed
        IF ( IERR < 0 ) THEN
           WRITE(6,*) '### INTEGRATE RETURNED ERROR AT: ', I, J, L
@@ -972,24 +958,7 @@ CONTAINS
        ! Copy VAR and FIX back into C (mps, 2/24/16)
        C(1:NVAR)       = VAR(:)
        C(NVAR+1:NSPEC) = FIX(:)
-       
-       !lshen add this to archive all B
-       !if(MOD(I,2)==1 .and. MOD(J,2)==1 .and. MOD(L,3)==1) THEN
-       !if( MOD(L,3)==1 ) THEN
-        IF (L<=2) THEN
-         !ilon=I/2+1
-         !ilat=J/2+1
-         !ilev=L/3+1
-         ilon=I
-         ilat=J
-         ilev=L
-         !lshen_all_JVS(ilon,ilat,ilev,:)=lshen_JVS
-         lshen_all_Vdot(ilon,ilat,ilev,:)=lshen_Vdot
-         lshen_all_Prate(ilon,ilat,ilev,:)=lshen_Prate
-         lshen_all_Lrate(ilon,ilat,ilev,:)=lshen_Lrate
-         lshen_all_VAR(ilon,ilat,ilev,:)=VAR
-         !print *,'lshen_test_VAR',ilon,ilat,ilev,VAR
-       ENDIF
+
        ! Save for next integration time step
        HSAVE_KPP(I,J,L) = RSTATE(Nhnew)
 
@@ -1146,8 +1115,6 @@ CONTAINS
 
     ENDDO
     ENDDO
-    CALL CPU_TIME(time=timeEnd)
-    !PRINT *,'lshen: L is',L,'time is',timeEnd-TimeStart
     ENDDO
     !$OMP END PARALLEL DO
 
@@ -1272,34 +1239,7 @@ CONTAINS
 
     ! Set FIRSTCHEM = .FALSE. -- we have gone thru one chem step
     FIRSTCHEM = .FALSE.
-  print *,'lshen_test_new_hour',NHMS,new_hour
-  if (new_hour) then
-    !write (outputname1, "(A9,I5,A4)") "lshen_JVS", NHMS,'.txt'
-    YMDH=NYMD*100+NHMS/10000
-    print *,NYMD,NHMS,YMDH
-    write (outputname1, "(A11,I10,A4)") "lshen_Vdot_", YMDH,'.txt'
-    write (outputname2, "(A10,I10,A4)") "lshen_VAR_", YMDH,'.txt'
-    write (outputname3, "(A12,I10,A4)") "lshen_Prate_", YMDH,'.txt'
-    write (outputname4, "(A12,I10,A4)") "lshen_Lrate_", YMDH,'.txt'
-    OPEN(unit=1101,file=outputname1)
-    OPEN(unit=1102,file=outputname2)
-    OPEN(unit=1103,file=outputname3)
-    OPEN(unit=1104,file=outputname4)
-         DO L=1,2
-           DO J=1,JJPAR
-            DO I=1,IIPAR
-              write(1101,'(3I4,234E15.3)'), I,J,L,lshen_all_Vdot(I,J,L,:)
-              write(1102,'(3I4,234E15.3)'), I,J,L,lshen_all_VAR(I,J,L,:)
-              write(1103,'(3I4,234E15.3)'), I,J,L,lshen_all_Prate(I,J,L,:)
-              write(1104,'(3I4,234E15.3)'), I,J,L,lshen_all_Lrate(I,J,L,:)
-            ENDDO
-           ENDDO
-         ENDDO
-    close(1101)!lshen
-    close(1102)
-    close(1103)
-    close(1104)
-  endif
+
   END SUBROUTINE Do_FlexChem
 !EOC
 !------------------------------------------------------------------------------

@@ -13,8 +13,8 @@
 !        R. Sander, Max-Planck Institute for Chemistry, Mainz, Germany
 ! 
 ! File                 : gckpp_Jacobian.f90
-! Time                 : Tue Jul 31 16:32:37 2018
-! Working directory    : /n/regal/jacob_lab/lshen/GC_speedup/merra2_4x5_standard/Code.GC12/KPP/Standard
+! Time                 : Thu Apr 12 15:20:38 2018
+! Working directory    : /n/home08/elundgren/GC/Code.v11-02f_gcc/KPP/Standard
 ! Equation file        : gckpp.kpp
 ! Output root filename : gckpp
 ! 
@@ -26,7 +26,7 @@ MODULE gckpp_Jacobian
 
   USE gckpp_Parameters
   USE gckpp_JacobianSP
-  USE gckpp_Global, ONLY: lshen_B, lshen_JVS
+
   IMPLICIT NONE
 
 CONTAINS
@@ -43,7 +43,8 @@ CONTAINS
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE Jac_SP ( V, F, RCT, JVS)
+SUBROUTINE Jac_SP ( V, F, RCT, JVS )
+
 ! V - Concentrations of variable species (local)
   REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
@@ -52,12 +53,11 @@ SUBROUTINE Jac_SP ( V, F, RCT, JVS)
   REAL(kind=dp) :: RCT(NREACT)
 ! JVS - sparse Jacobian of variables
   REAL(kind=dp) :: JVS(LU_NONZERO)
-!  REAL(kind=dp) :: lshen_JVS(LU_NONZERO)
+
 
 ! Local variables
 ! B - Temporary array
   REAL(kind=dp) :: B(1231)
-!  REAL(kind=dp) :: lshen_B(1231)
 
 ! B(1) = dA(1)/dV(221)
   B(1) = RCT(1)*V(222)
@@ -9398,9 +9398,6 @@ SUBROUTINE Jac_SP ( V, F, RCT, JVS)
   JVS(3412) = B(619)
 ! JVS(3413) = Jac_FULL(234,234)
   JVS(3413) = -0.91*B(575)-B(625)-B(1031)-B(1036)-B(1040)-B(1048)-B(1054)-B(1062)-B(1063)
-
-lshen_B(:)=B(:)!lshen
-lshen_JVS(:)=JVS(:) !lshen    
       
 END SUBROUTINE Jac_SP
 
@@ -10607,7 +10604,7 @@ SUBROUTINE JacTR_SP_Vec ( JVS, UV, JTUV )
                 &+JVS(887)*UV(150)+JVS(1324)*UV(186)+JVS(1419)*UV(190)+JVS(1543)*UV(196)+JVS(1567)*UV(198)+JVS(2742)*UV(225)&
                 &+JVS(3010)*UV(229)+JVS(3095)*UV(230)+JVS(3255)*UV(231)+JVS(3309)*UV(232)+JVS(3354)*UV(233)+JVS(3413)&
                 &*UV(234)
-
+      
 END SUBROUTINE JacTR_SP_Vec
 
 ! End of JacTR_SP_Vec function

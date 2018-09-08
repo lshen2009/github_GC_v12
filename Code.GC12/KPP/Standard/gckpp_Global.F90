@@ -13,8 +13,8 @@
 !        R. Sander, Max-Planck Institute for Chemistry, Mainz, Germany
 ! 
 ! File                 : gckpp_Global.f90
-! Time                 : Tue Jul 31 16:32:38 2018
-! Working directory    : /n/regal/jacob_lab/lshen/GC_speedup/merra2_4x5_standard/Code.GC12/KPP/Standard
+! Time                 : Thu Apr 12 15:20:38 2018
+! Working directory    : /n/home08/elundgren/GC/Code.v11-02f_gcc/KPP/Standard
 ! Equation file        : gckpp.kpp
 ! Output root filename : gckpp
 ! 
@@ -24,7 +24,7 @@
 
 MODULE gckpp_Global
 
-  USE gckpp_Parameters, ONLY: dp, NSPEC, NVAR, NFIX, NREACT,LU_NONZERO
+  USE gckpp_Parameters, ONLY: dp, NSPEC, NVAR, NFIX, NREACT
   PUBLIC
   SAVE
 
@@ -42,7 +42,6 @@ MODULE gckpp_Global
 !      EQUIVALENCE( C(235),FIX(1) )
 ! RCONST - Rate constants (global)
   REAL(kind=dp) :: RCONST(NREACT)
-  REAL(kind=dp) :: lshen_B(1231)
 ! TIME - Current integration time
   REAL(kind=dp) :: TIME
 ! SUN - Sunlight intensity between [0,1]
@@ -67,13 +66,8 @@ MODULE gckpp_Global
   REAL(kind=dp) :: STEPMAX
 ! CFACTOR - Conversion factor for concentration units
   REAL(kind=dp) :: CFACTOR
-  REAL(kind=dp) :: lshen_JVS(LU_NONZERO)  
-! INLINED global variable declarations
 
-  REAL(kind=dp) :: lshen_Vdot(NVAR)
-  REAL(kind=dp) :: lshen_A(NREACT)
-  REAL(kind=dp) :: lshen_Prate(NVAR)
-  REAL(kind=dp) :: lshen_Lrate(NVAR)
+! INLINED global variable declarations
 
       REAL(kind=dp) :: HET(NSPEC,7), PHOTOL(1000)
       REAL(kind=dp) :: NUMDEN, H2O, PRESS
@@ -82,10 +76,9 @@ MODULE gckpp_Global
 ! NOTE: The following variables need to be declared THREADPRIVATE
 ! because they get written to within an OpenMP parallel loop
 !-----------------------------------------------------------------------
-!$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP)
-!$OMP THREADPRIVATE( CFACTOR, HET, PHOTOL, NUMDEN, H2O,  PRESS)
-!$OMP THREADPRIVATE(lshen_B,lshen_JVS,lshen_Vdot)
-!$OMP THREADPRIVATE(lshen_A,lshen_Prate,lshen_Lrate)
+!$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP  )
+!$OMP THREADPRIVATE( CFACTOR, HET, PHOTOL, NUMDEN, H2O,  PRESS )
+
 ! INLINED global variable declarations
 
 

@@ -488,7 +488,6 @@ CONTAINS !  SUBROUTINES internal to Rosenbrock
 ! ~~~~ Local variables
    REAL(kind=dp) :: Ynew(N), Fcn0(N), Fcn(N)
    REAL(kind=dp) :: K(N*ros_S), dFdT(N)
-   INTEGER ::  jactimes,funtimes !lshen
 #ifdef FULL_ALGEBRA    
    REAL(kind=dp) :: Jac0(N,N), Ghimj(N,N)
 #else
@@ -524,11 +523,10 @@ CONTAINS !  SUBROUTINES internal to Rosenbrock
    RejectMoreH=.FALSE.
 
 !~~~> Time loop begins below
-   jactimes=0
-   funtimes=0
+
 TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
        .OR. (Direction < 0).AND.((Tend-T)+Roundoff <= ZERO) )
-   
+
    IF ( ISTATUS(Nstp) > Max_no_steps ) THEN  ! Too many steps
       CALL ros_ErrorMsg(-6,T,H,IERR)
       RETURN
@@ -544,7 +542,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
 !~~~>   Compute the function at current time
    CALL FunTemplate(T,Y,Fcn0)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
-   funtimes=funtimes+1
+
 !~~~>  Compute the function derivative with respect to T
    IF (.NOT.Autonomous) THEN
       CALL ros_FunTimeDerivative ( T, Roundoff, Y, &
@@ -554,7 +552,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
 !~~~>   Compute the Jacobian at current time
    CALL JacTemplate(T,Y,Jac0)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
-   jactimes=jactimes+1
+
 !~~~>  Repeat step calculation until current step accepted
 UntilAccepted: DO
 
@@ -585,7 +583,6 @@ Stage: DO istage = 1, ros_S
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
          CALL FunTemplate(Tau,Ynew,Fcn)
-         funtimes=funtimes+1
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -654,8 +651,7 @@ Stage: DO istage = 1, ros_S
 
    
    END DO TimeLoop
-   !PRINT*,'lshen: JacTemplate  = ',jactimes
-   !PRINT*,'lshen: FunTemplate  = ',funtimes
+
 !~~~> Succesful exit
    IERR = 1  !~~~> The integration was successful
 
@@ -1293,7 +1289,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot )
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Parameters, ONLY: NVAR, LU_NONZERO
- USE gckpp_Global, ONLY: FIX, RCONST, TIME, lshen_A, lshen_Vdot
+ USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(NVAR)
@@ -1304,7 +1300,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun( Y, FIX, RCONST, Ydot)
+   CALL Fun( Y, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate
@@ -1317,7 +1313,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Parameters, ONLY: NVAR, LU_NONZERO
- USE gckpp_Global, ONLY: FIX, RCONST, TIME, lshen_B, lshen_JVS
+ USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP, LU_IROW, LU_ICOL
  USE gckpp_LinearAlgebra
 !~~~> Input variables
@@ -1347,7 +1343,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
        Jcb(LU_IROW(i),LU_ICOL(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP( Y, FIX, RCONST, Jcb)
+    CALL Jac_SP( Y, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
