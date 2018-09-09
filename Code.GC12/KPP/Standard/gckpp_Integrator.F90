@@ -115,10 +115,12 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
 
-
+   !lshen added ind for fast and slow species
+   !They are select_ind,delete_ind,num1,num2, 2018/09/09
    CALL Rosenbrock(NVAR,VAR,TIN,TOUT,   &
          ATOL,RTOL,                &
-         RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
+         RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		 select_ind,delete_ind,num1,num2)!lshen
 
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
@@ -136,7 +138,8 @@ END SUBROUTINE INTEGRATE
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
            AbsTol,RelTol,              &
-           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
+           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		   select_ind,delete_ind,num1,num2)!lshen modified here, 2018/09/08
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !
 !    Solves the system y'=F(t,y) using a Rosenbrock method defined by:
@@ -281,7 +284,9 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
 !~~~>   Parameters
    REAL(kind=dp), PARAMETER :: ZERO = 0.0_dp, ONE  = 1.0_dp
    REAL(kind=dp), PARAMETER :: DeltaMin = 1.0E-5_dp
-
+!lshen added this,2018/09/09
+   INTEGER,       INTENT(IN)    :: num1,num2
+   INTEGER       ::select_ind(num1),delete_ind(num2)
 !~~~>  Initialize statistics
    ISTATUS(1:8) = 0
    RSTATUS(1:3) = ZERO
