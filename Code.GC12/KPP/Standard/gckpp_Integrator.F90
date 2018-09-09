@@ -287,6 +287,9 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
 !lshen added this,2018/09/09
    INTEGER,       INTENT(IN)    :: num1,num2
    INTEGER       ::select_ind(num1),delete_ind(num2)
+   print *,'lshen_test0',num1,num2
+   print *, 'lshen_test1',delete_ind
+   print *,'lshen_test2',select_ind(1:5)
 !~~~>  Initialize statistics
    ISTATUS(1:8) = 0
    RSTATUS(1:3) = ZERO
