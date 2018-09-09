@@ -286,10 +286,8 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
    REAL(kind=dp), PARAMETER :: DeltaMin = 1.0E-5_dp
 !lshen added this,2018/09/09
    INTEGER,       INTENT(IN)    :: num1,num2
-   INTEGER       ::select_ind(num1),delete_ind(num2)
-   print *,'lshen_test0',num1,num2
-   print *, 'lshen_test1',delete_ind
-   print *,'lshen_test2',select_ind(1:5)
+   INTEGER,       INTENT(IN)    ::select_ind(num1),delete_ind(num2)
+   
 !~~~>  Initialize statistics
    ISTATUS(1:8) = 0
    RSTATUS(1:3) = ZERO
@@ -430,7 +428,7 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
         Roundoff, Hmin, Hmax, Hstart,            &
         FacMin, FacMax, FacRej, FacSafe,         &
 !  Error indicator
-        IERR)
+        IERR,select_ind,delete_ind,num1,num2)!lshen changed here
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CONTAINS !  SUBROUTINES internal to Rosenbrock
@@ -484,7 +482,7 @@ CONTAINS !  SUBROUTINES internal to Rosenbrock
         Roundoff, Hmin, Hmax, Hstart,            &
         FacMin, FacMax, FacRej, FacSafe,         &
 !~~~> Error indicator
-        IERR )
+        IERR,select_ind,delete_ind,num1,num2)!lshen changed here
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !   Template for the implementation of a generic Rosenbrock method
 !      defined by ros_S (no of stages)
@@ -522,12 +520,14 @@ CONTAINS !  SUBROUTINES internal to Rosenbrock
    LOGICAL :: RejectLastH, RejectMoreH, Singular
 !~~~>  Local parameters
    REAL(kind=dp), PARAMETER :: ZERO = 0.0_dp, ONE  = 1.0_dp
-   REAL(kind=dp), PARAMETER :: DeltaMin = 1.0E-5_dp
+   REAL(kind=dp), PARAMETER :: DeltaMin = 1.0E-5_dp   
 !~~~>  Locally called functions
 !    REAL(kind=dp) WLAMCH
 !    EXTERNAL WLAMCH
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+!lshen added here 
+   INTEGER,       INTENT(IN)    :: num1,num2
+   INTEGER,       INTENT(IN)    ::select_ind(num1),delete_ind(num2)
 
 !~~~>  Initial preparations
    T = Tstart
