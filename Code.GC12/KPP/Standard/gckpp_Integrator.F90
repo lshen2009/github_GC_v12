@@ -79,8 +79,23 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20)
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-
+   
    INTEGER, SAVE :: Ntotal = 0
+
+   INTEGER,ALLOCATABLE :: select_ind(:),delete_ind(:) !lshen
+   INTEGER       :: all_ones(NVAR),all_ind(NVAR),kk,num1,num2!lshen
+   !lshen add this to select fast and slow species
+   DO kk=1,NVAR 
+      all_ind(kk)=kk
+   ENDDO
+   all_ones(:)=1
+   num1=sum(array=all_ones,mask=species_ind)
+   num2=NVAR-num1
+   ALLOCATE(select_ind(num1))
+   ALLOCATE(delete_ind(num2))
+   select_ind=PACK(array=all_ind, mask=species_ind)
+   delete_ind=PACK(array=all_ind, mask=.not. species_ind)
+   !lshen ends here
 
    ICNTRL(:)  = 0
    RCNTRL(:)  = 0.0_dp
@@ -848,7 +863,8 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   !CALL KppSolve( A, b )
+   CALL KppSolveIndirect(A,b) !lshen changed this function
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1

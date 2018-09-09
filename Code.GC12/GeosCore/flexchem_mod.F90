@@ -218,7 +218,7 @@ CONTAINS
     REAL(fp)               :: Start,     Finish,   rtim,      itim
     REAL(fp)               :: SO4_FRAC,  YLAT,     T,         TIN
     REAL(fp)               :: JNoon_Fac, TOUT
-
+    INTEGER                :: kk !lshen
     ! Strings
     CHARACTER(LEN=63)      :: OrigUnit
     CHARACTER(LEN=255)     :: ErrMsg,   ThisLoc
@@ -868,7 +868,10 @@ CONTAINS
        ! here. (bmy, 3/28/16)
        VAR(1:NVAR) = C(1:NVAR)
        FIX         = C(NVAR+1:NSPEC)
-
+       
+       species_ind(kk:(NVAR-5))=.TRUE. !lshen
+       species_ind((NVAR-5+1):NVAR)=.FALSE. !lshen
+        
        ! Update the array of rate constants
        CALL Update_RCONST( )
 
