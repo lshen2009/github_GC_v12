@@ -528,7 +528,8 @@ CONTAINS !  SUBROUTINES internal to Rosenbrock
 !lshen added here 
    INTEGER,       INTENT(IN)    :: num1,num2
    INTEGER,       INTENT(IN)    ::select_ind(num1),delete_ind(num2)
-
+   REAL(kind=dp) :: Y_fast(num1),Y_slow(num2),Fcn0_fast(num1)  
+   
 !~~~>  Initial preparations
    T = Tstart
    RSTATUS(Nhexit) = ZERO
@@ -575,7 +576,13 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
 !~~~>   Compute the Jacobian at current time
    CALL JacTemplate(T,Y,Jac0)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
-
+   
+!~~~> Now we update what we devide Y, Fcn0, and Jac0 to fast/slow groups
+   Fcn0_fast=Fcn0(select_ind)
+   Y_fast=Y(select_ind)
+   Y_slow=Y(delete_ind)
+   print *,'lshen_test',Fcn0_fast
+   
 !~~~>  Repeat step calculation until current step accepted
 UntilAccepted: DO
 
