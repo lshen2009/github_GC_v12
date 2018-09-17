@@ -2,4 +2,5 @@
 #Lu Shen, Sep 17, 2018
 
 ### 09/17/2018 ###
-*Add a new module in gckpp_Function.F90 to calculate the P/L rate.
+*Add a new subroutine Fun_PL in gckpp_Function.F90 to calculate the P/L rate.
+*

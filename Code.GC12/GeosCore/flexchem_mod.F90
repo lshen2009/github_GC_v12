@@ -241,10 +241,16 @@ CONTAINS
 
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
-
+    INTEGER :: NHMS,NYMD,YMDH !lshen
+    LOGICAL :: new_hour!lshen
     ! For testing only, may be removed later (mps, 4/26/16)
     LOGICAL                :: DO_HETCHEM
 
+    REAL(dp)               :: lshen_all_Vdot(IIPAR,JJPAR,24,NVAR)    
+    REAL(dp)               :: lshen_all_Prate(IIPAR,JJPAR,24,NVAR)
+    REAL(dp)               :: lshen_all_Lrate(IIPAR,JJPAR,24,NVAR)
+	INTEGER :: ilon,ilat,ilev#lshen
+    character(len=1024) :: outputname1,outputname2,outputname3#lshen
     !=======================================================================
     ! Do_FlexChem begins here!
     !=======================================================================
@@ -266,11 +272,17 @@ CONTAINS
     Day       =  Get_Day()    ! Current day
     Month     =  Get_Month()  ! Current month
     Year      =  Get_Year()   ! Current year
-
+	
     ! Turn heterogeneous chemistry and photolysis on/off here
     ! This is for testing only and may be removed later (mps, 4/26/16)
     DO_HETCHEM  = .TRUE.
-
+	
+    NHMS=GET_NHMS()!lshen
+    NYMD  = GET_NYMD()!lshen
+    new_hour=ITS_A_NEW_HOUR()!lshen
+	lshen_all_Vdot(:,:,:,:)=0     
+    lshen_all_Prate(:,:,:,:)=0
+    lshen_all_Lrate(:,:,:,:)=0
     ! Remove debug output
     !IF ( FIRSTCHEM .AND. am_I_Root ) THEN
     !   WRITE( 6, '(a)' ) REPEAT( '#', 32 )
@@ -903,7 +915,7 @@ CONTAINS
 !         ! Get time before integrator starts
 !         CALL CPU_TIME( start )
 !#endif
-
+	   
        ! Call the KPP integrator
        CALL Integrate( TIN,    TOUT,    ICNTRL,      &
                        RCNTRL, ISTATUS, RSTATE, IERR )
@@ -945,6 +957,8 @@ CONTAINS
           VAR = C(1:NVAR)
           FIX = C(NVAR+1:NSPEC)
           CALL Update_RCONST( )
+		  CALL Fun_PL(VAR,FIX,RCONST)!lshen
+		  
           CALL Integrate( TIN,    TOUT,    ICNTRL,      &
                           RCNTRL, ISTATUS, RSTATE, IERR )
           IF ( IERR < 0 ) THEN 

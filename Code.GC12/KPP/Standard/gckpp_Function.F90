@@ -1209,7 +1209,7 @@ END SUBROUTINE Fun
 
 
 
-SUBROUTINE Fun_PL ( V, F, RCT, Vdot )
+SUBROUTINE Fun_PL ( V, F, RCT)
 ! V - Concentrations of variable species (local)
   REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
