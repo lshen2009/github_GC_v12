@@ -79,23 +79,8 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20)
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   
-   INTEGER, SAVE :: Ntotal = 0
 
-   INTEGER,ALLOCATABLE :: select_ind(:),delete_ind(:) !lshen
-   INTEGER       :: all_ones(NVAR),all_ind(NVAR),kk,num1,num2!lshen
-   !lshen add this to select fast and slow species
-   DO kk=1,NVAR 
-      all_ind(kk)=kk
-   ENDDO
-   all_ones(:)=1
-   num1=sum(array=all_ones,mask=species_ind)
-   num2=NVAR-num1
-   ALLOCATE(select_ind(num1))
-   ALLOCATE(delete_ind(num2))
-   select_ind=PACK(array=all_ind, mask=species_ind)
-   delete_ind=PACK(array=all_ind, mask=.not. species_ind)
-   !lshen ends here
+   INTEGER, SAVE :: Ntotal = 0
 
    ICNTRL(:)  = 0
    RCNTRL(:)  = 0.0_dp
@@ -115,12 +100,10 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
 
-   !lshen added ind for fast and slow species
-   !They are select_ind,delete_ind,num1,num2, 2018/09/09
+
    CALL Rosenbrock(NVAR,VAR,TIN,TOUT,   &
          ATOL,RTOL,                &
-         RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		 select_ind,delete_ind,num1,num2)!lshen
+         RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
@@ -138,8 +121,7 @@ END SUBROUTINE INTEGRATE
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
            AbsTol,RelTol,              &
-           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		   select_ind,delete_ind,num1,num2)!lshen modified here, 2018/09/08
+           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !
 !    Solves the system y'=F(t,y) using a Rosenbrock method defined by:
@@ -284,10 +266,7 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
 !~~~>   Parameters
    REAL(kind=dp), PARAMETER :: ZERO = 0.0_dp, ONE  = 1.0_dp
    REAL(kind=dp), PARAMETER :: DeltaMin = 1.0E-5_dp
-!lshen added this,2018/09/09
-   INTEGER,       INTENT(IN)    :: num1,num2
-   INTEGER,       INTENT(IN)    ::select_ind(num1),delete_ind(num2)
-   
+
 !~~~>  Initialize statistics
    ISTATUS(1:8) = 0
    RSTATUS(1:3) = ZERO
@@ -428,7 +407,7 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
         Roundoff, Hmin, Hmax, Hstart,            &
         FacMin, FacMax, FacRej, FacSafe,         &
 !  Error indicator
-        IERR,select_ind,delete_ind,num1,num2)!lshen changed here
+        IERR)
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CONTAINS !  SUBROUTINES internal to Rosenbrock
@@ -482,7 +461,7 @@ CONTAINS !  SUBROUTINES internal to Rosenbrock
         Roundoff, Hmin, Hmax, Hstart,            &
         FacMin, FacMax, FacRej, FacSafe,         &
 !~~~> Error indicator
-        IERR,select_ind,delete_ind,num1,num2)!lshen changed here
+        IERR )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !   Template for the implementation of a generic Rosenbrock method
 !      defined by ros_S (no of stages)
@@ -520,16 +499,13 @@ CONTAINS !  SUBROUTINES internal to Rosenbrock
    LOGICAL :: RejectLastH, RejectMoreH, Singular
 !~~~>  Local parameters
    REAL(kind=dp), PARAMETER :: ZERO = 0.0_dp, ONE  = 1.0_dp
-   REAL(kind=dp), PARAMETER :: DeltaMin = 1.0E-5_dp   
+   REAL(kind=dp), PARAMETER :: DeltaMin = 1.0E-5_dp
 !~~~>  Locally called functions
 !    REAL(kind=dp) WLAMCH
 !    EXTERNAL WLAMCH
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-!lshen added here 
-   INTEGER,       INTENT(IN)    :: num1,num2
-   INTEGER,       INTENT(IN)    ::select_ind(num1),delete_ind(num2)
-   REAL(kind=dp) :: Y_fast(num1),Y_slow(num2),Fcn0_fast(num1)  
-   
+
+
 !~~~>  Initial preparations
    T = Tstart
    RSTATUS(Nhexit) = ZERO
@@ -576,13 +552,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
 !~~~>   Compute the Jacobian at current time
    CALL JacTemplate(T,Y,Jac0)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
-   
-!~~~> Now we update what we devide Y, Fcn0, and Jac0 to fast/slow groups
-   Fcn0_fast=Fcn0(select_ind)
-   Y_fast=Y(select_ind)
-   Y_slow=Y(delete_ind)
-   print *,'lshen_test',Fcn0_fast
-   
+
 !~~~>  Repeat step calculation until current step accepted
 UntilAccepted: DO
 
@@ -878,8 +848,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   !CALL KppSolve( A, b )
-   CALL KppSolveIndirect(A,b) !lshen changed this function
+   CALL KppSolve( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
