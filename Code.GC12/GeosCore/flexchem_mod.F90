@@ -139,6 +139,9 @@ CONTAINS
     USE UCX_MOD,              ONLY : SO4_PHOTFRAC
     USE UCX_MOD,              ONLY : UCX_NOX
     USE UCX_MOD,              ONLY : UCX_H2SO4PHOT
+	USE TIME_MOD,			  ONLY :  GET_NHMS!lshen
+	USE TIME_MOD,			  ONLY :  GET_NYMD!lshen
+	USE TIME_MOD,			  ONLY :  ITS_A_NEW_HOUR!lshen
 #if   defined( TOMAS )
     USE TOMAS_MOD,            ONLY : H2SO4_RATE
 #endif
@@ -249,8 +252,8 @@ CONTAINS
     REAL(dp)               :: lshen_all_Vdot(IIPAR,JJPAR,24,NVAR)    
     REAL(dp)               :: lshen_all_Prate(IIPAR,JJPAR,24,NVAR)
     REAL(dp)               :: lshen_all_Lrate(IIPAR,JJPAR,24,NVAR)
-	INTEGER :: ilon,ilat,ilev#lshen
-    character(len=1024) :: outputname1,outputname2,outputname3#lshen
+	INTEGER :: ilon,ilat,ilev!lshen
+    character(len=1024) :: outputname1,outputname2,outputname3!lshen
     !=======================================================================
     ! Do_FlexChem begins here!
     !=======================================================================

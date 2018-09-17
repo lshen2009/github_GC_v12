@@ -23,7 +23,8 @@
 
 
 MODULE gckpp_Function
-  USE gckpp_Global, ONLY: lshen_Vdot,lshen_Prate,lshen_Lrate
+  !USE gckpp_Global, ONLY: lshen_Vdot,lshen_Prate,lshen_Lrate
+  USE gckpp_Global
   USE gckpp_Parameters
   IMPLICIT NONE
 
