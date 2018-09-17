@@ -68,7 +68,10 @@ MODULE gckpp_Global
   REAL(kind=dp) :: CFACTOR
 
 ! INLINED global variable declarations
-
+  REAL(kind=dp) :: lshen_Vdot(NVAR)
+  REAL(kind=dp) :: lshen_Prate(NVAR)
+  REAL(kind=dp) :: lshen_Lrate(NVAR)
+  
       REAL(kind=dp) :: HET(NSPEC,7), PHOTOL(1000)
       REAL(kind=dp) :: NUMDEN, H2O, PRESS
 
@@ -78,7 +81,8 @@ MODULE gckpp_Global
 !-----------------------------------------------------------------------
 !$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP  )
 !$OMP THREADPRIVATE( CFACTOR, HET, PHOTOL, NUMDEN, H2O,  PRESS )
-
+!$OMP THREADPRIVATE(lshen_Vdot)
+!$OMP THREADPRIVATE(lshen_Prate,lshen_Lrate)
 ! INLINED global variable declarations
 
 
