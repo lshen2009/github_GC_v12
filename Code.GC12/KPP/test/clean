@@ -1,0 +1,3 @@
+rm *.f90
+rm core*
+rm Makefile_gckpp
