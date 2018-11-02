@@ -1,4 +1,0 @@
-rm ./main
-gfortran -o main gckpp_Parameters.f90 gckpp_JacobianSP.f90 gckpp_LinearAlgebra.F90 initialize.F90 main.F90
-rm *.mod
-./main
