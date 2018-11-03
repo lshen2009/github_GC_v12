@@ -584,7 +584,6 @@ CONTAINS
                               Is_Wetdep     = F,                            &
                               Is_Photolysis = T,                            &
                               RC            = RC )
-
           CASE( 'BRNO3' )
              CALL Spc_Create( am_I_Root     = am_I_Root,                    &
                               ThisSpc       = SpcData(N)%Info,              &

@@ -1117,7 +1117,7 @@ CONTAINS
     ENDDO
     ENDDO
     CALL CPU_TIME(time=timeEnd)
-    PRINT *,'lshen: L is',L,'time is',timeEnd-TimeStart
+    !PRINT *,'lshen: L is',L,'time is',timeEnd-TimeStart
     ENDDO
     !$OMP END PARALLEL DO
 

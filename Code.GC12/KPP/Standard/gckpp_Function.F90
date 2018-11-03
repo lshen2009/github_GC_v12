@@ -13,8 +13,8 @@
 !        R. Sander, Max-Planck Institute for Chemistry, Mainz, Germany
 ! 
 ! File                 : gckpp_Function.f90
-! Time                 : Tue Jul 31 16:32:37 2018
-! Working directory    : /n/regal/jacob_lab/lshen/GC_speedup/merra2_4x5_standard/Code.GC12/KPP/Standard
+! Time                 : Fri Nov  2 20:21:30 2018
+! Working directory    : /net/seasasfs02/srv/export/seasasfs02/share_root/lshen/GC_speedup/github/github_GC_v12/Code.GC12/KPP/Standard
 ! Equation file        : gckpp.kpp
 ! Output root filename : gckpp
 ! 
