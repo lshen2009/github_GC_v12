@@ -32,7 +32,7 @@ MODULE gckpp_Parameters
 ! NSPEC - Number of chemical species
   INTEGER, PARAMETER :: NSPEC = 239 
 ! NVAR - Number of Variable species
-  INTEGER, PARAMETER :: NVAR = 234 
+  INTEGER, PARAMETER :: NVAR = 234  
 ! NFLUX - Number of Reaction Flux species
   INTEGER, PARAMETER :: NFLUX = 1 
 ! NFAM - Number of Prod/Loss Families
@@ -51,6 +51,7 @@ MODULE gckpp_Parameters
   INTEGER, PARAMETER :: NONZERO = 2749 
 ! LU_NONZERO - Number of nonzero entries in LU factoriz. of Jacobian
   INTEGER, PARAMETER :: LU_NONZERO = 3413 
+  INTEGER, PARAMETER :: LU_NONZERO2 = 3329 
 ! CNVAR - (NVAR+1) Number of elements in compressed row format
   INTEGER, PARAMETER :: CNVAR = 235 
 ! NLOOKAT - Number of species to look at
