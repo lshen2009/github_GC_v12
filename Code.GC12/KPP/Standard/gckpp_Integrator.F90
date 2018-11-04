@@ -102,7 +102,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
    END IF
 
    VAR2=VAR(1:NVAR2)
-   CALL Rosenbrock(NVAR,VAR,TIN,TOUT,   &
+   CALL Rosenbrock(NVAR2,VAR2,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -1285,77 +1285,6 @@ Stage: DO istage = 1, ros_S
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 END SUBROUTINE Rosenbrock
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate( T, Y, Ydot )
-!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-!  Template for the ODE function call.
-!  Updates the rate coefficients (and possibly the fixed species) at each call
-!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- USE gckpp_Parameters, ONLY: NVAR, LU_NONZERO
- USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Function, ONLY: Fun
-!~~~> Input variables
-   REAL(kind=dp) :: T, Y(NVAR)
-!~~~> Output variables
-   REAL(kind=dp) :: Ydot(NVAR)
-!~~~> Local variables
-   REAL(kind=dp) :: Told
-
-   Told = TIME
-   TIME = T
-   CALL Fun( Y, FIX, RCONST, Ydot )
-   TIME = Told
-
-END SUBROUTINE FunTemplate
-
-
-!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate( T, Y, Jcb )
-!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-!  Template for the ODE Jacobian call.
-!  Updates the rate coefficients (and possibly the fixed species) at each call
-!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- USE gckpp_Parameters, ONLY: NVAR, LU_NONZERO
- USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Jacobian, ONLY: Jac_SP, LU_IROW, LU_ICOL
- USE gckpp_LinearAlgebra
-!~~~> Input variables
-    REAL(kind=dp) :: T, Y(NVAR)
-!~~~> Output variables
-#ifdef FULL_ALGEBRA    
-    REAL(kind=dp) :: JV(LU_NONZERO), Jcb(NVAR,NVAR)
-#else
-    REAL(kind=dp) :: Jcb(LU_NONZERO)
-#endif   
-!~~~> Local variables
-    REAL(kind=dp) :: Told
-#ifdef FULL_ALGEBRA    
-    INTEGER :: i, j
-#endif   
-
-    Told = TIME
-    TIME = T
-#ifdef FULL_ALGEBRA    
-    CALL Jac_SP(Y, FIX, RCONST, JV)
-    DO j=1,NVAR
-      DO i=1,NVAR
-         Jcb(i,j) = 0.0_dp
-      END DO
-    END DO
-    DO i=1,LU_NONZERO
-       Jcb(LU_IROW(i),LU_ICOL(i)) = JV(i)
-    END DO
-#else
-    CALL Jac_SP( Y, FIX, RCONST, Jcb )
-#endif   
-    TIME = Told
-
-END SUBROUTINE JacTemplate
-
-
-
 
 SUBROUTINE FunTemplate2( T, Y, Ydot )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
