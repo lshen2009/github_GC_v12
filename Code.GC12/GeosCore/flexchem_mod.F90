@@ -139,7 +139,7 @@ CONTAINS
     USE UCX_MOD,              ONLY : SO4_PHOTFRAC
     USE UCX_MOD,              ONLY : UCX_NOX
     USE UCX_MOD,              ONLY : UCX_H2SO4PHOT
-	USE gckpp_Parameters, ONLY:LU_CROW2,LU_DIAG2,LU_IROW2,LU_ICOL2 !lshen 
+    USE gckpp_JacobianSP, ONLY:LU_CROW2,LU_DIAG2,LU_IROW2,LU_ICOL2 !lshen 
 #if   defined( TOMAS )
     USE TOMAS_MOD,            ONLY : H2SO4_RATE
 #endif
