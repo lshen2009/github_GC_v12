@@ -9404,10 +9404,10 @@ END SUBROUTINE Jac_SP
 ! End of Jac_SP function
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE Jac_SP2 ( V, F, RCT, JVS )
+SUBROUTINE Jac_SP2 ( V2, F, RCT, JVS )
 
 ! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
+  REAL(kind=dp) :: V2(NVAR2)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -9417,7 +9417,9 @@ SUBROUTINE Jac_SP2 ( V, F, RCT, JVS )
 
 ! Local variables
   REAL(kind=dp) :: B(1231)
-
+  REAL(kind=dp) :: V(NVAR)
+  V(1:NVAR2)=V2
+  
   B(1) = RCT(1)*V(222)
   B(2) = RCT(1)*V(221)
   B(3) = RCT(2)*V(231)

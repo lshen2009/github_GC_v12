@@ -1206,17 +1206,19 @@ END SUBROUTINE Fun
 
 ! End of Fun function
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Fun2 ( V, F, RCT, Vdot )
+SUBROUTINE Fun2 ( V2, F, RCT, Vdot )
 
 ! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
+  REAL(kind=dp) :: V2(NVAR2)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(NVAR-1)
-
+  
+  REAL(kind=dp) :: V(NVAR)
+  V(1:NVAR2)=V2
 
 ! Computation of equation rates
   A(1) = RCT(1)*V(221)*V(222)
