@@ -51,6 +51,7 @@
 MODULE gckpp_Integrator
 
   USE gckpp_Parameters, ONLY: NVAR, NFIX, NSPEC, LU_NONZERO
+  USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2 !lshen
   USE gckpp_Global
   IMPLICIT NONE
   PUBLIC
@@ -100,7 +101,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
 
-
+   VAR2=VAR(1:NVAR2)
    CALL Rosenbrock(NVAR,VAR,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
