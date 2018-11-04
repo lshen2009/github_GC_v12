@@ -543,7 +543,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate(T,Y,Fcn0)
+   CALL FunTemplate2(T,Y,Fcn0)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    funtimes=funtimes+1
 !~~~>  Compute the function derivative with respect to T
@@ -553,7 +553,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate(T,Y,Jac0)
+   CALL JacTemplate2(T,Y,Jac0)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
    jactimes=jactimes+1
 !~~~>  Repeat step calculation until current step accepted
@@ -585,7 +585,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate(Tau,Ynew,Fcn)
+         CALL FunTemplate2(Tau,Ynew,Fcn)
          funtimes=funtimes+1
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
@@ -714,7 +714,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate(T+Delta,Y,dFdT)
+   CALL FunTemplate2(T+Delta,Y,dFdT)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -1353,6 +1353,75 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
     TIME = Told
 
 END SUBROUTINE JacTemplate
+
+
+
+
+SUBROUTINE FunTemplate2( T, Y, Ydot )
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!  Template for the ODE function call.
+!  Updates the rate coefficients (and possibly the fixed species) at each call
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
+ USE gckpp_Global, ONLY: FIX, RCONST, TIME
+ USE gckpp_Function, ONLY: Fun2
+!~~~> Input variables
+   REAL(kind=dp) :: T, Y(NVAR2)
+!~~~> Output variables
+   REAL(kind=dp) :: Ydot(NVAR2)
+!~~~> Local variables
+   REAL(kind=dp) :: Told
+
+   Told = TIME
+   TIME = T
+   CALL Fun2( Y, FIX, RCONST, Ydot )
+   TIME = Told
+
+END SUBROUTINE FunTemplate2
+
+
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SUBROUTINE JacTemplate2( T, Y, Jcb )
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!  Template for the ODE Jacobian call.
+!  Updates the rate coefficients (and possibly the fixed species) at each call
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
+ USE gckpp_Global, ONLY: FIX, RCONST, TIME
+ USE gckpp_Jacobian, ONLY: Jac_SP2, LU_IROW2, LU_ICOL2
+ USE gckpp_LinearAlgebra
+!~~~> Input variables
+    REAL(kind=dp) :: T, Y(NVAR2)
+!~~~> Output variables
+#ifdef FULL_ALGEBRA    
+    REAL(kind=dp) :: JV(LU_NONZERO2), Jcb(NVAR2,NVAR2)
+#else
+    REAL(kind=dp) :: Jcb(LU_NONZERO2)
+#endif   
+!~~~> Local variables
+    REAL(kind=dp) :: Told
+#ifdef FULL_ALGEBRA    
+    INTEGER :: i, j
+#endif   
+
+    Told = TIME
+    TIME = T
+#ifdef FULL_ALGEBRA    
+    CALL Jac_SP2(Y, FIX, RCONST, JV)
+    DO j=1,NVAR2
+      DO i=1,NVAR2
+         Jcb(i,j) = 0.0_dp
+      END DO
+    END DO
+    DO i=1,LU_NONZERO2
+       Jcb(LU_IROW2(i),LU_ICOL2(i)) = JV(i)
+    END DO
+#else
+    CALL Jac_SP2( Y, FIX, RCONST, Jcb )
+#endif   
+    TIME = Told
+
+END SUBROUTINE JacTemplate2
 
 END MODULE gckpp_Integrator
 
