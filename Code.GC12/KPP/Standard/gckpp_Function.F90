@@ -1219,6 +1219,7 @@ SUBROUTINE Fun2 ( V2, F, RCT, Vdot )
   
   REAL(kind=dp) :: V(NVAR)
   V(1:NVAR2)=V2
+  V(NVAR2+1:NVAR)=0
 
 ! Computation of equation rates
   A(1) = RCT(1)*V(221)*V(222)
