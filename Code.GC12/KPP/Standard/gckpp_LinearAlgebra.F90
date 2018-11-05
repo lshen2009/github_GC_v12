@@ -50,31 +50,31 @@ SUBROUTINE KppDecomp( JVS, IER )
   USE gckpp_JacobianSP
 
       INTEGER  :: IER
-      REAL(kind=dp) :: JVS(LU_NONZERO), W(NVAR), a
+      REAL(kind=dp) :: JVS(LU_NONZERO2), W(NVAR2), a
       INTEGER  :: k, kk, j, jj
 
       a = 0. ! mz_rs_20050606
       IER = 0
-      DO k=1,NVAR
+      DO k=1,NVAR2
         ! mz_rs_20050606: don't check if real value == 0
         ! IF ( JVS( LU_DIAG(k) ) .EQ. 0. ) THEN
-        IF ( ABS(JVS(LU_DIAG(k))) < TINY(a) ) THEN
+        IF ( ABS(JVS(LU_DIAG2(k))) < TINY(a) ) THEN
             IER = k
             RETURN
         END IF
-        DO kk = LU_CROW(k), LU_CROW(k+1)-1
-              W( LU_ICOL(kk) ) = JVS(kk)
+        DO kk = LU_CROW2(k), LU_CROW2(k+1)-1
+              W( LU_ICOL2(kk) ) = JVS(kk)
         END DO
-        DO kk = LU_CROW(k), LU_DIAG(k)-1
-            j = LU_ICOL(kk)
-            a = -W(j) / JVS( LU_DIAG(j) )
+        DO kk = LU_CROW2(k), LU_DIAG2(k)-1
+            j = LU_ICOL2(kk)
+            a = -W(j) / JVS( LU_DIAG2(j) )
             W(j) = -a
-            DO jj = LU_DIAG(j)+1, LU_CROW(j+1)-1
-               W( LU_ICOL(jj) ) = W( LU_ICOL(jj) ) + a*JVS(jj)
+            DO jj = LU_DIAG2(j)+1, LU_CROW2(j+1)-1
+               W( LU_ICOL2(jj) ) = W( LU_ICOL2(jj) ) + a*JVS(jj)
             END DO
          END DO
-         DO kk = LU_CROW(k), LU_CROW(k+1)-1
-            JVS(kk) = W( LU_ICOL(kk) )
+         DO kk = LU_CROW2(k), LU_CROW2(k+1)-1
+            JVS(kk) = W( LU_ICOL2(kk) )
          END DO
       END DO
       

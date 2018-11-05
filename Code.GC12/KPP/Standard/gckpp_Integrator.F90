@@ -50,7 +50,7 @@
 
 MODULE gckpp_Integrator
 
-  USE gckpp_Parameters, ONLY: NVAR, NFIX, NSPEC, LU_NONZERO,NVAR2
+  USE gckpp_Parameters, ONLY: NVAR, NFIX, NSPEC, LU_NONZERO2,NVAR2
   USE gckpp_Global
   IMPLICIT NONE
   PUBLIC
@@ -492,7 +492,7 @@ CONTAINS !  SUBROUTINES internal to Rosenbrock
 #ifdef FULL_ALGEBRA    
    REAL(kind=dp) :: Jac0(N,N), Ghimj(N,N)
 #else
-   REAL(kind=dp) :: Jac0(LU_NONZERO), Ghimj(LU_NONZERO)
+   REAL(kind=dp) :: Jac0(LU_NONZERO2), Ghimj(LU_NONZERO2)
 #endif
    REAL(kind=dp) :: H, Hnew, HC, HG, Fac, Tau
    REAL(kind=dp) :: Err, Yerr(N)
@@ -735,7 +735,7 @@ Stage: DO istage = 1, ros_S
 #ifdef FULL_ALGEBRA    
    REAL(kind=dp), INTENT(IN) ::  Jac0(N,N)
 #else
-   REAL(kind=dp), INTENT(IN) ::  Jac0(LU_NONZERO)
+   REAL(kind=dp), INTENT(IN) ::  Jac0(LU_NONZERO2)
 #endif   
    REAL(kind=dp), INTENT(IN) ::  gam
    INTEGER, INTENT(IN) ::  Direction
@@ -743,7 +743,7 @@ Stage: DO istage = 1, ros_S
 #ifdef FULL_ALGEBRA    
    REAL(kind=dp), INTENT(OUT) :: Ghimj(N,N)
 #else
-   REAL(kind=dp), INTENT(OUT) :: Ghimj(LU_NONZERO)
+   REAL(kind=dp), INTENT(OUT) :: Ghimj(LU_NONZERO2)
 #endif   
    LOGICAL, INTENT(OUT) ::  Singular
    INTEGER, INTENT(OUT) ::  Pivot(N)
@@ -769,12 +769,12 @@ Stage: DO istage = 1, ros_S
        Ghimj(i,i) = Ghimj(i,i)+ghinv
      END DO
 #else
-     !slim: CALL WCOPY(LU_NONZERO,Jac0,1,Ghimj,1)
-     !slim: CALL WSCAL(LU_NONZERO,(-ONE),Ghimj,1)
-     Ghimj(1:LU_NONZERO) = -Jac0(1:LU_NONZERO)
+     !slim: CALL WCOPY(LU_NONZERO2,Jac0,1,Ghimj,1)
+     !slim: CALL WSCAL(LU_NONZERO2,(-ONE),Ghimj,1)
+     Ghimj(1:LU_NONZERO2) = -Jac0(1:LU_NONZERO2)
      ghinv = ONE/(Direction*H*gam)
      DO i=1,N
-       Ghimj(LU_DIAG(i)) = Ghimj(LU_DIAG(i))+ghinv
+       Ghimj(LU_DIAG2(i)) = Ghimj(LU_DIAG2(i))+ghinv
      END DO
 #endif   
 !~~~>    Compute LU decomposition
@@ -810,7 +810,7 @@ Stage: DO istage = 1, ros_S
 #ifdef FULL_ALGEBRA    
    REAL(kind=dp), INTENT(INOUT) :: A(N,N)
 #else   
-   REAL(kind=dp), INTENT(INOUT) :: A(LU_NONZERO)
+   REAL(kind=dp), INTENT(INOUT) :: A(LU_NONZERO2)
 #endif
 !~~~> Output variables
    INTEGER, INTENT(OUT) :: Pivot(N), ISING
@@ -837,7 +837,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), INTENT(IN) :: A(N,N)
    INTEGER :: ISING
 #else   
-   REAL(kind=dp), INTENT(IN) :: A(LU_NONZERO)
+   REAL(kind=dp), INTENT(IN) :: A(LU_NONZERO2)
 #endif
    INTEGER, INTENT(IN) :: Pivot(N)
 !~~~> InOut variables
@@ -1289,13 +1289,13 @@ SUBROUTINE FunTemplate( T, Y, Ydot )
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- USE gckpp_Parameters, ONLY: NVAR, LU_NONZERO
+ USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun
 !~~~> Input variables
-   REAL(kind=dp) :: T, Y(NVAR)
+   REAL(kind=dp) :: T, Y(NVAR2)
 !~~~> Output variables
-   REAL(kind=dp) :: Ydot(NVAR)
+   REAL(kind=dp) :: Ydot(NVAR2)
 !~~~> Local variables
    REAL(kind=dp) :: Told
 
@@ -1313,17 +1313,17 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- USE gckpp_Parameters, ONLY: NVAR, LU_NONZERO
+ USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Jacobian, ONLY: Jac_SP, LU_IROW, LU_ICOL
+ USE gckpp_Jacobian, ONLY: Jac_SP, LU_IROW2, LU_ICOL2
  USE gckpp_LinearAlgebra
 !~~~> Input variables
-    REAL(kind=dp) :: T, Y(NVAR)
+    REAL(kind=dp) :: T, Y(NVAR2)
 !~~~> Output variables
 #ifdef FULL_ALGEBRA    
-    REAL(kind=dp) :: JV(LU_NONZERO), Jcb(NVAR,NVAR)
+    REAL(kind=dp) :: JV(LU_NONZERO2), Jcb(NVAR2,NVAR2)
 #else
-    REAL(kind=dp) :: Jcb(LU_NONZERO)
+    REAL(kind=dp) :: Jcb(LU_NONZERO2)
 #endif   
 !~~~> Local variables
     REAL(kind=dp) :: Told
@@ -1335,13 +1335,13 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
     TIME = T
 #ifdef FULL_ALGEBRA    
     CALL Jac_SP(Y, FIX, RCONST, JV)
-    DO j=1,NVAR
-      DO i=1,NVAR
+    DO j=1,NVAR2
+      DO i=1,NVAR2
          Jcb(i,j) = 0.0_dp
       END DO
     END DO
-    DO i=1,LU_NONZERO
-       Jcb(LU_IROW(i),LU_ICOL(i)) = JV(i)
+    DO i=1,LU_NONZERO2
+       Jcb(LU_IROW2(i),LU_ICOL2(i)) = JV(i)
     END DO
 #else
     CALL Jac_SP( Y, FIX, RCONST, Jcb )
