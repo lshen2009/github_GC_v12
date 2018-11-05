@@ -51,7 +51,6 @@
 MODULE gckpp_Integrator
 
   USE gckpp_Parameters, ONLY: NVAR, NFIX, NSPEC, LU_NONZERO
-  USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2 !lshen
   USE gckpp_Global
   IMPLICIT NONE
   PUBLIC
@@ -101,8 +100,8 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
 
-   VAR2=VAR(1:NVAR2)
-   CALL Rosenbrock(NVAR2,VAR2,TIN,TOUT,   &
+
+   CALL Rosenbrock(NVAR,VAR,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -489,7 +488,6 @@ CONTAINS !  SUBROUTINES internal to Rosenbrock
 ! ~~~~ Local variables
    REAL(kind=dp) :: Ynew(N), Fcn0(N), Fcn(N)
    REAL(kind=dp) :: K(N*ros_S), dFdT(N)
-   INTEGER ::  jactimes,funtimes !lshen
 #ifdef FULL_ALGEBRA    
    REAL(kind=dp) :: Jac0(N,N), Ghimj(N,N)
 #else
@@ -525,11 +523,10 @@ CONTAINS !  SUBROUTINES internal to Rosenbrock
    RejectMoreH=.FALSE.
 
 !~~~> Time loop begins below
-   jactimes=0
-   funtimes=0
+
 TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
        .OR. (Direction < 0).AND.((Tend-T)+Roundoff <= ZERO) )
-   
+
    IF ( ISTATUS(Nstp) > Max_no_steps ) THEN  ! Too many steps
       CALL ros_ErrorMsg(-6,T,H,IERR)
       RETURN
@@ -543,9 +540,9 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate2(T,Y,Fcn0)
+   CALL FunTemplate(T,Y,Fcn0)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
-   funtimes=funtimes+1
+
 !~~~>  Compute the function derivative with respect to T
    IF (.NOT.Autonomous) THEN
       CALL ros_FunTimeDerivative ( T, Roundoff, Y, &
@@ -553,9 +550,9 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate2(T,Y,Jac0)
+   CALL JacTemplate(T,Y,Jac0)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
-   jactimes=jactimes+1
+
 !~~~>  Repeat step calculation until current step accepted
 UntilAccepted: DO
 
@@ -585,8 +582,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate2(Tau,Ynew,Fcn)
-         funtimes=funtimes+1
+         CALL FunTemplate(Tau,Ynew,Fcn)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -655,8 +651,7 @@ Stage: DO istage = 1, ros_S
 
    
    END DO TimeLoop
-   !PRINT*,'lshen: JacTemplate  = ',jactimes
-   !PRINT*,'lshen: FunTemplate  = ',funtimes
+
 !~~~> Succesful exit
    IERR = 1  !~~~> The integration was successful
 
@@ -714,7 +709,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate2(T+Delta,Y,dFdT)
+   CALL FunTemplate(T+Delta,Y,dFdT)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -1286,46 +1281,48 @@ Stage: DO istage = 1, ros_S
 END SUBROUTINE Rosenbrock
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE FunTemplate2( T, Y, Ydot )
+
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SUBROUTINE FunTemplate( T, Y, Ydot )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
+ USE gckpp_Parameters, ONLY: NVAR, LU_NONZERO
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Function, ONLY: Fun2
+ USE gckpp_Function, ONLY: Fun
 !~~~> Input variables
-   REAL(kind=dp) :: T, Y(NVAR2)
+   REAL(kind=dp) :: T, Y(NVAR)
 !~~~> Output variables
-   REAL(kind=dp) :: Ydot(NVAR2)
+   REAL(kind=dp) :: Ydot(NVAR)
 !~~~> Local variables
    REAL(kind=dp) :: Told
 
    Told = TIME
    TIME = T
-   CALL Fun2( Y, FIX, RCONST, Ydot )
+   CALL Fun( Y, FIX, RCONST, Ydot )
    TIME = Told
 
-END SUBROUTINE FunTemplate2
+END SUBROUTINE FunTemplate
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate2( T, Y, Jcb )
+SUBROUTINE JacTemplate( T, Y, Jcb )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
+ USE gckpp_Parameters, ONLY: NVAR, LU_NONZERO
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Jacobian, ONLY: Jac_SP2, LU_IROW2, LU_ICOL2
+ USE gckpp_Jacobian, ONLY: Jac_SP, LU_IROW, LU_ICOL
  USE gckpp_LinearAlgebra
 !~~~> Input variables
-    REAL(kind=dp) :: T, Y(NVAR2)
+    REAL(kind=dp) :: T, Y(NVAR)
 !~~~> Output variables
 #ifdef FULL_ALGEBRA    
-    REAL(kind=dp) :: JV(LU_NONZERO2), Jcb(NVAR2,NVAR2)
+    REAL(kind=dp) :: JV(LU_NONZERO), Jcb(NVAR,NVAR)
 #else
-    REAL(kind=dp) :: Jcb(LU_NONZERO2)
+    REAL(kind=dp) :: Jcb(LU_NONZERO)
 #endif   
 !~~~> Local variables
     REAL(kind=dp) :: Told
@@ -1336,21 +1333,21 @@ SUBROUTINE JacTemplate2( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP2(Y, FIX, RCONST, JV)
-    DO j=1,NVAR2
-      DO i=1,NVAR2
+    CALL Jac_SP(Y, FIX, RCONST, JV)
+    DO j=1,NVAR
+      DO i=1,NVAR
          Jcb(i,j) = 0.0_dp
       END DO
     END DO
-    DO i=1,LU_NONZERO2
-       Jcb(LU_IROW2(i),LU_ICOL2(i)) = JV(i)
+    DO i=1,LU_NONZERO
+       Jcb(LU_IROW(i),LU_ICOL(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP2( Y, FIX, RCONST, Jcb )
+    CALL Jac_SP( Y, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
-END SUBROUTINE JacTemplate2
+END SUBROUTINE JacTemplate
 
 END MODULE gckpp_Integrator
 

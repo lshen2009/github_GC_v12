@@ -381,6 +381,7 @@ RCOOH      = IGNORE; {C2H5C(O)OH; > C2 organic acids}
 //
 // Gas-phase reactions
 //
+LSHENA = O2 :                               GCARR(3.00E-12, 0.0E+00, -1500.0);
 O3 + NO = NO2 + O2:                         GCARR(3.00E-12, 0.0E+00, -1500.0);
 O3 + OH = HO2 + O2 :                         GCARR(1.70E-12, 0.0E+00, -940.0);
 O3 + HO2 = OH + O2 + O2 :                    GCARR(1.00E-14, 0.0E+00, -490.0);
