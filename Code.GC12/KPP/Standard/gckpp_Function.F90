@@ -56,7 +56,7 @@ SUBROUTINE Fun ( V, F, RCT, Vdot )
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(NVAR)
 
-
+  V(NVAR)=0 !lshen
 ! Computation of equation rates
   A(1) = RCT(1)*V(221)*V(222)
   A(2) = RCT(2)*V(221)*V(231)
@@ -1219,7 +1219,7 @@ SUBROUTINE Fun2 ( V2, F, RCT, Vdot )
   
   REAL(kind=dp) :: V(NVAR)
   V(1:NVAR2)=V2
-  V(NVAR2+1:NVAR)=0
+  V((NVAR2+1):NVAR)=0
 
 ! Computation of equation rates
   A(1) = RCT(1)*V(221)*V(222)

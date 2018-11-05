@@ -54,11 +54,11 @@ SUBROUTINE Jac_SP ( V, F, RCT, JVS )
 ! JVS - sparse Jacobian of variables
   REAL(kind=dp) :: JVS(LU_NONZERO)
 
-
 ! Local variables
 ! B - Temporary array
   REAL(kind=dp) :: B(1231)
 
+  V(NVAR)=0
 ! B(1) = dA(1)/dV(221)
   B(1) = RCT(1)*V(222)
 ! B(2) = dA(1)/dV(222)
@@ -9419,7 +9419,7 @@ SUBROUTINE Jac_SP2 ( V2, F, RCT, JVS )
   REAL(kind=dp) :: B(1231)
   REAL(kind=dp) :: V(NVAR)
   V(1:NVAR2)=V2
-  V(NVAR2+1:NVAR)=0
+  V((NVAR2+1):NVAR)=0
   
   B(1) = RCT(1)*V(222)
   B(2) = RCT(1)*V(221)
