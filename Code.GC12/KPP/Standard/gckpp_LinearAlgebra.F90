@@ -57,7 +57,7 @@ SUBROUTINE KppDecomp( JVS, IER )
       IER = 0
       DO k=1,NVAR2
         ! mz_rs_20050606: don't check if real value == 0
-        ! IF ( JVS( LU_DIAG(k) ) .EQ. 0. ) THEN
+        ! IF ( JVS( LU_DIAG2(k) ) .EQ. 0. ) THEN
         IF ( ABS(JVS(LU_DIAG2(k))) < TINY(a) ) THEN
             IER = k
             RETURN
@@ -91,29 +91,29 @@ SUBROUTINE KppDecompCmplx( JVS, IER )
   USE gckpp_JacobianSP
 
       INTEGER        :: IER
-      DOUBLE COMPLEX :: JVS(LU_NONZERO), W(NVAR), a
+      DOUBLE COMPLEX :: JVS(LU_NONZERO2), W(NVAR2), a
       REAL(kind=dp)  :: b = 0.0
       INTEGER        :: k, kk, j, jj
 
       IER = 0
-      DO k=1,NVAR
-        IF ( ABS(JVS(LU_DIAG(k))) < TINY(b) ) THEN
+      DO k=1,NVAR2
+        IF ( ABS(JVS(LU_DIAG2(k))) < TINY(b) ) THEN
             IER = k
             RETURN
         END IF
-        DO kk = LU_CROW(k), LU_CROW(k+1)-1
-              W( LU_ICOL(kk) ) = JVS(kk)
+        DO kk = LU_CROW2(k), LU_CROW2(k+1)-1
+              W( LU_ICOL2(kk) ) = JVS(kk)
         END DO
-        DO kk = LU_CROW(k), LU_DIAG(k)-1
-            j = LU_ICOL(kk)
-            a = -W(j) / JVS( LU_DIAG(j) )
+        DO kk = LU_CROW2(k), LU_DIAG2(k)-1
+            j = LU_ICOL2(kk)
+            a = -W(j) / JVS( LU_DIAG2(j) )
             W(j) = -a
-            DO jj = LU_DIAG(j)+1, LU_CROW(j+1)-1
-               W( LU_ICOL(jj) ) = W( LU_ICOL(jj) ) + a*JVS(jj)
+            DO jj = LU_DIAG2(j)+1, LU_CROW2(j+1)-1
+               W( LU_ICOL2(jj) ) = W( LU_ICOL2(jj) ) + a*JVS(jj)
             END DO
          END DO
-         DO kk = LU_CROW(k), LU_CROW(k+1)-1
-            JVS(kk) = W( LU_ICOL(kk) )
+         DO kk = LU_CROW2(k), LU_CROW2(k+1)-1
+            JVS(kk) = W( LU_ICOL2(kk) )
          END DO
       END DO
       
@@ -131,37 +131,37 @@ SUBROUTINE KppDecompCmplxR( JVSR, JVSI, IER )
   USE gckpp_JacobianSP
 
       INTEGER       :: IER
-      REAL(kind=dp) :: JVSR(LU_NONZERO), JVSI(LU_NONZERO) 
-      REAL(kind=dp) :: WR(NVAR), WI(NVAR), ar, ai, den
+      REAL(kind=dp) :: JVSR(LU_NONZERO2), JVSI(LU_NONZERO2) 
+      REAL(kind=dp) :: WR(NVAR2), WI(NVAR2), ar, ai, den
       INTEGER       :: k, kk, j, jj
 
       IER = 0
       ar  = 0.0
-      DO k=1,NVAR
-        IF (  ( ABS(JVSR(LU_DIAG(k))) < TINY(ar) ) .AND. &
-              ( ABS(JVSI(LU_DIAG(k))) < TINY(ar) ) )  THEN
+      DO k=1,NVAR2
+        IF (  ( ABS(JVSR(LU_DIAG2(k))) < TINY(ar) ) .AND. &
+              ( ABS(JVSI(LU_DIAG2(k))) < TINY(ar) ) )  THEN
             IER = k
             RETURN
         END IF
-        DO kk = LU_CROW(k), LU_CROW(k+1)-1
-              WR( LU_ICOL(kk) ) = JVSR(kk)
-              WI( LU_ICOL(kk) ) = JVSI(kk)
+        DO kk = LU_CROW2(k), LU_CROW2(k+1)-1
+              WR( LU_ICOL2(kk) ) = JVSR(kk)
+              WI( LU_ICOL2(kk) ) = JVSI(kk)
         END DO
-        DO kk = LU_CROW(k), LU_DIAG(k)-1
-            j = LU_ICOL(kk)
-            den = JVSR(LU_DIAG(j))**2 + JVSI(LU_DIAG(j))**2
-            ar = -(WR(j)*JVSR(LU_DIAG(j)) + WI(j)*JVSI(LU_DIAG(j)))/den
-            ai = -(WI(j)*JVSR(LU_DIAG(j)) - WR(j)*JVSI(LU_DIAG(j)))/den
+        DO kk = LU_CROW2(k), LU_DIAG2(k)-1
+            j = LU_ICOL2(kk)
+            den = JVSR(LU_DIAG2(j))**2 + JVSI(LU_DIAG2(j))**2
+            ar = -(WR(j)*JVSR(LU_DIAG2(j)) + WI(j)*JVSI(LU_DIAG2(j)))/den
+            ai = -(WI(j)*JVSR(LU_DIAG2(j)) - WR(j)*JVSI(LU_DIAG2(j)))/den
             WR(j) = -ar
             WI(j) = -ai
-            DO jj = LU_DIAG(j)+1, LU_CROW(j+1)-1
-               WR( LU_ICOL(jj) ) = WR( LU_ICOL(jj) ) + ar*JVSR(jj) - ai*JVSI(jj)
-               WI( LU_ICOL(jj) ) = WI( LU_ICOL(jj) ) + ar*JVSI(jj) + ai*JVSR(jj)
+            DO jj = LU_DIAG2(j)+1, LU_CROW2(j+1)-1
+               WR( LU_ICOL2(jj) ) = WR( LU_ICOL2(jj) ) + ar*JVSR(jj) - ai*JVSI(jj)
+               WI( LU_ICOL2(jj) ) = WI( LU_ICOL2(jj) ) + ar*JVSI(jj) + ai*JVSR(jj)
             END DO
          END DO
-         DO kk = LU_CROW(k), LU_CROW(k+1)-1
-            JVSR(kk) = WR( LU_ICOL(kk) )
-            JVSI(kk) = WI( LU_ICOL(kk) )
+         DO kk = LU_CROW2(k), LU_CROW2(k+1)-1
+            JVSR(kk) = WR( LU_ICOL2(kk) )
+            JVSI(kk) = WI( LU_ICOL2(kk) )
          END DO
       END DO
 
@@ -178,20 +178,20 @@ SUBROUTINE KppSolveIndirect( JVS, X )
   USE gckpp_JacobianSP
 
       INTEGER  :: i, j
-      REAL(kind=dp) :: JVS(LU_NONZERO), X(NVAR), sum
+      REAL(kind=dp) :: JVS(LU_NONZERO2), X(NVAR2), sum
 
-      DO i=1,NVAR
-         DO j = LU_CROW(i), LU_DIAG(i)-1 
-             X(i) = X(i) - JVS(j)*X(LU_ICOL(j));
+      DO i=1,NVAR2
+         DO j = LU_CROW2(i), LU_DIAG2(i)-1 
+             X(i) = X(i) - JVS(j)*X(LU_ICOL2(j));
          END DO  
       END DO
 
-      DO i=NVAR,1,-1
+      DO i=NVAR2,1,-1
         sum = X(i);
-        DO j = LU_DIAG(i)+1, LU_CROW(i+1)-1
-          sum = sum - JVS(j)*X(LU_ICOL(j));
+        DO j = LU_DIAG2(i)+1, LU_CROW2(i+1)-1
+          sum = sum - JVS(j)*X(LU_ICOL2(j));
         END DO
-        X(i) = sum/JVS(LU_DIAG(i));
+        X(i) = sum/JVS(LU_DIAG2(i));
       END DO
       
 END SUBROUTINE KppSolveIndirect
@@ -207,20 +207,20 @@ SUBROUTINE KppSolveTRIndirect( JVS, X )
   USE gckpp_JacobianSP
 
       INTEGER       :: i, j
-      REAL(kind=dp) :: JVS(LU_NONZERO), X(NVAR)
+      REAL(kind=dp) :: JVS(LU_NONZERO2), X(NVAR2)
 
-      DO i=1,NVAR
-        X(i) = X(i)/JVS(LU_DIAG(i))
+      DO i=1,NVAR2
+        X(i) = X(i)/JVS(LU_DIAG2(i))
 	! subtract all nonzero elements in row i of JVS from X
-        DO j=LU_DIAG(i)+1,LU_CROW(i+1)-1
-	  X(LU_ICOL(j)) = X(LU_ICOL(j))-JVS(j)*X(i)
+        DO j=LU_DIAG2(i)+1,LU_CROW2(i+1)-1
+	  X(LU_ICOL2(j)) = X(LU_ICOL2(j))-JVS(j)*X(i)
 	END DO
       END DO
 
-      DO i=NVAR, 1, -1
+      DO i=NVAR2, 1, -1
 	! subtract all nonzero elements in row i of JVS from X
-        DO j=LU_CROW(i),LU_DIAG(i)-1
-	  X(LU_ICOL(j)) = X(LU_ICOL(j))-JVS(j)*X(i)
+        DO j=LU_CROW2(i),LU_DIAG2(i)-1
+	  X(LU_ICOL2(j)) = X(LU_ICOL2(j))-JVS(j)*X(i)
 	END DO
       END DO
       
@@ -237,20 +237,20 @@ SUBROUTINE KppSolveCmplx( JVS, X )
   USE gckpp_JacobianSP
 
       INTEGER        :: i, j
-      DOUBLE COMPLEX :: JVS(LU_NONZERO), X(NVAR), sum
+      DOUBLE COMPLEX :: JVS(LU_NONZERO2), X(NVAR2), sum
 
-      DO i=1,NVAR
-         DO j = LU_CROW(i), LU_DIAG(i)-1 
-             X(i) = X(i) - JVS(j)*X(LU_ICOL(j));
+      DO i=1,NVAR2
+         DO j = LU_CROW2(i), LU_DIAG2(i)-1 
+             X(i) = X(i) - JVS(j)*X(LU_ICOL2(j));
          END DO  
       END DO
 
-      DO i=NVAR,1,-1
+      DO i=NVAR2,1,-1
         sum = X(i);
-        DO j = LU_DIAG(i)+1, LU_CROW(i+1)-1
-          sum = sum - JVS(j)*X(LU_ICOL(j));
+        DO j = LU_DIAG2(i)+1, LU_CROW2(i+1)-1
+          sum = sum - JVS(j)*X(LU_ICOL2(j));
         END DO
-        X(i) = sum/JVS(LU_DIAG(i));
+        X(i) = sum/JVS(LU_DIAG2(i));
       END DO
       
 END SUBROUTINE KppSolveCmplx
@@ -266,24 +266,24 @@ SUBROUTINE KppSolveCmplxR( JVSR, JVSI, XR, XI )
   USE gckpp_JacobianSP
 
       INTEGER       ::  i, j
-      REAL(kind=dp) ::  JVSR(LU_NONZERO), JVSI(LU_NONZERO), XR(NVAR), XI(NVAR), sumr, sumi, den
+      REAL(kind=dp) ::  JVSR(LU_NONZERO2), JVSI(LU_NONZERO2), XR(NVAR2), XI(NVAR2), sumr, sumi, den
 
-      DO i=1,NVAR
-         DO j = LU_CROW(i), LU_DIAG(i)-1 
-             XR(i) = XR(i) - (JVSR(j)*XR(LU_ICOL(j)) - JVSI(j)*XI(LU_ICOL(j)))
-             XI(i) = XI(i) - (JVSR(j)*XI(LU_ICOL(j)) + JVSI(j)*XR(LU_ICOL(j)))
+      DO i=1,NVAR2
+         DO j = LU_CROW2(i), LU_DIAG2(i)-1 
+             XR(i) = XR(i) - (JVSR(j)*XR(LU_ICOL2(j)) - JVSI(j)*XI(LU_ICOL2(j)))
+             XI(i) = XI(i) - (JVSR(j)*XI(LU_ICOL2(j)) + JVSI(j)*XR(LU_ICOL2(j)))
          END DO  
       END DO
 
-      DO i=NVAR,1,-1
+      DO i=NVAR2,1,-1
         sumr = XR(i); sumi = XI(i)
-        DO j = LU_DIAG(i)+1, LU_CROW(i+1)-1
-            sumr = sumr - (JVSR(j)*XR(LU_ICOL(j)) - JVSI(j)*XI(LU_ICOL(j)))
-            sumi = sumi - (JVSR(j)*XI(LU_ICOL(j)) + JVSI(j)*XR(LU_ICOL(j)))
+        DO j = LU_DIAG2(i)+1, LU_CROW2(i+1)-1
+            sumr = sumr - (JVSR(j)*XR(LU_ICOL2(j)) - JVSI(j)*XI(LU_ICOL2(j)))
+            sumi = sumi - (JVSR(j)*XI(LU_ICOL2(j)) + JVSI(j)*XR(LU_ICOL2(j)))
         END DO
-        den   = JVSR(LU_DIAG(i))**2 + JVSI(LU_DIAG(i))**2
-        XR(i) = (sumr*JVSR(LU_DIAG(i)) + sumi*JVSI(LU_DIAG(i)))/den
-        XI(i) = (sumi*JVSR(LU_DIAG(i)) - sumr*JVSI(LU_DIAG(i)))/den
+        den   = JVSR(LU_DIAG2(i))**2 + JVSI(LU_DIAG2(i))**2
+        XR(i) = (sumr*JVSR(LU_DIAG2(i)) + sumi*JVSI(LU_DIAG2(i)))/den
+        XI(i) = (sumi*JVSR(LU_DIAG2(i)) - sumr*JVSI(LU_DIAG2(i)))/den
       END DO
       
 END SUBROUTINE KppSolveCmplxR
@@ -299,20 +299,20 @@ SUBROUTINE KppSolveTRCmplx( JVS, X )
   USE gckpp_JacobianSP
 
       INTEGER        :: i, j
-      DOUBLE COMPLEX :: JVS(LU_NONZERO), X(NVAR)
+      DOUBLE COMPLEX :: JVS(LU_NONZERO2), X(NVAR2)
 
-      DO i=1,NVAR
-        X(i) = X(i)/JVS(LU_DIAG(i))
+      DO i=1,NVAR2
+        X(i) = X(i)/JVS(LU_DIAG2(i))
 	! subtract all nonzero elements in row i of JVS from X
-        DO j=LU_DIAG(i)+1,LU_CROW(i+1)-1
-	  X(LU_ICOL(j)) = X(LU_ICOL(j))-JVS(j)*X(i)
+        DO j=LU_DIAG2(i)+1,LU_CROW2(i+1)-1
+	  X(LU_ICOL2(j)) = X(LU_ICOL2(j))-JVS(j)*X(i)
 	END DO
       END DO
 
-      DO i=NVAR, 1, -1
+      DO i=NVAR2, 1, -1
 	! subtract all nonzero elements in row i of JVS from X
-        DO j=LU_CROW(i),LU_DIAG(i)-1
-	  X(LU_ICOL(j)) = X(LU_ICOL(j))-JVS(j)*X(i)
+        DO j=LU_CROW2(i),LU_DIAG2(i)-1
+	  X(LU_ICOL2(j)) = X(LU_ICOL2(j))-JVS(j)*X(i)
 	END DO
       END DO
       
@@ -330,24 +330,24 @@ SUBROUTINE KppSolveTRCmplxR( JVSR, JVSI, XR, XI )
   USE gckpp_JacobianSP
 
       INTEGER       ::  i, j
-      REAL(kind=dp) ::  JVSR(LU_NONZERO), JVSI(LU_NONZERO), XR(NVAR), XI(NVAR), den
+      REAL(kind=dp) ::  JVSR(LU_NONZERO2), JVSI(LU_NONZERO2), XR(NVAR2), XI(NVAR2), den
 
-      DO i=1,NVAR
-        den   = JVSR(LU_DIAG(i))**2 + JVSI(LU_DIAG(i))**2
-        XR(i) = (XR(i)*JVSR(LU_DIAG(i)) + XI(i)*JVSI(LU_DIAG(i)))/den
-        XI(i) = (XI(i)*JVSR(LU_DIAG(i)) - XR(i)*JVSI(LU_DIAG(i)))/den
+      DO i=1,NVAR2
+        den   = JVSR(LU_DIAG2(i))**2 + JVSI(LU_DIAG2(i))**2
+        XR(i) = (XR(i)*JVSR(LU_DIAG2(i)) + XI(i)*JVSI(LU_DIAG2(i)))/den
+        XI(i) = (XI(i)*JVSR(LU_DIAG2(i)) - XR(i)*JVSI(LU_DIAG2(i)))/den
 	! subtract all nonzero elements in row i of JVS from X
-        DO j=LU_DIAG(i)+1,LU_CROW(i+1)-1
-	  XR(LU_ICOL(j)) = XR(LU_ICOL(j))-(JVSR(j)*XR(i) - JVSI(j)*XI(i))
-	  XI(LU_ICOL(j)) = XI(LU_ICOL(j))-(JVSI(j)*XR(i) + JVSR(j)*XI(i))
+        DO j=LU_DIAG2(i)+1,LU_CROW2(i+1)-1
+	  XR(LU_ICOL2(j)) = XR(LU_ICOL2(j))-(JVSR(j)*XR(i) - JVSI(j)*XI(i))
+	  XI(LU_ICOL2(j)) = XI(LU_ICOL2(j))-(JVSI(j)*XR(i) + JVSR(j)*XI(i))
 	END DO
       END DO
 
-      DO i=NVAR, 1, -1
+      DO i=NVAR2, 1, -1
 	! subtract all nonzero elements in row i of JVS from X
-        DO j=LU_CROW(i),LU_DIAG(i)-1
-	  XR(LU_ICOL(j)) = XR(LU_ICOL(j))-(JVSR(j)*XR(i) - JVSI(j)*XI(i))
-	  XI(LU_ICOL(j)) = XI(LU_ICOL(j))-(JVSI(j)*XR(i) + JVSR(j)*XI(i))
+        DO j=LU_CROW2(i),LU_DIAG2(i)-1
+	  XR(LU_ICOL2(j)) = XR(LU_ICOL2(j))-(JVSR(j)*XR(i) - JVSI(j)*XI(i))
+	  XI(LU_ICOL2(j)) = XI(LU_ICOL2(j))-(JVSI(j)*XR(i) + JVSR(j)*XI(i))
 	END DO
       END DO
       
@@ -367,43 +367,43 @@ END SUBROUTINE KppSolveTRCmplxR
 !  USE gckpp_Parameters
 !  USE gckpp_JacobianSP
 !
-!      INTEGER  :: IP3(3), IER, IP(3,NVAR)
-!      REAL(kind=dp) :: JVS(3,3,LU_NONZERO), W(3,3,NVAR), a(3,3), E(3,3)
+!      INTEGER  :: IP3(3), IER, IP(3,NVAR2)
+!      REAL(kind=dp) :: JVS(3,3,LU_NONZERO2), W(3,3,NVAR2), a(3,3), E(3,3)
 !      INTEGER  :: k, kk, j, jj
 !
 !      a = 0.0d0
 !      IER = 0
-!      DO k=1,NVAR
-!        DO kk = LU_CROW(k), LU_CROW(k+1)-1
-!              W( 1:3,1:3,LU_ICOL(kk) ) = JVS(1:3,1:3,kk)
+!      DO k=1,NVAR2
+!        DO kk = LU_CROW2(k), LU_CROW2(k+1)-1
+!              W( 1:3,1:3,LU_ICOL2(kk) ) = JVS(1:3,1:3,kk)
 !        END DO
-!        DO kk = LU_CROW(k), LU_DIAG(k)-1
-!            j = LU_ICOL(kk)
-!            E(1:3,1:3) = JVS( 1:3,1:3,LU_DIAG(j) )
+!        DO kk = LU_CROW2(k), LU_DIAG2(k)-1
+!            j = LU_ICOL2(kk)
+!            E(1:3,1:3) = JVS( 1:3,1:3,LU_DIAG2(j) )
 !            ! CALL DGETRF(3,3,E,3,IP3,IER) 
 !            CALL FAC3(E,IP3,IER)
 !            IF ( IER /= 0 )  RETURN
-!            ! a = W(j) / JVS( LU_DIAG(j) )
+!            ! a = W(j) / JVS( LU_DIAG2(j) )
 !            a(1:3,1:3) = W( 1:3,1:3,j )
 !            ! CALL DGETRS ('N',3,3,E,3,IP3,a,3,IER) 
 !            CALL SOL3('N',E,IP3,a(1,1))
 !            CALL SOL3('N',E,IP3,a(1,2))
 !            CALL SOL3('N',E,IP3,a(1,3))
 !            W(1:3,1:3,j) = a(1:3,1:3)
-!            DO jj = LU_DIAG(j)+1, LU_CROW(j+1)-1
-!               W( 1:3,1:3,LU_ICOL(jj) ) = W( 1:3,1:3,LU_ICOL(jj) ) &
+!            DO jj = LU_DIAG2(j)+1, LU_CROW2(j+1)-1
+!               W( 1:3,1:3,LU_ICOL2(jj) ) = W( 1:3,1:3,LU_ICOL2(jj) ) &
 !                        - MATMUL( a(1:3,1:3) , JVS(1:3,1:3,jj) )
 !            END DO
 !         END DO
-!         DO kk = LU_CROW(k), LU_CROW(k+1)-1
-!            JVS(1:3,1:3,kk) = W( 1:3,1:3,LU_ICOL(kk) )
+!         DO kk = LU_CROW2(k), LU_CROW2(k+1)-1
+!            JVS(1:3,1:3,kk) = W( 1:3,1:3,LU_ICOL2(kk) )
 !         END DO
 !      END DO
 !
-!      DO k=1,NVAR
-!         ! CALL WGEFA(JVS(1,1,LU_DIAG(k)),3,3,IP(1,k),IER)
-!         ! CALL DGETRF(3,3,JVS(1,1,LU_DIAG(k)),3,IP(1,k),IER)
-!         CALL FAC3(JVS(1,1,LU_DIAG(k)),IP(1,k),IER)
+!      DO k=1,NVAR2
+!         ! CALL WGEFA(JVS(1,1,LU_DIAG2(k)),3,3,IP(1,k),IER)
+!         ! CALL DGETRF(3,3,JVS(1,1,LU_DIAG2(k)),3,IP(1,k),IER)
+!         CALL FAC3(JVS(1,1,LU_DIAG2(k)),IP(1,k),IER)
 !         IF ( IER /= 0 )  RETURN
 !      END DO 
 !      
@@ -420,34 +420,34 @@ END SUBROUTINE KppSolveTRCmplxR
 !  USE gckpp_Parameters
 !  USE gckpp_JacobianSP
 !
-!      INTEGER  :: i, j, k, m, IP3(3), IP(3,NVAR), IER
-!      REAL(kind=dp) :: JVS(3,3,LU_NONZERO), X(3,NVAR), sum(3)
+!      INTEGER  :: i, j, k, m, IP3(3), IP(3,NVAR2), IER
+!      REAL(kind=dp) :: JVS(3,3,LU_NONZERO2), X(3,NVAR2), sum(3)
 !
-!      DO i=1,NVAR
-!        DO j = LU_CROW(i), LU_DIAG(i)-1 
-!          !X(1:3,i) = X(1:3,i) - MATMUL(JVS(1:3,1:3,j),X(1:3,LU_ICOL(j)));
+!      DO i=1,NVAR2
+!        DO j = LU_CROW2(i), LU_DIAG2(i)-1 
+!          !X(1:3,i) = X(1:3,i) - MATMUL(JVS(1:3,1:3,j),X(1:3,LU_ICOL2(j)));
 !          DO k=1,3
 !            DO m=1,3
-!	       X(k,i) = X(k,i) - JVS(k,m,j)*X(m,LU_ICOL(j))
+!	       X(k,i) = X(k,i) - JVS(k,m,j)*X(m,LU_ICOL2(j))
 !            END DO
 !          END DO
 !        END DO  
 !      END DO
 !
-!      DO i=NVAR,1,-1
+!      DO i=NVAR2,1,-1
 !        sum(1:3) = X(1:3,i);
-!        DO j = LU_DIAG(i)+1, LU_CROW(i+1)-1
-!          !sum(1:3) = sum(1:3) - MATMUL(JVS(1:3,1:3,j),X(1:3,LU_ICOL(j)));
+!        DO j = LU_DIAG2(i)+1, LU_CROW2(i+1)-1
+!          !sum(1:3) = sum(1:3) - MATMUL(JVS(1:3,1:3,j),X(1:3,LU_ICOL2(j)));
 !          DO k=1,3
 !            DO m=1,3
-!	       sum(k) = sum(k) - JVS(k,m,j)*X(m,LU_ICOL(j))
+!	       sum(k) = sum(k) - JVS(k,m,j)*X(m,LU_ICOL2(j))
 !            END DO
 !          END DO
 !        END DO
-!        ! X(i) = sum/JVS(LU_DIAG(i));
-!        ! CALL DGETRS ('N',3,1,JVS(1:3,1:3,LU_DIAG(i)),3,IP(1,i),sum,3,0) 
-!        ! CALL WGESL('N',JVS(1,1,LU_DIAG(i)),3,3,IP(1,i),sum)
-!        CALL SOL3('N',JVS(1,1,LU_DIAG(i)),IP(1,i),sum)
+!        ! X(i) = sum/JVS(LU_DIAG2(i));
+!        ! CALL DGETRS ('N',3,1,JVS(1:3,1:3,LU_DIAG2(i)),3,IP(1,i),sum,3,0) 
+!        ! CALL WGESL('N',JVS(1,1,LU_DIAG2(i)),3,3,IP(1,i),sum)
+!        CALL SOL3('N',JVS(1,1,LU_DIAG2(i)),IP(1,i),sum)
 !        X(1:3,i) = sum(1:3)
 !      END DO
 !      
@@ -463,30 +463,30 @@ END SUBROUTINE KppSolveTRCmplxR
 !  USE gckpp_Parameters
 !  USE gckpp_JacobianSP
 !
-!      INTEGER       :: i, j, k, m, IP(3,NVAR)
-!      REAL(kind=dp) :: JVS(3,3,LU_NONZERO), X(3,NVAR)
+!      INTEGER       :: i, j, k, m, IP(3,NVAR2)
+!      REAL(kind=dp) :: JVS(3,3,LU_NONZERO2), X(3,NVAR2)
 !
-!      DO i=1,NVAR
-!        ! X(i) = X(i)/JVS(LU_DIAG(i))
-!        CALL SOL3('T',JVS(1,1,LU_DIAG(i)),IP(1,i),X(1,i))
-!        DO j=LU_DIAG(i)+1,LU_CROW(i+1)-1
-!	  !X(1:3,LU_ICOL(j)) = X(1:3,LU_ICOL(j)) &
+!      DO i=1,NVAR2
+!        ! X(i) = X(i)/JVS(LU_DIAG2(i))
+!        CALL SOL3('T',JVS(1,1,LU_DIAG2(i)),IP(1,i),X(1,i))
+!        DO j=LU_DIAG2(i)+1,LU_CROW2(i+1)-1
+!	  !X(1:3,LU_ICOL2(j)) = X(1:3,LU_ICOL2(j)) &
 !          !    - MATMUL( TRANSPOSE(JVS(1:3,1:3,j)), X(1:3,i) )
 !          DO k=1,3
 !            DO m=1,3
-!	       X(k,LU_ICOL(j)) = X(k,LU_ICOL(j)) - JVS(m,k,j)*X(m,i)
+!	       X(k,LU_ICOL2(j)) = X(k,LU_ICOL2(j)) - JVS(m,k,j)*X(m,i)
 !            END DO
 !          END DO
 !	END DO
 !      END DO
 !
-!      DO i=NVAR, 1, -1
-!        DO j=LU_CROW(i),LU_DIAG(i)-1
-!	  !X(1:3,LU_ICOL(j)) = X(1:3,LU_ICOL(j)) &
+!      DO i=NVAR2, 1, -1
+!        DO j=LU_CROW2(i),LU_DIAG2(i)-1
+!	  !X(1:3,LU_ICOL2(j)) = X(1:3,LU_ICOL2(j)) &
 !          !   - MATMUL( TRANSPOSE(JVS(1:3,1:3,j)), X(1:3,i) )
 !          DO k=1,3
 !            DO m=1,3
-!	       X(k,LU_ICOL(j)) = X(k,LU_ICOL(j)) - JVS(m,k,j)*X(m,i)
+!	       X(k,LU_ICOL2(j)) = X(k,LU_ICOL2(j)) - JVS(m,k,j)*X(m,i)
 !            END DO
 !          END DO
 !	END DO
@@ -1312,11 +1312,11 @@ END SUBROUTINE KppSolve
 SUBROUTINE KppSolveTR ( JVS, X, XX )
 
 ! JVS - sparse Jacobian of variables
-  REAL(kind=dp) :: JVS(LU_NONZERO)
+  REAL(kind=dp) :: JVS(LU_NONZERO2)
 ! X - Vector for variables
-  REAL(kind=dp) :: X(NVAR)
+  REAL(kind=dp) :: X(NVAR2)
 ! XX - Vector for output variables
-  REAL(kind=dp) :: XX(NVAR)
+  REAL(kind=dp) :: XX(NVAR2)
 
   XX(1) = X(1)/JVS(1)
   XX(2) = X(2)/JVS(2)
