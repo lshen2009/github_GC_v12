@@ -617,7 +617,7 @@ CONTAINS
     !$OMP REDUCTION( +:TOTNUMLU                                             )&
     !$OMP SCHEDULE ( DYNAMIC,  1                                            )
     DO L = 1, LLPAR
-       CALL CPU_TIME(time=timeStart)
+       !CALL CPU_TIME(time=timeStart)
     DO J = 1, JJPAR
     DO I = 1, IIPAR
        !====================================================================
@@ -1115,7 +1115,7 @@ CONTAINS
 
     ENDDO
     ENDDO
-    CALL CPU_TIME(time=timeEnd)
+    !CALL CPU_TIME(time=timeEnd)
     !PRINT *,'lshen: L is',L,'time is',timeEnd-TimeStart
     ENDDO
     !$OMP END PARALLEL DO
