@@ -105,7 +105,8 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
    CALL Rosenbrock(NVAR2,VAR2,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
-
+    VAR(1:3)=VAR2(1:3)
+	VAR(5:NVAR)=VAR2(4:NVAR2)
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
    ! PRINT*,'NSTEPS=',ISTATUS(Nstp),' (',Ntotal,')','  O3=', VAR(ind_O3)
