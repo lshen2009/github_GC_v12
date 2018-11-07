@@ -104,7 +104,8 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 	VAR2(4:NVAR2)=VAR(5:NVAR)
    CALL Rosenbrock(NVAR2,VAR2,TIN,TOUT,   &
          ATOL,RTOL,                &
-         RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
+         RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		 LU_NONZERO2,NVAR2)
     VAR(1:3)=VAR2(1:3)
 	VAR(5:NVAR)=VAR2(4:NVAR2)
    !~~~> Debug option: show no of steps
@@ -123,7 +124,8 @@ END SUBROUTINE INTEGRATE
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
            AbsTol,RelTol,              &
-           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
+           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		   LU_NONZERO,NVAR)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !
 !    Solves the system y'=F(t,y) using a Rosenbrock method defined by:
@@ -243,7 +245,7 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
   IMPLICIT NONE
 
 !~~~>  Arguments
-   INTEGER,       INTENT(IN)    :: N
+   INTEGER,       INTENT(IN)    :: N,LU_NONZERO,NVAR
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
@@ -597,7 +599,7 @@ Stage: DO istage = 1, ros_S
          HG = Direction*H*ros_Gamma(istage)
          CALL WAXPY(N,HG,dFdT,1,K(ioffset+1),1)
        END IF
-       CALL ros_Solve(Ghimj, Pivot, K(ioffset+1))
+       CALL ros_Solve(Ghimj, Pivot, K(ioffset+1),LU_NONZERO,NVAR)
 
    END DO Stage
 
@@ -828,7 +830,7 @@ Stage: DO istage = 1, ros_S
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  SUBROUTINE ros_Solve( A, Pivot, b )
+  SUBROUTINE ros_Solve( A, Pivot, b)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the forward/backward substitution (using pre-computed LU decomposition)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -850,7 +852,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve(LU_NONZERO,NVAR, A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
