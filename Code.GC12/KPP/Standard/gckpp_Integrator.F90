@@ -127,7 +127,7 @@ END SUBROUTINE INTEGRATE
 SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		   LS_LU_NONZERO,LS_NVAR,LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL)
+		   LS_LU_NONZERO,LS_NVAR,LS_LU_CROW,LS_LU_DIAG,LS_LU_IROW,LS_LU_ICOL)
 		    
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !
@@ -250,7 +250,7 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N,LS_LU_NONZERO,LS_NVAR   
    INTEGER,INTENT(IN)::LS_LU_CROW(LS_NVAR+1),LS_LU_DIAG(LS_NVAR+1)
-   INTEGER,INTENT(IN)::LS_LU_ICOL(LS_LU_NONZERO)   
+   INTEGER,INTENT(IN)::LS_LU_IROW(LS_LU_NONZERO),LS_LU_ICOL(LS_LU_NONZERO)   
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
