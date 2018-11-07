@@ -639,7 +639,7 @@ END SUBROUTINE KppSolveTRCmplxR
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE KppSolve ( JVS, X )
+SUBROUTINE KppSolve (JVS, X )
   REAL(kind=dp) :: JVS(LU_NONZERO2)
   REAL(kind=dp) :: X(NVAR2)
 X(62)=X(62)-JVS(408)*X(49)
