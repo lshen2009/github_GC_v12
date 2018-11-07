@@ -1342,7 +1342,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP(Y, FIX, RCONST, JV)
+    CALL Jac_SP(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO)
     DO j=1,NVAR2
       DO i=1,NVAR2
          Jcb(i,j) = 0.0_dp
@@ -1352,7 +1352,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
        Jcb(LU_IROW2(i),LU_ICOL2(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP( Y, FIX, RCONST, Jcb )
+    CALL Jac_SP( Y, FIX, RCONST, Jcb,LS_NVAR,LS_LU_NONZERO)
 #endif   
     TIME = Told
 

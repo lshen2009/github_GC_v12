@@ -43,15 +43,16 @@ CONTAINS
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE Jac_SP ( V, F, RCT, JVS )
+SUBROUTINE Jac_SP ( V, F, RCT, JVS, LS_NVAR, LS_NONZERO )
 
+  INTEGER,INTENT(IN)::LS_NVAR,LS_LU_NONZERO
 ! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR2)
+  REAL(kind=dp) :: V(LS_NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
-  REAL(kind=dp) :: JVS(LU_NONZERO2)
+  REAL(kind=dp) :: JVS(LS_NONZERO)
 
 
 ! Local variables
