@@ -125,7 +125,7 @@ END SUBROUTINE INTEGRATE
 SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		   lshen_LU_NONZERO,lshen_NVAR)
+		   LS_LU_NONZERO,LS_NVAR)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !
 !    Solves the system y'=F(t,y) using a Rosenbrock method defined by:
@@ -245,7 +245,7 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
   IMPLICIT NONE
 
 !~~~>  Arguments
-   INTEGER,       INTENT(IN)    :: N,lshen_LU_NONZERO,lshen_NVAR
+   INTEGER,       INTENT(IN)    :: N,LS_LU_NONZERO,LS_NVAR
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
@@ -852,7 +852,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve(lshen_LU_NONZERO,lshen_NVAR, A, b )
+   CALL KppSolve(LS_LU_NONZERO,LS_NVAR, A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
