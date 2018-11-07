@@ -1297,14 +1297,14 @@ SUBROUTINE FunTemplate( T, Y, Ydot, LS_NVAR )
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
+ !USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun
  INTEGER,INTENT(IN)::LS_NVAR
 !~~~> Input variables
-   REAL(kind=dp) :: T, Y(NVAR2)
+   REAL(kind=dp) :: T, Y(LS_NVAR)
 !~~~> Output variables
-   REAL(kind=dp) :: Ydot(NVAR2)
+   REAL(kind=dp) :: Ydot(LS_NVAR)
 !~~~> Local variables
    REAL(kind=dp) :: Told
 
