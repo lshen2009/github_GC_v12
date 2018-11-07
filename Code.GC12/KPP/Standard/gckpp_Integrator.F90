@@ -246,8 +246,9 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
   IMPLICIT NONE
 
 !~~~>  Arguments
-   INTEGER,       INTENT(IN)    :: N,LS_LU_NONZERO,LS_NVAR
-   INTEGER,		  INTENT(IN)    :: LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL
+   INTEGER,       INTENT(IN)    :: N,LS_LU_NONZERO,LS_NVAR   
+   INTEGER,INTENT(IN)::LS_LU_CROW(LS_NVAR+1),LS_LU_DIAG(LS_NVAR+1)
+   INTEGER,INTENT(IN)::LS_LU_ICOL(LS_LU_NONZERO)   
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
