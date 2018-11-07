@@ -500,7 +500,7 @@ CONTAINS !  SUBROUTINES internal to Rosenbrock
 #ifdef FULL_ALGEBRA    
    REAL(kind=dp) :: Jac0(N,N), Ghimj(N,N)
 #else
-   REAL(kind=dp) :: Jac0(LU_NONZERO2), Ghimj(LU_NONZERO2)
+   REAL(kind=dp) :: Jac0(LS_LU_NONZERO), Ghimj(LS_LU_NONZERO)
 #endif
    REAL(kind=dp) :: H, Hnew, HC, HG, Fac, Tau
    REAL(kind=dp) :: Err, Yerr(N)
@@ -743,7 +743,7 @@ Stage: DO istage = 1, ros_S
 #ifdef FULL_ALGEBRA    
    REAL(kind=dp), INTENT(IN) ::  Jac0(N,N)
 #else
-   REAL(kind=dp), INTENT(IN) ::  Jac0(LU_NONZERO2)
+   REAL(kind=dp), INTENT(IN) ::  Jac0(LS_LU_NONZERO)
 #endif   
    REAL(kind=dp), INTENT(IN) ::  gam
    INTEGER, INTENT(IN) ::  Direction
@@ -751,7 +751,7 @@ Stage: DO istage = 1, ros_S
 #ifdef FULL_ALGEBRA    
    REAL(kind=dp), INTENT(OUT) :: Ghimj(N,N)
 #else
-   REAL(kind=dp), INTENT(OUT) :: Ghimj(LU_NONZERO2)
+   REAL(kind=dp), INTENT(OUT) :: Ghimj(LS_LU_NONZERO)
 #endif   
    LOGICAL, INTENT(OUT) ::  Singular
    INTEGER, INTENT(OUT) ::  Pivot(N)
@@ -777,9 +777,9 @@ Stage: DO istage = 1, ros_S
        Ghimj(i,i) = Ghimj(i,i)+ghinv
      END DO
 #else
-     !slim: CALL WCOPY(LU_NONZERO2,Jac0,1,Ghimj,1)
-     !slim: CALL WSCAL(LU_NONZERO2,(-ONE),Ghimj,1)
-     Ghimj(1:LU_NONZERO2) = -Jac0(1:LU_NONZERO2)
+     !slim: CALL WCOPY(LS_LU_NONZERO,Jac0,1,Ghimj,1)
+     !slim: CALL WSCAL(LS_LU_NONZERO,(-ONE),Ghimj,1)
+     Ghimj(1:LS_LU_NONZERO) = -Jac0(1:LS_LU_NONZERO)
      ghinv = ONE/(Direction*H*gam)
      DO i=1,N
        Ghimj(LS_LU_DIAG(i)) = Ghimj(LS_LU_DIAG(i))+ghinv
@@ -818,7 +818,7 @@ Stage: DO istage = 1, ros_S
 #ifdef FULL_ALGEBRA    
    REAL(kind=dp), INTENT(INOUT) :: A(N,N)
 #else   
-   REAL(kind=dp), INTENT(INOUT) :: A(LU_NONZERO2)
+   REAL(kind=dp), INTENT(INOUT) :: A(LS_LU_NONZERO)
 #endif
 !~~~> Output variables
    INTEGER, INTENT(OUT) :: Pivot(N), ISING
@@ -845,7 +845,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), INTENT(IN) :: A(N,N)
    INTEGER :: ISING
 #else   
-   REAL(kind=dp), INTENT(IN) :: A(LU_NONZERO2)
+   REAL(kind=dp), INTENT(IN) :: A(LS_LU_NONZERO)
 #endif
    INTEGER, INTENT(IN) :: Pivot(N)
 !~~~> InOut variables
@@ -1297,7 +1297,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot, LS_NVAR )
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- !USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
+ !USE gckpp_Parameters, ONLY: NVAR2, LS_LU_NONZERO
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun
  INTEGER,INTENT(IN)::LS_NVAR
@@ -1322,7 +1322,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- !USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
+ !USE gckpp_Parameters, ONLY: NVAR2, LS_LU_NONZERO
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP
  USE gckpp_LinearAlgebra
