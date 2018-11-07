@@ -549,7 +549,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate(T,Y,Fcn0)
+   CALL FunTemplate(T,Y,Fcn0, LS_NVAR)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -591,7 +591,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate(Tau,Ynew,Fcn)
+         CALL FunTemplate(Tau,Ynew,Fcn, LS_NVAR)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -718,7 +718,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate(T+Delta,Y,dFdT)
+   CALL FunTemplate(T+Delta,Y,dFdT, LS_NVAR)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -1292,7 +1292,7 @@ END SUBROUTINE Rosenbrock
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate( T, Y, Ydot )
+SUBROUTINE FunTemplate( T, Y, Ydot, LS_NVAR )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -1300,6 +1300,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot )
  USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun
+ INTEGER,INTENT(IN)::LS_NVAR
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(NVAR2)
 !~~~> Output variables
@@ -1309,7 +1310,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun( Y, FIX, RCONST, Ydot )
+   CALL Fun( Y, FIX, RCONST, Ydot, LS_NVAR )
    TIME = Told
 
 END SUBROUTINE FunTemplate
