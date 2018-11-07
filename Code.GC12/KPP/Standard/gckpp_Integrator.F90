@@ -1322,19 +1322,19 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO)
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
+ !USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP, LU_IROW2, LU_ICOL2
  USE gckpp_LinearAlgebra
  
  INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO
 !~~~> Input variables
-    REAL(kind=dp) :: T, Y(NVAR2)
+    REAL(kind=dp) :: T, Y(LS_NVAR)
 !~~~> Output variables
 #ifdef FULL_ALGEBRA    
-    REAL(kind=dp) :: JV(LU_NONZERO2), Jcb(NVAR2,NVAR2)
+    REAL(kind=dp) :: JV(LS_LU_NONZERO), Jcb(LS_NVAR,LS_NVAR)
 #else
-    REAL(kind=dp) :: Jcb(LU_NONZERO2)
+    REAL(kind=dp) :: Jcb(LS_LU_NONZERO)
 #endif   
 !~~~> Local variables
     REAL(kind=dp) :: Told
@@ -1346,12 +1346,12 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO)
     TIME = T
 #ifdef FULL_ALGEBRA    
     CALL Jac_SP(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO)
-    DO j=1,NVAR2
-      DO i=1,NVAR2
+    DO j=1,LS_NVAR
+      DO i=1,LS_NVAR
          Jcb(i,j) = 0.0_dp
       END DO
     END DO
-    DO i=1,LU_NONZERO2
+    DO i=1,LS_LU_NONZERO
        Jcb(LU_IROW2(i),LU_ICOL2(i)) = JV(i)
     END DO
 #else
