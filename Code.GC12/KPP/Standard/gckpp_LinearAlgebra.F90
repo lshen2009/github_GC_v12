@@ -25,7 +25,7 @@
 MODULE gckpp_LinearAlgebra
 
   USE gckpp_Parameters
-  USE gckpp_JacobianSP
+  !USE gckpp_JacobianSP
 
   IMPLICIT NONE
 
