@@ -823,7 +823,7 @@ Stage: DO istage = 1, ros_S
 #ifdef FULL_ALGEBRA    
    CALL  DGETRF( N, N, A, N, Pivot, ISING )
 #else   
-   CALL KppDecomp ( A, ISING,LS_NVAR,LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL )
+   CALL KppDecomp ( A, ISING,LS_NVAR,LS_LU_NONZERO,LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL)   
    Pivot(1) = 1
 #endif
    ISTATUS(Ndec) = ISTATUS(Ndec) + 1

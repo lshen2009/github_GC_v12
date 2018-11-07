@@ -41,16 +41,18 @@ CONTAINS
 
 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE KppDecomp(JVS,IER,LS_NVAR,LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL)
+SUBROUTINE KppDecomp(JVS,IER,LS_NVAR,LS_LU_NONZERO,LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL)
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !        Sparse LU factorization
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   !USE gckpp_Parameters
   !USE gckpp_JacobianSP
-  	  INTEGER,INTENT(IN)::LS_NVAR,LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL
+  	  INTEGER,INTENT(IN)::LS_NVAR,LS_LU_NONZERO
+	  INTEGER,INTENT(IN)::LS_LU_CROW(LS_NVAR+1),LS_LU_DIAG(LS_NVAR+1)
+	  INTEGER,INTENT(IN)::LS_LU_ICOL(LS_LU_NONZERO)
       INTEGER  :: IER
-      REAL(kind=dp) :: JVS(LU_NONZERO2), W(LS_NVAR), a
+      REAL(kind=dp) :: JVS(LS_LU_NONZERO), W(LS_NVAR), a
       INTEGER  :: k, kk, j, jj
 
       a = 0. ! mz_rs_20050606
