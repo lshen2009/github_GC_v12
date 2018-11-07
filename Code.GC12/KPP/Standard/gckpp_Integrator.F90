@@ -51,6 +51,7 @@
 MODULE gckpp_Integrator
 
   USE gckpp_Parameters, ONLY: NVAR, NFIX, NSPEC, LU_NONZERO2,NVAR2
+  USE gckpp_Parameters, ONLY: LU_CROW2,LU_DIAG2,LU_ICOL2
   USE gckpp_Global
   IMPLICIT NONE
   PUBLIC
@@ -127,6 +128,7 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		   LS_LU_NONZERO,LS_NVAR,LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL)
+		    
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !
 !    Solves the system y'=F(t,y) using a Rosenbrock method defined by:
