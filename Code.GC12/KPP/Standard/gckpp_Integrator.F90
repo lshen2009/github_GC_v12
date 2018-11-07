@@ -782,7 +782,7 @@ Stage: DO istage = 1, ros_S
      Ghimj(1:LU_NONZERO2) = -Jac0(1:LU_NONZERO2)
      ghinv = ONE/(Direction*H*gam)
      DO i=1,N
-       Ghimj(LU_DIAG2(i)) = Ghimj(LU_DIAG2(i))+ghinv
+       Ghimj(LS_LU_DIAG(i)) = Ghimj(LS_LU_DIAG(i))+ghinv
      END DO
 #endif   
 !~~~>    Compute LU decomposition
@@ -1324,7 +1324,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  !USE gckpp_Parameters, ONLY: NVAR2, LU_NONZERO2
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Jacobian, ONLY: Jac_SP!, LU_IROW2, LU_ICOL2
+ USE gckpp_Jacobian, ONLY: Jac_SP
  USE gckpp_LinearAlgebra
  
  INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO
