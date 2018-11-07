@@ -599,7 +599,7 @@ Stage: DO istage = 1, ros_S
          HG = Direction*H*ros_Gamma(istage)
          CALL WAXPY(N,HG,dFdT,1,K(ioffset+1),1)
        END IF
-       CALL ros_Solve(Ghimj, Pivot, K(ioffset+1),LU_NONZERO,NVAR)
+       CALL ros_Solve(Ghimj, Pivot, K(ioffset+1))
 
    END DO Stage
 
