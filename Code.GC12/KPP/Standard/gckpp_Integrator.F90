@@ -105,7 +105,8 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
    CALL Rosenbrock(NVAR2,VAR2,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		 LU_NONZERO2,NVAR2)
+		 LU_NONZERO2,NVAR2,LU_CROW2,LU_DIAG2,LU_ICOL2)
+		 
     VAR(1:3)=VAR2(1:3)
 	VAR(5:NVAR)=VAR2(4:NVAR2)
    !~~~> Debug option: show no of steps
@@ -125,7 +126,7 @@ END SUBROUTINE INTEGRATE
 SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		   LS_LU_NONZERO,LS_NVAR)
+		   LS_LU_NONZERO,LS_NVAR,LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !
 !    Solves the system y'=F(t,y) using a Rosenbrock method defined by:
@@ -246,6 +247,7 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
 
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N,LS_LU_NONZERO,LS_NVAR
+   INTEGER,		  INTENT(IN)    :: LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
@@ -821,7 +823,7 @@ Stage: DO istage = 1, ros_S
 #ifdef FULL_ALGEBRA    
    CALL  DGETRF( N, N, A, N, Pivot, ISING )
 #else   
-   CALL KppDecomp ( A, ISING )
+   CALL KppDecomp ( A, ISING,LS_NVAR,LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL )
    Pivot(1) = 1
 #endif
    ISTATUS(Ndec) = ISTATUS(Ndec) + 1
