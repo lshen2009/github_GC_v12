@@ -82,10 +82,10 @@ END SUBROUTINE KppDecomp
 
 
 
-SUBROUTINE KppSolve (LU_NONZERO,NVAR,JVS, X )
-  INTEGER, INTENT(IN)    :: LU_NONZERO,NVAR
-  REAL(kind=dp) :: JVS(LU_NONZERO)
-  REAL(kind=dp) :: X(NVAR)
+SUBROUTINE KppSolve (lshen_LU_NONZERO,lshen_NVAR,JVS, X )
+  INTEGER, INTENT(IN)    :: lshen_LU_NONZERO,lshen_NVAR
+  REAL(kind=dp) :: JVS(lshen_LU_NONZERO)
+  REAL(kind=dp) :: X(lshen_NVAR)
 X(62)=X(62)-JVS(408)*X(49)
 X(63)=X(63)-JVS(413)*X(41)
 X(66)=X(66)-JVS(428)*X(37)
