@@ -559,7 +559,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate(T,Y,Jac0)
+   CALL JacTemplate(T,Y,Jac0,LS_NVAR, LS_LU_NONZERO)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -1316,7 +1316,7 @@ END SUBROUTINE FunTemplate
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate( T, Y, Jcb )
+SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -1325,6 +1325,8 @@ SUBROUTINE JacTemplate( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP, LU_IROW2, LU_ICOL2
  USE gckpp_LinearAlgebra
+ 
+ INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(NVAR2)
 !~~~> Output variables
