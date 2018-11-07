@@ -52,7 +52,7 @@ SUBROUTINE Jac_SP ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
-  REAL(kind=dp) :: JVS(LS_NONZERO)
+  REAL(kind=dp) :: JVS(LS_LU_NONZERO)
 
 
 ! Local variables
