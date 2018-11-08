@@ -51,7 +51,7 @@
 MODULE gckpp_Integrator
 
   USE gckpp_Parameters, ONLY: NVAR, NFIX, NSPEC, LU_NONZERO2,NVAR2
-  USE gckpp_JacobianSP, ONLY: LU_CROW2,LU_DIAG2,LU_IROW2,LU_ICOL2
+  USE gckpp_JacobianSP, ONLY: LU_CROW2,LU_DIAG2,LU_IROW2,LU_ICOL2,select_ind,delete_ind
   USE gckpp_Global
   IMPLICIT NONE
   PUBLIC
@@ -101,19 +101,20 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
 
-	VAR2(1:3)=VAR(1:3)
-	VAR2(4:29)=VAR(5:30)
-	VAR2(30:36)=VAR(32:38)
-	VAR2(37:NVAR2)=VAR(43:NVAR)
+	!VAR2(1:3)=VAR(1:3)
+	!VAR2(4:29)=VAR(5:30)
+	!VAR2(30:36)=VAR(32:38)
+	!VAR2(37:NVAR2)=VAR(43:NVAR)
+	VAR2=VAR(select_ind)
    CALL Rosenbrock(NVAR2,VAR2,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		 LU_NONZERO2,NVAR2,LU_CROW2,LU_DIAG2,LU_IROW2,LU_ICOL2)
-		 
-	VAR(1:3)=VAR2(1:3)
-	VAR(5:30)=VAR2(4:29)
-	VAR(32:38)=VAR2(30:36)
-	VAR(43:NVAR)=VAR2(37:NVAR2)
+	VAR(select_ind)=VAR2
+	!VAR(1:3)=VAR2(1:3)
+	!VAR(5:30)=VAR2(4:29)
+	!VAR(32:38)=VAR2(30:36)
+	!VAR(43:NVAR)=VAR2(37:NVAR2)
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
    ! PRINT*,'NSTEPS=',ISTATUS(Nstp),' (',Ntotal,')','  O3=', VAR(ind_O3)
