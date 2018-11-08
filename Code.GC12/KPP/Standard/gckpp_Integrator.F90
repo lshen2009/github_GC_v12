@@ -102,7 +102,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
    END IF
 
 	VAR_selected=VAR(select_ind)
-   CALL Rosenbrock(NVAR2,VAR2,TIN,TOUT,   &
+   CALL Rosenbrock(NVAR2,VAR_selected,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		 LU_NONZERO2,NVAR2,LU_CROW2,LU_DIAG2,LU_IROW2,LU_ICOL2)
