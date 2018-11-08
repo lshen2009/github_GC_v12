@@ -35,7 +35,8 @@ MODULE gckpp_Global
   REAL(kind=dp) :: C(NSPEC)
 ! VAR - Concentrations of variable species (global)
   REAL(kind=dp) :: VAR(NVAR)
-  REAL(kind=dp) :: VAR2(NVAR2)
+  REAL(kind=dp) :: VAR_selected(NVAR2)
+  REAL(kind=dp) :: VAR_deleted(NVAR-NVAR2)
 ! FIX - Concentrations of fixed species (global)
   REAL(kind=dp) :: FIX(NFIX)
 ! VAR, FIX are chunks of array C
@@ -77,7 +78,7 @@ MODULE gckpp_Global
 ! NOTE: The following variables need to be declared THREADPRIVATE
 ! because they get written to within an OpenMP parallel loop
 !-----------------------------------------------------------------------
-!$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP,VAR2  )
+!$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP,VAR_selected,VAR_deleted)
 !$OMP THREADPRIVATE( CFACTOR, HET, PHOTOL, NUMDEN, H2O,  PRESS )
 
 ! INLINED global variable declarations
