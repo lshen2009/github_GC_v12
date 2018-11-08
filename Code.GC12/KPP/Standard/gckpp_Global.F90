@@ -24,7 +24,7 @@
 
 MODULE gckpp_Global
 
-  USE gckpp_Parameters, ONLY: dp, NSPEC, NVAR, NFIX, NREACT
+  USE gckpp_Parameters, ONLY: dp, NSPEC, NVAR, NFIX, NREACT,NVAR2
   PUBLIC
   SAVE
 
