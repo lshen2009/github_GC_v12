@@ -365,6 +365,11 @@ VRP        = IGNORE; {HOCH2CH(OOH)C(O)CH3; Peroxide from VRO2}
 XYLE       = IGNORE; {C8H10; Xylene}
 XRO2       = IGNORE; {Peroxy radical from XYLE oxidation}
 LSHENA     = IGNORE; {Peroxy radical from XYLE oxidation}
+LSHENB     = IGNORE; {Peroxy radical from XYLE oxidation}
+LSHENC     = IGNORE; {Peroxy radical from XYLE oxidation}
+LSHEND     = IGNORE; {Peroxy radical from XYLE oxidation}
+LSHENE     = IGNORE; {Peroxy radical from XYLE oxidation}
+LSHENF     = IGNORE; {Peroxy radical from XYLE oxidation}
 
 #DEFFIX
 
@@ -382,6 +387,10 @@ RCOOH      = IGNORE; {C2H5C(O)OH; > C2 organic acids}
 // Gas-phase reactions
 //
 LSHENA = O2 :                               GCARR(3.00E-12, 0.0E+00, -1500.0);
+LSHENB = 1.200LSHENC+LSHENA :               GCARR(3.00E-12, 0.0E+00, -1500.0);
+LSHENC + LSHEND=LSHENE + O2 :               GCARR(3.00E-12, 0.0E+00, -1500.0);
+LSHENC + LSHENF=LSHENB      :               GCARR(3.00E-12, 0.0E+00, -1500.0);
+LSHENF = O2 + LSHENE        :               GCARR(3.00E-12, 0.0E+00, -1500.0);
 O3 + NO = NO2 + O2:                         GCARR(3.00E-12, 0.0E+00, -1500.0);
 O3 + OH = HO2 + O2 :                         GCARR(1.70E-12, 0.0E+00, -940.0);
 O3 + HO2 = OH + O2 + O2 :                    GCARR(1.00E-14, 0.0E+00, -490.0);
