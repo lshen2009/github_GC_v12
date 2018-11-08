@@ -50,7 +50,7 @@
 
 MODULE gckpp_Integrator
 
-  USE gckpp_Parameters, ONLY: NVAR, NFIX, NSPEC, LU_NONZERO2,NVAR_1
+  USE gckpp_Parameters, ONLY: NVAR, NFIX, NSPEC, LU_NONZERO_1,NVAR_1
   USE gckpp_JacobianSP!, ONLY: LU_CROW2,LU_DIAG2,LU_IROW2,LU_ICOL2,select_ind,delete_ind
   USE gckpp_Global
   IMPLICIT NONE
