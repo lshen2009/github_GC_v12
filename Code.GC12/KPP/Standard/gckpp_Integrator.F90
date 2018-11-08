@@ -51,7 +51,7 @@
 MODULE gckpp_Integrator
 
   USE gckpp_Parameters, ONLY: NVAR, NFIX, NSPEC, LU_NONZERO_1,NVAR_1
-  USE gckpp_JacobianSP!, ONLY: LU_CROW2,LU_DIAG2,LU_IROW2,LU_ICOL2,select_ind,delete_ind
+  USE gckpp_JacobianSP
   USE gckpp_Global
   IMPLICIT NONE
   PUBLIC
@@ -101,12 +101,12 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
 
-	VAR_selected_1=VAR(select_ind)
+	VAR_selected_1=VAR(select_ind_1)
    CALL Rosenbrock(NVAR_1,VAR_selected_1,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		 LU_NONZERO2,NVAR_1,LU_CROW2,LU_DIAG2,LU_IROW2,LU_ICOL2)
-	VAR(select_ind)=VAR_selected_1
+		 LU_NONZERO_1,NVAR_1,LU_CROW_1,LU_DIAG_1,LU_IROW_1,LU_ICOL_1)
+	VAR(select_ind_1)=VAR_selected_1
 
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
