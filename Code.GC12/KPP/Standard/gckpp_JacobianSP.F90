@@ -792,7 +792,7 @@ MODULE gckpp_JacobianSP
      217,218,219,220,221,222,223,224,225,226, &
      227,228,229,230,231,232,233,234,235,236, &
      237,238,239,240 /)
-  INTEGER, PARAMETER, DIMENSION(6) :: select_ind = (/ &
+  INTEGER, PARAMETER, DIMENSION(6) :: delete_ind = (/ &
      4,31,39,40,41,42 /)
 END MODULE gckpp_JacobianSP
 
