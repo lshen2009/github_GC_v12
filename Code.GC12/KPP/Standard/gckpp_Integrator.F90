@@ -80,7 +80,8 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20)
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-
+   REAL(kind=dp) :: VAR_selected_1(NVAR_1)
+   
    INTEGER, SAVE :: Ntotal = 0
 
    ICNTRL(:)  = 0
