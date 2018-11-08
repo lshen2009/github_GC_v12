@@ -24,7 +24,7 @@
 
 MODULE gckpp_Global
 
-  USE gckpp_Parameters, ONLY: dp, NSPEC, NVAR, NFIX, NREACT,NVAR_1
+  USE gckpp_Parameters, ONLY: dp, NSPEC, NVAR, NFIX, NREACT
   PUBLIC
   SAVE
 
@@ -35,8 +35,6 @@ MODULE gckpp_Global
   REAL(kind=dp) :: C(NSPEC)
 ! VAR - Concentrations of variable species (global)
   REAL(kind=dp) :: VAR(NVAR)
-  !REAL(kind=dp) :: VAR_selected_1(NVAR_1)
-  !REAL(kind=dp) :: VAR_deleted_1(NVAR-NVAR_1)
 ! FIX - Concentrations of fixed species (global)
   REAL(kind=dp) :: FIX(NFIX)
 ! VAR, FIX are chunks of array C
@@ -79,7 +77,6 @@ MODULE gckpp_Global
 ! because they get written to within an OpenMP parallel loop
 !-----------------------------------------------------------------------
 !$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP)
-!$OMP THREADPRIVATE( VAR_selected_1,VAR_deleted_1)
 !$OMP THREADPRIVATE( CFACTOR, HET, PHOTOL, NUMDEN, H2O,  PRESS )
 
 ! INLINED global variable declarations
