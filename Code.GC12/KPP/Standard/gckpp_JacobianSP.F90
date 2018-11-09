@@ -792,8 +792,8 @@ MODULE gckpp_JacobianSP
      211,212,213,214,215,216,217,218,219,220, &
      221,222,223,224,225,226,227,228,229,230, &
      231,232,233,234 /)
-  INTEGER, PARAMETER, DIMENSION(0) :: delete_ind_1 = (/ &
-      /)
+  INTEGER, PARAMETER, DIMENSION(1) :: delete_ind_1 = (/ &
+      999/)
 	 
 END MODULE gckpp_JacobianSP
 
