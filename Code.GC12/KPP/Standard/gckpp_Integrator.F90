@@ -857,7 +857,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve(LS_LU_NONZERO,LS_NVAR, A, b )
+   CALL KppSolve_1(LS_LU_NONZERO,LS_NVAR, A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -1299,7 +1299,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot, LS_NVAR )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  !USE gckpp_Parameters, ONLY: NVAR2, LS_LU_NONZERO
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Function, ONLY: Fun
+ USE gckpp_Function, ONLY: Fun_1
  INTEGER,INTENT(IN)::LS_NVAR
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LS_NVAR)
@@ -1310,7 +1310,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot, LS_NVAR )
 
    Told = TIME
    TIME = T
-   CALL Fun( Y, FIX, RCONST, Ydot, LS_NVAR )
+   CALL Fun_1( Y, FIX, RCONST, Ydot, LS_NVAR )
    TIME = Told
 
 END SUBROUTINE FunTemplate
@@ -1324,7 +1324,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  !USE gckpp_Parameters, ONLY: NVAR2, LS_LU_NONZERO
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Jacobian, ONLY: Jac_SP
+ USE gckpp_Jacobian, ONLY: Jac_SP_1
  USE gckpp_LinearAlgebra
  
  INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO
@@ -1346,7 +1346,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO)
+    CALL Jac_SP_1(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO)
     DO j=1,LS_NVAR
       DO i=1,LS_NVAR
          Jcb(i,j) = 0.0_dp
@@ -1356,7 +1356,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
        Jcb(LS_LU_IROW(i),LS_LU_ICOL(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP( Y, FIX, RCONST, Jcb,LS_NVAR,LS_LU_NONZERO)
+    CALL Jac_SP_1( Y, FIX, RCONST, Jcb,LS_NVAR,LS_LU_NONZERO)
 #endif   
     TIME = Told
 

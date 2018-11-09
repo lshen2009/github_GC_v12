@@ -45,7 +45,7 @@ CONTAINS
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE Fun ( V, F, RCT, Vdot, LS_NVAR )
+SUBROUTINE Fun_1 ( V, F, RCT, Vdot, LS_NVAR )
 
   INTEGER,INTENT(IN)::LS_NVAR
 ! V - Concentrations of variable species (local)
@@ -1204,7 +1204,7 @@ SUBROUTINE Fun ( V, F, RCT, Vdot, LS_NVAR )
                 &-A(559)
 
       
-END SUBROUTINE Fun
+END SUBROUTINE Fun_1
 
 ! End of Fun function
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -93,7 +93,7 @@ END SUBROUTINE KppDecomp
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE KppSolve (LS_LU_NONZERO,LS_NVAR,JVS, X )
+SUBROUTINE KppSolve_1 (LS_LU_NONZERO,LS_NVAR,JVS, X )
   INTEGER, INTENT(IN)    :: LS_LU_NONZERO,LS_NVAR
   REAL(kind=dp) :: JVS(LS_LU_NONZERO)
   REAL(kind=dp) :: X(LS_NVAR)
@@ -752,7 +752,7 @@ X(3)=(X(3))/JVS(3)
 X(2)=(X(2))/JVS(2)
 X(1)=(X(1))/JVS(1)
 
-END SUBROUTINE KppSolve
+END SUBROUTINE KppSolve_1
 
 ! End of KppSolve function
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

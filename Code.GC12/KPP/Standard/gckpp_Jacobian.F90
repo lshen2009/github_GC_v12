@@ -43,7 +43,7 @@ CONTAINS
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE Jac_SP ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+SUBROUTINE Jac_SP_1 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
 
   INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO
 ! V - Concentrations of variable species (local)
@@ -4767,7 +4767,7 @@ SUBROUTINE Jac_SP ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
   JVS(3412) = B(619)
   JVS(3413) = -0.91*B(575)-B(625)-B(1031)-B(1036)-B(1040)-B(1048)-B(1054)-B(1062)-B(1063)
       
-END SUBROUTINE Jac_SP
+END SUBROUTINE Jac_SP_1
 
 END MODULE gckpp_Jacobian
 
