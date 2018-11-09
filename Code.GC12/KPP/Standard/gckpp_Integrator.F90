@@ -127,7 +127,7 @@ END SUBROUTINE INTEGRATE
 SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		   LS_LU_NONZERO,LS_NVAR,LS_LU_CROW,LS_LU_DIAG,LS_LU_IROW,LS_LU_ICOL)
+		   LS_LU_NONZERO,LS_NVAR,LS_LU_CROW,LS_LU_DIAG,LS_LU_IROW,LS_LU_ICOL, LS_type)
 		    
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !
