@@ -905,8 +905,8 @@ CONTAINS
 !#endif
 		LS_type=1
        ! Call the KPP integrator
-       CALL Integrate( TIN,    TOUT,    ICNTRL,      &
-                       RCNTRL, ISTATUS, RSTATE, IERR, LS_type )
+       CALL Integrate( TIN,    TOUT, LS_type,  ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )
 
        ! Print grid box indices to screen if integrate failed
        IF ( IERR < 0 ) THEN
