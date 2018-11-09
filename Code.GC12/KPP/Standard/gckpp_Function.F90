@@ -45,16 +45,17 @@ CONTAINS
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SUBROUTINE Fun ( V, F, RCT, Vdot )
+SUBROUTINE Fun ( V, F, RCT, Vdot, LS_NVAR )
 
+  INTEGER,INTENT(IN)::LS_NVAR
 ! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
+  REAL(kind=dp) :: V(LS_NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(NVAR)
+  REAL(kind=dp) :: Vdot(LS_NVAR)
 
 
 ! Computation of equation rates
