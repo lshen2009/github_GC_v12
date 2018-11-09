@@ -218,7 +218,7 @@ CONTAINS
     REAL(fp)               :: Start,     Finish,   rtim,      itim
     REAL(fp)               :: SO4_FRAC,  YLAT,     T,         TIN
     REAL(fp)               :: JNoon_Fac, TOUT
-
+	INTEGER                :: LS_type
     ! Strings
     CHARACTER(LEN=63)      :: OrigUnit
     CHARACTER(LEN=255)     :: ErrMsg,   ThisLoc
@@ -903,10 +903,10 @@ CONTAINS
 !         ! Get time before integrator starts
 !         CALL CPU_TIME( start )
 !#endif
-
+		LS_type=1
        ! Call the KPP integrator
        CALL Integrate( TIN,    TOUT,    ICNTRL,      &
-                       RCNTRL, ISTATUS, RSTATE, IERR )
+                       RCNTRL, ISTATUS, RSTATE, IERR, LS_type )
 
        ! Print grid box indices to screen if integrate failed
        IF ( IERR < 0 ) THEN
