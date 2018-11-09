@@ -906,7 +906,7 @@ CONTAINS
 	   IF (L>=35) THEN
 		LS_type=1
 	   ELSE
-	    LS_type=2
+	    LS_type=1
 	   END IF
        ! Call the KPP integrator
        CALL Integrate( TIN,    TOUT, LS_type,  ICNTRL, &
