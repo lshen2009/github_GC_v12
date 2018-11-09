@@ -106,7 +106,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, &
    CALL Rosenbrock(NVAR_1,VAR_selected_1,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		 LU_NONZERO_1,NVAR_1,LU_CROW_1,LU_DIAG_1,LU_IROW_11,LU_ICOL_11)
+		 LU_NONZERO_1,NVAR_1,LU_CROW_1,LU_DIAG_1,LU_IROW_1,LU_ICOL_1)
 	VAR(select_ind_1)=VAR_selected_1
 
    !~~~> Debug option: show no of steps
