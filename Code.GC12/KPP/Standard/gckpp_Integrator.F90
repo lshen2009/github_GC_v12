@@ -81,7 +81,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type, &
    
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20)
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected_1(NVAR_1)
+   REAL(kind=dp) :: VAR_selected_1(NVAR_1),VAR_selected_2(NVAR_2)
    
    INTEGER, SAVE :: Ntotal = 0
 
@@ -102,14 +102,23 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type, &
    IF (PRESENT(RCNTRL_U)) THEN
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
-
-   VAR_selected_1=VAR(select_ind_1)
-   CALL Rosenbrock(NVAR_1,VAR_selected_1,TIN,TOUT,   &
+   
+   IF (LS_type==1) THEN
+     VAR_selected_1=VAR(select_ind_1)
+     CALL Rosenbrock(NVAR_1,VAR_selected_1,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		 LU_NONZERO_1,NVAR_1,LU_CROW_1,LU_DIAG_1,LU_IROW_1,LU_ICOL_1, LS_type)
-	VAR(select_ind_1)=VAR_selected_1
-
+	 VAR(select_ind_1)=VAR_selected_1
+   ELSE IF (LS_type==2) THEN
+     VAR_selected_2=VAR(select_ind_2)
+     CALL Rosenbrock(NVAR_2,VAR_selected_2,TIN,TOUT,   &
+         ATOL,RTOL,                &
+         RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		 LU_NONZERO_2,NVAR_2,LU_CROW_2,LU_DIAG_2,LU_IROW_2,LU_ICOL_2, LS_type)
+	  VAR(select_ind_2)=VAR_selected_2
+   END IF
+   
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
    ! PRINT*,'NSTEPS=',ISTATUS(Nstp),' (',Ntotal,')','  O3=', VAR(ind_O3)
@@ -1373,7 +1382,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
     IF (LS_type==1) THEN
        CALL Jac_SP_1( Y, FIX, RCONST, Jcb,LS_NVAR,LS_LU_NONZERO)
 	ELSE IF (LS_type==2) THEN
-	   CALL Jac_SP_1( Y, FIX, RCONST, Jcb,LS_NVAR,LS_LU_NONZERO)
+	   CALL Jac_SP_2( Y, FIX, RCONST, Jcb,LS_NVAR,LS_LU_NONZERO)
 	END IF
 #endif   
     TIME = Told
