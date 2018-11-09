@@ -107,7 +107,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type, &
    CALL Rosenbrock(NVAR_1,VAR_selected_1,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		 LU_NONZERO_1,NVAR_1,LU_CROW_1,LU_DIAG_1,LU_IROW_1,LU_ICOL_1)
+		 LU_NONZERO_1,NVAR_1,LU_CROW_1,LU_DIAG_1,LU_IROW_1,LU_ICOL_1, LS_type)
 	VAR(select_ind_1)=VAR_selected_1
 
    !~~~> Debug option: show no of steps
@@ -248,7 +248,7 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
   IMPLICIT NONE
 
 !~~~>  Arguments
-   INTEGER,       INTENT(IN)    :: N,LS_LU_NONZERO,LS_NVAR   
+   INTEGER,       INTENT(IN)    :: N,LS_LU_NONZERO,LS_NVAR,LS_type   
    INTEGER,INTENT(IN)::LS_LU_CROW(LS_NVAR+1),LS_LU_DIAG(LS_NVAR+1)
    INTEGER,INTENT(IN)::LS_LU_IROW(LS_LU_NONZERO),LS_LU_ICOL(LS_LU_NONZERO)   
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
