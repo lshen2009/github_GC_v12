@@ -13,7 +13,7 @@
 !        R. Sander, Max-Planck Institute for Chemistry, Mainz, Germany
 ! 
 ! File                 : gckpp_Global.f90
-! Time                 : Thu Nov  8 00:02:58 2018
+! Time                 : Thu Nov  8 22:27:07 2018
 ! Working directory    : /net/seasasfs02/srv/export/seasasfs02/share_root/lshen/GC_speedup/github/github_GC_v12/Code.GC12/KPP/Standard
 ! Equation file        : gckpp.kpp
 ! Output root filename : gckpp
@@ -39,7 +39,7 @@ MODULE gckpp_Global
   REAL(kind=dp) :: FIX(NFIX)
 ! VAR, FIX are chunks of array C
 !      EQUIVALENCE( C(1),VAR(1) )
-!      EQUIVALENCE( C(241),FIX(1) )
+!      EQUIVALENCE( C(235),FIX(1) )
 ! RCONST - Rate constants (global)
   REAL(kind=dp) :: RCONST(NREACT)
 ! TIME - Current integration time
@@ -76,7 +76,7 @@ MODULE gckpp_Global
 ! NOTE: The following variables need to be declared THREADPRIVATE
 ! because they get written to within an OpenMP parallel loop
 !-----------------------------------------------------------------------
-!$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP)
+!$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP  )
 !$OMP THREADPRIVATE( CFACTOR, HET, PHOTOL, NUMDEN, H2O,  PRESS )
 
 ! INLINED global variable declarations
