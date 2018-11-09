@@ -856,8 +856,12 @@ Stage: DO istage = 1, ros_S
    IF ( Info < 0 ) THEN
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
-#else   
-   CALL KppSolve_1(LS_LU_NONZERO,LS_NVAR, A, b )
+#else 
+   IF (LS_type==1) THEN
+   	CALL KppSolve_1(LS_LU_NONZERO,LS_NVAR, A, b )
+   ELSE IF (LS_type==2) THEN
+    CALL KppSolve_2(LS_LU_NONZERO,LS_NVAR, A, b )
+   END iF
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -1299,7 +1303,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot, LS_NVAR, LS_type )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  !USE gckpp_Parameters, ONLY: NVAR2, LS_LU_NONZERO
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Function, ONLY: Fun_1
+ USE gckpp_Function, ONLY: Fun_1,Fun_2
  INTEGER,INTENT(IN)::LS_NVAR, LS_type
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LS_NVAR)
@@ -1310,7 +1314,13 @@ SUBROUTINE FunTemplate( T, Y, Ydot, LS_NVAR, LS_type )
 
    Told = TIME
    TIME = T
-   CALL Fun_1( Y, FIX, RCONST, Ydot, LS_NVAR )
+   IF (LS_type==1) THEN
+       CALL Fun_1( Y, FIX, RCONST, Ydot, LS_NVAR )
+   ELSE IF (LS_type==2) THEN
+       CALL Fun_2( Y, FIX, RCONST, Ydot, LS_NVAR )
+   ENDIF
+   
+   
    TIME = Told
 
 END SUBROUTINE FunTemplate
@@ -1324,7 +1334,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  !USE gckpp_Parameters, ONLY: NVAR2, LS_LU_NONZERO
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Jacobian, ONLY: Jac_SP_1
+ USE gckpp_Jacobian, ONLY: Jac_SP_1,Jac_SP_2
  USE gckpp_LinearAlgebra
  
  INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO, LS_type
@@ -1345,8 +1355,12 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
 
     Told = TIME
     TIME = T
-#ifdef FULL_ALGEBRA    
-    CALL Jac_SP_1(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO)
+#ifdef FULL_ALGEBRA
+    IF (LS_type==1) THEN
+       CALL Jac_SP_1(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO)
+	ELSE IF (LS_type==2) THEN
+	   CALL Jac_SP_2(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO)
+	END IF
     DO j=1,LS_NVAR
       DO i=1,LS_NVAR
          Jcb(i,j) = 0.0_dp
@@ -1356,7 +1370,11 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
        Jcb(LS_LU_IROW(i),LS_LU_ICOL(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_1( Y, FIX, RCONST, Jcb,LS_NVAR,LS_LU_NONZERO)
+    IF (LS_type==1) THEN
+       CALL Jac_SP_1(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO)
+	ELSE IF (LS_type==2) THEN
+	   CALL Jac_SP_2(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO)
+	END IF
 #endif   
     TIME = Told
 
