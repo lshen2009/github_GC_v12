@@ -606,7 +606,7 @@ CONTAINS
     !$OMP PRIVATE  ( I,        J,        L,       N,     YLAT               )&
     !$OMP PRIVATE  ( SO4_FRAC, IERR,     RCNTRL,  START, FINISH, ISTATUS    )&
     !$OMP PRIVATE  ( RSTATE,   SpcID,    KppID,   F,     P                  )&
-    !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC                 ) &
+    !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC, LS_type) &
     !$OMP REDUCTION( +:ITIM                                                 )&
     !$OMP REDUCTION( +:RTIM                                                 )&
     !$OMP REDUCTION( +:TOTSTEPS                                             )&
