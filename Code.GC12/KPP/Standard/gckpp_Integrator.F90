@@ -81,7 +81,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type, &
    
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20)
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected_1(NVAR_1),VAR_selected_2(NVAR_2)
+   !REAL(kind=dp) :: VAR_selected_1(NVAR_1),VAR_selected_2(NVAR_2)
    
    INTEGER, SAVE :: Ntotal = 0
 
@@ -110,6 +110,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type, &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		 LU_NONZERO_1,NVAR_1,LU_CROW_1,LU_DIAG_1,LU_IROW_1,LU_ICOL_1, LS_type)
 	 VAR(select_ind_1)=VAR_selected_1
+	 
    ELSE IF (LS_type==2) THEN
      VAR_selected_2=VAR(select_ind_2)
      CALL Rosenbrock(NVAR_2,VAR_selected_2,TIN,TOUT,   &
