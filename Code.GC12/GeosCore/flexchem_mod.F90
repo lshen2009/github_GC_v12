@@ -618,6 +618,11 @@ CONTAINS
     !$OMP SCHEDULE ( DYNAMIC,  1                                            )
     DO L = 1, LLPAR
        !CALL CPU_TIME(time=timeStart)
+	   IF (L>=35) THEN
+		LS_type=1
+	   ELSE
+	    LS_type=1
+	   END IF	   
     DO J = 1, JJPAR
     DO I = 1, IIPAR
        !====================================================================
@@ -903,11 +908,6 @@ CONTAINS
 !         ! Get time before integrator starts
 !         CALL CPU_TIME( start )
 !#endif
-	   IF (L>=35) THEN
-		LS_type=1
-	   ELSE
-	    LS_type=2
-	   END IF
        ! Call the KPP integrator
        CALL Integrate( TIN,    TOUT, LS_type,  ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )
