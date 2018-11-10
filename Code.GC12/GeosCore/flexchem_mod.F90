@@ -904,7 +904,7 @@ CONTAINS
 !         CALL CPU_TIME( start )
 !#endif
 	   IF (L>=35) THEN
-		LS_type=1
+		LS_type=2
 	   ELSE
 	    LS_type=2
 	   END IF
