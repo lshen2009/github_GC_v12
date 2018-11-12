@@ -618,7 +618,7 @@ CONTAINS
     !$OMP SCHEDULE ( DYNAMIC,  1                                            )
     DO L = 1, LLPAR
        !CALL CPU_TIME(time=timeStart)
-	   IF (L>=20) THEN
+	   IF (L>=30) THEN
 		LS_type=2
 	   ELSE
 	    LS_type=1
