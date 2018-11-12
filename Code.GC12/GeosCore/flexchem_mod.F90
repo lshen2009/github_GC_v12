@@ -621,7 +621,7 @@ CONTAINS
 	   IF (L>=20) THEN
 		LS_type=2
 	   ELSE
-	    LS_type=2
+	    LS_type=1
 	   END IF	   
     DO J = 1, JJPAR
     DO I = 1, IIPAR

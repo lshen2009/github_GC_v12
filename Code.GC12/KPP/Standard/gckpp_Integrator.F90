@@ -110,7 +110,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type, &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
    	 LU_NONZERO_1,NVAR_1,LU_CROW_1,LU_DIAG_1,LU_IROW_1,LU_ICOL_1, LS_type)
    	 VAR(select_ind_1)=VAR_selected_1
-    END IF
+   END IF
    
    IF (LS_type==2) THEN
      VAR_selected_2=VAR(select_ind_2)
