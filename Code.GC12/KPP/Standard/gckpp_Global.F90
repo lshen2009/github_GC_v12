@@ -25,7 +25,7 @@
 MODULE gckpp_Global
 
   USE gckpp_Parameters, ONLY: dp, NSPEC, NVAR, NFIX, NREACT
-  !USE gckpp_JacobianSP, ONLY: NVAR_1,NVAR_2
+  USE gckpp_JacobianSP, ONLY: NVAR_1,NVAR_2
   PUBLIC
   SAVE
 
