@@ -619,9 +619,9 @@ CONTAINS
     DO L = 1, LLPAR
        !CALL CPU_TIME(time=timeStart)
 	   IF (L>=20) THEN
-		LS_type=2
+		LS_type=1
 	   ELSE
-	    LS_type=1
+	    LS_type=2
 	   END IF	   
     DO J = 1, JJPAR
     DO I = 1, IIPAR
