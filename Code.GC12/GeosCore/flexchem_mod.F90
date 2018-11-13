@@ -921,7 +921,7 @@ CONTAINS
 		    print *, "error"
 	   END SELECT
 			
-       CALL Integrate( TIN,    TOUT, LS_type, LS_NSEL,  ICNTRL, &
+       CALL Integrate( TIN,    TOUT, LS_type, LS_NSEL, LS_NDEL, ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )
 
        ! Print grid box indices to screen if integrate failed
