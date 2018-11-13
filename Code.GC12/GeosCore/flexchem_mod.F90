@@ -113,6 +113,7 @@ CONTAINS
     USE GCKPP_HetRates,       ONLY : SET_HET
     USE GCKPP_Monitor,        ONLY : SPC_NAMES, FAM_NAMES
     USE GCKPP_Parameters
+	USE gckpp_JacobianSP
     USE GCKPP_Integrator,     ONLY : INTEGRATE, NHnew
     USE GCKPP_Function 
     USE GCKPP_Model
@@ -218,7 +219,7 @@ CONTAINS
     REAL(fp)               :: Start,     Finish,   rtim,      itim
     REAL(fp)               :: SO4_FRAC,  YLAT,     T,         TIN
     REAL(fp)               :: JNoon_Fac, TOUT
-	INTEGER                :: LS_type
+	INTEGER                :: LS_type, LS_NSEL, LS_NDEL
     ! Strings
     CHARACTER(LEN=63)      :: OrigUnit
     CHARACTER(LEN=255)     :: ErrMsg,   ThisLoc
@@ -909,7 +910,18 @@ CONTAINS
 !         CALL CPU_TIME( start )
 !#endif
        ! Call the KPP integrator
-       CALL Integrate( TIN,    TOUT, LS_type,  ICNTRL, &
+	   SELECT CASE (LS_type)
+	     CASE (1)
+		    LS_NSEL=NVAR_1
+			LS_NDEL=0
+	     CASE (2)
+		    LS_NSEL=NVAR_2
+			LS_NDEL=LU_DEL_2
+		 CASE DEFAULT
+		    print *, "error"
+	   END SELECT
+			
+       CALL Integrate( TIN,    TOUT, LS_type, LS_NSEL, LS_NDEL, ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )
 
        ! Print grid box indices to screen if integrate failed
