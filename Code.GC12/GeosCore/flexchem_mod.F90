@@ -242,7 +242,9 @@ CONTAINS
 
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
-
+    INTEGER :: NHMS,NYMD,YMDH
+    LOGICAL :: new_hour
+	
     ! For testing only, may be removed later (mps, 4/26/16)
     LOGICAL                :: DO_HETCHEM
     REAL(fp)               :: TimeStart,timeEnd
@@ -272,6 +274,11 @@ CONTAINS
     ! This is for testing only and may be removed later (mps, 4/26/16)
     DO_HETCHEM  = .TRUE.
 
+    NHMS=GET_NHMS()!lshen
+    NYMD  = GET_NYMD()!lshen
+    new_hour=ITS_A_NEW_HOUR()!lshen
+	
+	print *,'lshen_test_new_hour',NYMD,NHMS,new_hour
     ! Remove debug output
     !IF ( FIRSTCHEM .AND. am_I_Root ) THEN
     !   WRITE( 6, '(a)' ) REPEAT( '#', 32 )
