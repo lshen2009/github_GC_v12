@@ -114,11 +114,13 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type, &
    
    IF (LS_type==2) THEN
      VAR_selected_2=VAR(select_ind_2)
+	 VAR_deleted_2=VAR(delete_ind_2)
      CALL Rosenbrock(NVAR_2,VAR_selected_2,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		 LU_NONZERO_2,NVAR_2,LU_CROW_2,LU_DIAG_2,LU_IROW_2,LU_ICOL_2, LS_type)
 	  VAR(select_ind_2)=VAR_selected_2
+	  VAR(delete_ind_2)=VAR_deleted_2
    END IF
    
    !~~~> Debug option: show no of steps
