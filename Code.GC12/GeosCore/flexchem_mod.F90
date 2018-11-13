@@ -135,6 +135,7 @@ CONTAINS
     USE TIME_MOD,             ONLY : Get_Day
     USE TIME_MOD,             ONLY : Get_Month
     USE TIME_MOD,             ONLY : Get_Year
+	USE TIME_MOD,             ONLY : GET_NHMS,GET_NYMD,ITS_A_NEW_HOUR
     USE UnitConv_Mod,         ONLY : Convert_Spc_Units
     USE UCX_MOD,              ONLY : CALC_STRAT_AER
     USE UCX_MOD,              ONLY : SO4_PHOTFRAC
