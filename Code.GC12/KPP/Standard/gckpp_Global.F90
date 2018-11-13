@@ -25,7 +25,7 @@
 MODULE gckpp_Global
 
   USE gckpp_Parameters, ONLY: dp, NSPEC, NVAR, NFIX, NREACT
-  USE gckpp_JacobianSP, ONLY: NVAR_1,NVAR_2
+  USE gckpp_JacobianSP, ONLY: NVAR_1,NVAR_2, LU_DEL_2
   PUBLIC
   SAVE
 
@@ -38,7 +38,7 @@ MODULE gckpp_Global
   REAL(kind=dp) :: VAR(NVAR)
   REAL(kind=dp) :: VAR_selected_1(NVAR_1)
   REAL(kind=dp) :: VAR_selected_2(NVAR_2)
-  REAL(kind=dp) :: VAR_deleted_2(NVAR_1-NVAR_2)
+  REAL(kind=dp) :: VAR_deleted_2(LU_DEL_2)
 ! FIX - Concentrations of fixed species (global)
   REAL(kind=dp) :: FIX(NFIX)
 ! VAR, FIX are chunks of array C
