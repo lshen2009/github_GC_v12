@@ -961,7 +961,7 @@ CONTAINS
           VAR = C(1:NVAR)
           FIX = C(NVAR+1:NSPEC)
           CALL Update_RCONST( )
-          CALL Integrate( TIN,    TOUT, LS_type,   ICNTRL,      &
+          CALL Integrate( TIN,    TOUT, LS_type, LS_NSEL, LS_NDEL,  ICNTRL,      &
                           RCNTRL, ISTATUS, RSTATE, IERR )
           IF ( IERR < 0 ) THEN 
              WRITE(6,*) '## INTEGRATE FAILED TWICE !!! '
