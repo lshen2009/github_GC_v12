@@ -64,7 +64,7 @@ MODULE gckpp_Integrator
 
 CONTAINS
 
-SUBROUTINE INTEGRATE( TIN, TOUT, LS_type, &
+SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
 
    IMPLICIT NONE
@@ -77,12 +77,12 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type, &
    INTEGER,       INTENT(OUT), OPTIONAL :: ISTATUS_U(20)
    REAL(kind=dp), INTENT(OUT), OPTIONAL :: RSTATUS_U(20)
    INTEGER,       INTENT(OUT), OPTIONAL :: IERR_U
-   INTEGER,		  INTENT(IN) :: LS_type
+   INTEGER,		  INTENT(IN) :: LS_type,LS_NSEL,LS_NDEL
    
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20)
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
    
-   REAL(kind=dp) :: VAR_selected_1(NVAR_1),VAR_selected_2(NVAR_2),VAR_deleted_2(LU_DEL_2)
+   REAL(kind=dp) :: VAR_selected(LS_NSEL),VAR_deleted(LS_NDEL)
    
    INTEGER, SAVE :: Ntotal = 0
 
@@ -105,23 +105,23 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type, &
    END IF
    
    IF (LS_type==1) THEN
-     VAR_selected_1=VAR(select_ind_1)
-     CALL Rosenbrock(NVAR_1,VAR_selected_1,TIN,TOUT,   &
+     VAR_selected=VAR(select_ind_1)
+     CALL Rosenbrock(NVAR_1,VAR_selected,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
    	 LU_NONZERO_1,NVAR_1,LU_CROW_1,LU_DIAG_1,LU_IROW_1,LU_ICOL_1, LS_type)
-   	 VAR(select_ind_1)=VAR_selected_1
+   	 VAR(select_ind_1)=VAR_selected
    END IF
    
    IF (LS_type==2) THEN
-     VAR_selected_2=VAR(select_ind_2)
-	 VAR_deleted_2=VAR(delete_ind_2)
-     CALL Rosenbrock(NVAR_2,VAR_selected_2,TIN,TOUT,   &
+     VAR_selected=VAR(select_ind_2)
+	 VAR_deleted=VAR(delete_ind_2)
+     CALL Rosenbrock(NVAR_2,VAR_selected,TIN,TOUT,   &
          ATOL,RTOL,                &
          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		 LU_NONZERO_2,NVAR_2,LU_CROW_2,LU_DIAG_2,LU_IROW_2,LU_ICOL_2, LS_type)
-	  VAR(select_ind_2)=VAR_selected_2
-	  VAR(delete_ind_2)=VAR_deleted_2
+	  VAR(select_ind_2)=VAR_selected
+	  VAR(delete_ind_2)=VAR_deleted
    END IF
    
    !~~~> Debug option: show no of steps
