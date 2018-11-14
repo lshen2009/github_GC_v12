@@ -1287,12 +1287,12 @@ CONTAINS
   if (new_hour) then    
     YMDH=NYMD*100+NHMS/10000
     print *,NYMD,NHMS,YMDH
-    write (outputname1, "(A12,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
-    write (outputname2, "(A12,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'
-	write (outputname3, "(A12,I10,A4)") "PL/lshen_Vdot_", YMDH,'.txt'
+    write (outputname1, "(A15,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
+    write (outputname2, "(A15,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'
+	write (outputname3, "(A15,I10,A4)") "PL/lshen_Vdot_", YMDH,'.txt'
     OPEN(unit=1101,file=outputname1)
     OPEN(unit=1102,file=outputname2)
-	OPEN(unit=1103,file=outputname2)
+	OPEN(unit=1103,file=outputname3)
          DO L=1,LLPAR
            DO J=1,JJPAR
             DO I=1,IIPAR
