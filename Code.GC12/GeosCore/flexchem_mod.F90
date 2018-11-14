@@ -895,9 +895,9 @@ CONTAINS
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 	     LS_Prate(I,J,L,:)=Prate
 	     LS_Lrate(I,J,L,:)=Lrate
-	     if(MOD(I,30)==1 .and. J==10 .and. L==2) THEN
-		    print *, "lshen_Prate",Prate
-	     ENDIF
+	     !if(MOD(I,30)==1 .and. J==10 .and. L==2) THEN
+		    !print *, "lshen_Prate",Prate
+	     !ENDIF
 	   ENDIF
 !#if defined( DEVEL )
 !       ! Get time when rate computation finished
