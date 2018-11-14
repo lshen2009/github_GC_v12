@@ -239,8 +239,9 @@ CONTAINS
     REAL(fp)               :: Before     (IIPAR,JJPAR,LLPAR,State_Chm%nAdvect)
 	REAL(fp)               :: LS_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
 	REAL(fp)               :: LS_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
+	REAL(fp)               :: LS_Vdot     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
 	INTEGER                :: LS_Alltype   (IIPAR,JJPAR,LLPAR) !lshen
-	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR)
+	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR),Vdot(NVAR)
 
     ! For tagged CO saving
     REAL(fp)               :: LCH4, PCO_TOT, PCO_CH4, PCO_NMVOC
@@ -621,7 +622,7 @@ CONTAINS
     !$OMP PRIVATE  ( SO4_FRAC, IERR,     RCNTRL,  START, FINISH, ISTATUS    )&
     !$OMP PRIVATE  ( RSTATE,   SpcID,    KppID,   F,     P                  )&
     !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC                 ) &
-	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate              ) &
+	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate,Vdot         ) &
     !$OMP REDUCTION( +:ITIM                                                 )&
     !$OMP REDUCTION( +:RTIM                                                 )&
     !$OMP REDUCTION( +:TOTSTEPS                                             )&
@@ -893,9 +894,10 @@ CONTAINS
        CALL Update_RCONST( )
 	   
 	   IF (new_hour) THEN
-	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
+	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate, Vdot)
 	     LS_Prate(I,J,L,:)=Prate
 	     LS_Lrate(I,J,L,:)=Lrate
+		 LS_Vdot(I,J,L,:)=Vdot
 	     !if(MOD(I,30)==1 .and. J==10 .and. L==2) THEN
 		    !print *, "lshen_Prate",Prate
 	     !ENDIF
@@ -1287,18 +1289,22 @@ CONTAINS
     print *,NYMD,NHMS,YMDH
     write (outputname1, "(A12,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
     write (outputname2, "(A12,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'
+	write (outputname3, "(A12,I10,A4)") "PL/lshen_Vdot_", YMDH,'.txt'
     OPEN(unit=1101,file=outputname1)
     OPEN(unit=1102,file=outputname2)
+	OPEN(unit=1103,file=outputname2)
          DO L=1,LLPAR
            DO J=1,JJPAR
             DO I=1,IIPAR
               write(1101,'(3I4,234E15.3)'), I,J,L,LS_Prate(I,J,L,:)
               write(1102,'(3I4,234E15.3)'), I,J,L,LS_Lrate(I,J,L,:)
+			  write(1103,'(3I4,234E15.3)'), I,J,L,LS_Vdot(I,J,L,:)
             ENDDO
            ENDDO
          ENDDO
     close(1101)!lshen
     close(1102)
+	close(1103)
   endif
   
   END SUBROUTINE Do_FlexChem
