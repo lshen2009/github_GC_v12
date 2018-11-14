@@ -1848,7 +1848,7 @@ Vdot(129)=-0.91*A(299)+A(321)-A(324)+A(336)+A(337)+A(339)+A(340)+A(341)+2*A(361)
 END SUBROUTINE Fun_2
 
 
-SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate, Vdot, Diff)
+SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate)
 
 ! V - Concentrations of variable species (local)
   REAL(kind=dp) :: V(NVAR)
@@ -1857,7 +1857,7 @@ SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate, Vdot, Diff)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
   REAL(kind=dp) :: Prate(NVAR),Lrate(NVAR)
-  REAL(kind=dp) :: Vdot(NVAR),Diff(NVAR)
+  REAL(kind=dp) :: Vdot(NVAR)
 
 ! Computation of equation rates
   A(1) = RCT(1)*V(221)*V(222)
@@ -3685,7 +3685,7 @@ SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate, Vdot, Diff)
                 &-2*A(352)-A(356)-A(357)-A(358)-A(395)-A(396)-A(397)-A(669)
   Lrate(234) = -0.91*A(299)-A(324)-A(540)-A(543)-A(545)-A(549)-A(552)-A(558)-A(559)
 
-  Diff=Prate+Lrate-Vdot
+  !Diff=Prate+Lrate-Vdot
 END SUBROUTINE Fun_PL
 
 
