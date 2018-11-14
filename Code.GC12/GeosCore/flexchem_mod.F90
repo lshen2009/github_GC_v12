@@ -240,6 +240,7 @@ CONTAINS
 	REAL(fp)               :: LS_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
 	REAL(fp)               :: LS_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
 	INTEGER                :: LS_Alltype   (IIPAR,JJPAR,LLPAR) !lshen
+	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR)
 
     ! For tagged CO saving
     REAL(fp)               :: LCH4, PCO_TOT, PCO_CH4, PCO_NMVOC
@@ -619,7 +620,7 @@ CONTAINS
     !$OMP PRIVATE  ( SO4_FRAC, IERR,     RCNTRL,  START, FINISH, ISTATUS    )&
     !$OMP PRIVATE  ( RSTATE,   SpcID,    KppID,   F,     P                  )&
     !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC                 ) &
-	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL                            ) &
+	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate              ) &
     !$OMP REDUCTION( +:ITIM                                                 )&
     !$OMP REDUCTION( +:RTIM                                                 )&
     !$OMP REDUCTION( +:TOTSTEPS                                             )&

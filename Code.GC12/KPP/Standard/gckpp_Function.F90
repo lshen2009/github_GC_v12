@@ -3264,7 +3264,7 @@ SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate)
                 &-2*A(352)-A(356)-A(357)-A(358)-A(395)-A(396)-A(397)-A(669)
   Lrate(234) = -0.91*A(299)-A(324)-A(540)-A(543)-A(545)-A(549)-A(552)-A(558)-A(559)
 
-END SUBROUTINE Fun
+END SUBROUTINE Fun_PL
 
 
 
