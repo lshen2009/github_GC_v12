@@ -240,8 +240,9 @@ CONTAINS
 	REAL(fp)               :: LS_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
 	REAL(fp)               :: LS_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
 	REAL(fp)               :: LS_Vdot     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
+	REAL(fp)               :: LS_Diff     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
 	INTEGER                :: LS_Alltype   (IIPAR,JJPAR,LLPAR) !lshen
-	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR),Vdot(NVAR)
+	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR),Vdot(NVAR),Diff(NVAR)
 
     ! For tagged CO saving
     REAL(fp)               :: LCH4, PCO_TOT, PCO_CH4, PCO_NMVOC
@@ -279,6 +280,7 @@ CONTAINS
 	LS_Prate(:,:,:,:)=0.0_fp
 	LS_Lrate(:,:,:,:)=0.0_fp
 	LS_Vdot(:,:,:,:)=0.0_fp
+	LS_Diff(:,:,:,:)=0.0_fp
 
     ! Turn heterogeneous chemistry and photolysis on/off here
     ! This is for testing only and may be removed later (mps, 4/26/16)
@@ -625,7 +627,7 @@ CONTAINS
     !$OMP PRIVATE  ( SO4_FRAC, IERR,     RCNTRL,  START, FINISH, ISTATUS    )&
     !$OMP PRIVATE  ( RSTATE,   SpcID,    KppID,   F,     P                  )&
     !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC                 ) &
-	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate,Vdot         ) &
+	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate,Vdot,Diff   ) &
     !$OMP REDUCTION( +:ITIM                                                 )&
     !$OMP REDUCTION( +:RTIM                                                 )&
     !$OMP REDUCTION( +:TOTSTEPS                                             )&
@@ -897,10 +899,11 @@ CONTAINS
        CALL Update_RCONST( )
 	   
 	   IF (new_hour) THEN
-	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate, Vdot)
+	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate, Vdot,Diff)
 	     LS_Prate(I,J,L,:)=Prate
 	     LS_Lrate(I,J,L,:)=Lrate
 		 LS_Vdot(I,J,L,:)=Vdot
+		 LS_Diff(I,J,L,:)=Diff
 	     !if(MOD(I,30)==1 .and. J==10 .and. L==2) THEN
 		    !print *, "lshen_Prate",Prate
 	     !ENDIF
@@ -1293,21 +1296,25 @@ CONTAINS
     write (outputname1, "(A15,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
     write (outputname2, "(A15,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'
 	write (outputname3, "(A15,I10,A4)") "PL/lshen_Vdot_", YMDH,'.txt'
+	write (outputname4, "(A15,I10,A4)") "PL/lshen_Diff_", YMDH,'.txt'
     OPEN(unit=1101,file=outputname1)
     OPEN(unit=1102,file=outputname2)
 	OPEN(unit=1103,file=outputname3)
+	OPEN(unit=1104,file=outputname4)
          DO L=1,LLPAR
            DO J=1,JJPAR
             DO I=1,IIPAR
               write(1101,'(3I4,234E15.3)'), I,J,L,LS_Prate(I,J,L,:)
               write(1102,'(3I4,234E15.3)'), I,J,L,LS_Lrate(I,J,L,:)
 			  write(1103,'(3I4,234E15.3)'), I,J,L,LS_Vdot(I,J,L,:)
+			  write(1104,'(3I4,234E15.3)'), I,J,L,LS_Diff(I,J,L,:)
             ENDDO
            ENDDO
          ENDDO
     close(1101)!lshen
     close(1102)
 	close(1103)
+	close(1104)
   endif
   
   END SUBROUTINE Do_FlexChem
