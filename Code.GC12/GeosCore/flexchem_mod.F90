@@ -975,7 +975,10 @@ CONTAINS
           FIX = C(NVAR+1:NSPEC)
           CALL Update_RCONST( )
 		  
-		  CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate )
+		  CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
+		  if(MOD(I,10)==1 .and. J==10 .and. L==2) THEN
+		  	print *, "lshen_Prate",Prate
+		  ENDIF
 		  
           CALL Integrate( TIN,    TOUT, LS_type, LS_NSEL, LS_NDEL,  ICNTRL,      &
                           RCNTRL, ISTATUS, RSTATE, IERR )
