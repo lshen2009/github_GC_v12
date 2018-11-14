@@ -249,6 +249,7 @@ CONTAINS
     TYPE(Species), POINTER :: SpcInfo
     INTEGER :: NHMS,NYMD,YMDH
     LOGICAL :: new_hour
+	character(len=1024) :: outputname1,outputname2,outputname3,outputname4
 	
     ! For testing only, may be removed later (mps, 4/26/16)
     LOGICAL                :: DO_HETCHEM
@@ -1280,6 +1281,26 @@ CONTAINS
     ! Set FIRSTCHEM = .FALSE. -- we have gone thru one chem step
     FIRSTCHEM = .FALSE.
 
+  print *,'lshen_test_new_hour',NHMS,new_hour
+  if (new_hour) then    
+    YMDH=NYMD*100+NHMS/10000
+    print *,NYMD,NHMS,YMDH
+    write (outputname1, "(A12,I10,A4)") "lshen_Prate_", YMDH,'.txt'
+    write (outputname2, "(A12,I10,A4)") "lshen_Lrate_", YMDH,'.txt'
+    OPEN(unit=1101,file=outputname1)
+    OPEN(unit=1102,file=outputname2)
+         DO L=1,LLPAR
+           DO J=1,JJPAR
+            DO I=1,IIPAR
+              write(1101,'(3I4,234E15.3)'), I,J,L,LS_Prate(I,J,L,:)
+              write(1102,'(3I4,234E15.3)'), I,J,L,LS_Lrate(I,J,L,:)
+            ENDDO
+           ENDDO
+         ENDDO
+    close(1101)!lshen
+    close(1102)
+  endif
+  
   END SUBROUTINE Do_FlexChem
 !EOC
 !------------------------------------------------------------------------------
