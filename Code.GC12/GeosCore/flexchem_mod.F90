@@ -890,7 +890,10 @@ CONTAINS
 
        ! Update the array of rate constants
        CALL Update_RCONST( )
-
+	   CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
+	   if(MOD(I,10)==1 .and. J==10 .and. L==2) THEN
+		  print *, "lshen_Prate",Prate
+	   ENDIF
 !#if defined( DEVEL )
 !       ! Get time when rate computation finished
 !       CALL CPU_TIME( finish )
@@ -973,12 +976,7 @@ CONTAINS
           CALL Init_KPP( )
           VAR = C(1:NVAR)
           FIX = C(NVAR+1:NSPEC)
-          CALL Update_RCONST( )
-		  
-		  CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
-		  if(MOD(I,10)==1 .and. J==10 .and. L==2) THEN
-		  	print *, "lshen_Prate",Prate
-		  ENDIF
+          CALL Update_RCONST( )		  		 
 		  
           CALL Integrate( TIN,    TOUT, LS_type, LS_NSEL, LS_NDEL,  ICNTRL,      &
                           RCNTRL, ISTATUS, RSTATE, IERR )
