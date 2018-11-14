@@ -1285,8 +1285,8 @@ CONTAINS
   if (new_hour) then    
     YMDH=NYMD*100+NHMS/10000
     print *,NYMD,NHMS,YMDH
-    write (outputname1, "(A12,I10,A4)") "lshen_Prate_", YMDH,'.txt'
-    write (outputname2, "(A12,I10,A4)") "lshen_Lrate_", YMDH,'.txt'
+    write (outputname1, "(A12,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
+    write (outputname2, "(A12,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'
     OPEN(unit=1101,file=outputname1)
     OPEN(unit=1102,file=outputname2)
          DO L=1,LLPAR
