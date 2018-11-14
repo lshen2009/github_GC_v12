@@ -3403,7 +3403,7 @@ SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate, Vdot)
                 &+A(377)
 
 
-  Lrate(1) = 0
+  Lrate(1) = -A(700)
   Lrate(2) = -A(701)
   Lrate(3) = -A(702)
   Lrate(4) = 0
