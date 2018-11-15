@@ -893,8 +893,13 @@ CONTAINS
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 	     State_Chm%LS_Prate(I,J,L,:)=Prate
 	     State_Chm%LS_Lrate(I,J,L,:)=Lrate
-		 !Lrate=-Lrate/VAR		 
-		 Lrate=-SAFE_DIV(Lrate,VAR,1E-30_fp)
+		 
+		 WHERE ( ABS(VAR) >= 1e-30_fp)
+		     Lrate = -Lrate/VAR
+		 ELSEWHERE
+		     Lrate = 1e-30_fp
+		 END WHERE		 		 
+	 		 
 		 State_Chm%LS_K(I,J,L,:)=Lrate
 		 IF (L>=30) THEN
 		 	State_Chm%LS_Alltype(I,J,L)=2
