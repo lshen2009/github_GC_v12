@@ -940,7 +940,7 @@ CONTAINS
 		    LS_NSEL=NVAR_2
 			LS_NDEL=LU_DEL_2
 		 CASE DEFAULT
-		    print *, "error"
+		    print *, "lshen_error",I,J,L,LS_type
 	   END SELECT
 			
        CALL Integrate( TIN,    TOUT, LS_type, LS_NSEL, LS_NDEL, ICNTRL, &
