@@ -634,12 +634,7 @@ CONTAINS
     !$OMP REDUCTION( +:TOTNUMLU                                             )&
     !$OMP SCHEDULE ( DYNAMIC,  1                                            )
     DO L = 1, LLPAR
-       !CALL CPU_TIME(time=timeStart)
-	   IF (L>=30) THEN
-		LS_type=2
-	   ELSE
-	    LS_type=1
-	   END IF	   
+       !CALL CPU_TIME(time=timeStart)	   
     DO J = 1, JJPAR
     DO I = 1, IIPAR
        !====================================================================
@@ -898,9 +893,11 @@ CONTAINS
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 	     LS_Prate(I,J,L,:)=Prate
 	     LS_Lrate(I,J,L,:)=Lrate
-	     !if(MOD(I,30)==1 .and. J==10 .and. L==2) THEN
-		    !print *, "lshen_Prate",Prate
-	     !ENDIF
+		 IF (L>=30) THEN!LS_Alltype
+			LS_Alltype(I,J,L)=2
+	     ELSE
+	        LS_Alltype(I,J,L)=1
+	      END IF
 	   ENDIF
 !#if defined( DEVEL )
 !       ! Get time when rate computation finished
@@ -934,6 +931,7 @@ CONTAINS
 !         CALL CPU_TIME( start )
 !#endif
        ! Call the KPP integrator
+	   LS_type=LS_Alltype(I,J,L)
 	   SELECT CASE (LS_type)
 	     CASE (1)
 		    LS_NSEL=NVAR_1
@@ -1283,25 +1281,25 @@ CONTAINS
     ! Set FIRSTCHEM = .FALSE. -- we have gone thru one chem step
     FIRSTCHEM = .FALSE.
 
-  print *,'lshen_test_new_hour',NHMS,new_hour
-  if (new_hour) then    
-    YMDH=NYMD*100+NHMS/10000
-    print *,NYMD,NHMS,YMDH
-    write (outputname1, "(A15,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
-    write (outputname2, "(A15,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'		
-    OPEN(unit=1101,file=outputname1)
-    OPEN(unit=1102,file=outputname2)
-         DO L=1,LLPAR
-           DO J=1,JJPAR
-            DO I=1,IIPAR
-              write(1101,'(3I4,234E15.3)'), I,J,L,LS_Prate(I,J,L,:)
-              write(1102,'(3I4,234E15.3)'), I,J,L,LS_Lrate(I,J,L,:)
-            ENDDO
-           ENDDO
-         ENDDO
-    close(1101)!lshen
-    close(1102)
-  endif
+  !print *,'lshen_test_new_hour',NHMS,new_hour
+  !if (new_hour) then    
+  !  YMDH=NYMD*100+NHMS/10000
+  !  print *,NYMD,NHMS,YMDH
+  !  write (outputname1, "(A15,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
+  !  write (outputname2, "(A15,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'		
+  !  OPEN(unit=1101,file=outputname1)
+  !  OPEN(unit=1102,file=outputname2)
+  !       DO L=1,LLPAR
+  !         DO J=1,JJPAR
+  !          DO I=1,IIPAR
+  !            write(1101,'(3I4,234E15.3)'), I,J,L,LS_Prate(I,J,L,:)
+  !            write(1102,'(3I4,234E15.3)'), I,J,L,LS_Lrate(I,J,L,:)
+  !          ENDDO
+  !         ENDDO
+  !       ENDDO
+  !  close(1101)!lshen
+  !  close(1102)
+  !endif
   
   END SUBROUTINE Do_FlexChem
 !EOC
