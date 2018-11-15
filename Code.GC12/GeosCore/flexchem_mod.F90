@@ -893,13 +893,12 @@ CONTAINS
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 	     State_Chm%LS_Prate(I,J,L,:)=Prate
 	     State_Chm%LS_Lrate(I,J,L,:)=Lrate
-	   ENDIF
-
 		 IF (L>=30) THEN!LS_Alltype
 			State_Chm%LS_Alltype(I,J,L)=2
 	     ELSE
 	        State_Chm%LS_Alltype(I,J,L)=1
-	     END IF
+	     END IF		 
+	   ENDIF
 !#if defined( DEVEL )
 !       ! Get time when rate computation finished
 !       CALL CPU_TIME( finish )
