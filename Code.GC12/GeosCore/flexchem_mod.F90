@@ -893,7 +893,8 @@ CONTAINS
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 	     State_Chm%LS_Prate(I,J,L,:)=Prate
 	     State_Chm%LS_Lrate(I,J,L,:)=Lrate
-		 IF (L>=30) THEN!LS_Alltype
+		 State_Chm%LS_K(I,J,L,:)=-Lrate/VAR
+		 IF (L>=30) THEN
 		 	State_Chm%LS_Alltype(I,J,L)=2
 	     ELSE
 	        State_Chm%LS_Alltype(I,J,L)=1
@@ -931,7 +932,8 @@ CONTAINS
 !         CALL CPU_TIME( start )
 !#endif
        ! Call the KPP integrator
-	   LS_type=State_Chm%LS_Alltype(I,J,L)	   
+	   
+	   LS_type=State_Chm%LS_Alltype(I,J,L)   
 	   SELECT CASE (LS_type)
 	     CASE (1)
 		    LS_NSEL=NVAR_1
@@ -947,6 +949,7 @@ CONTAINS
 	      print *, "lshen_LS_type", L, LS_type 
 		  print *, "lshen_LS_Prate", State_Chm%LS_Prate(I,J,L,5:7)
 		  print *, "lshen_LS_Lrate", State_Chm%LS_Lrate(I,J,L,9:11)
+		  print *, "lshen_LS_K", State_Chm%LS_K(I,J,L,9:11)
 	   END IF
 	   
 	   
