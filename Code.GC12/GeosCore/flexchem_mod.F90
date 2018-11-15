@@ -128,6 +128,7 @@ CONTAINS
     USE Species_Mod,          ONLY : Species
     USE State_Chm_Mod,        ONLY : ChmState
     USE State_Chm_Mod,        ONLY : Ind_
+	USE State_Chm_Mod,        ONLY : LS_Prate,LS_Lrate,LS_Alltype
     USE State_Diag_Mod,       ONLY : DgnState
     USE State_Met_Mod,        ONLY : MetState
     USE Strat_Chem_Mod,       ONLY : SChem_Tend
@@ -237,9 +238,9 @@ CONTAINS
     REAL(dp)               :: RSTATE     (                  20               )
     REAL(dp)               :: GLOB_RCONST(IIPAR,JJPAR,LLPAR,NREACT           )
     REAL(fp)               :: Before     (IIPAR,JJPAR,LLPAR,State_Chm%nAdvect)
-!	REAL(fp)               :: LS_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
-!	REAL(fp)               :: LS_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
-!	INTEGER                :: LS_Alltype   (IIPAR,JJPAR,LLPAR) !lshen
+	!REAL(fp)               :: LS_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
+	!REAL(fp)               :: LS_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
+	!INTEGER                :: LS_Alltype   (IIPAR,JJPAR,LLPAR) !lshen
 	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR)
 
     ! For tagged CO saving

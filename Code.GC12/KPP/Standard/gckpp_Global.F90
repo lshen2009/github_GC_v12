@@ -69,10 +69,6 @@ MODULE gckpp_Global
   REAL(kind=dp) :: STEPMAX
 ! CFACTOR - Conversion factor for concentration units
   REAL(kind=dp) :: CFACTOR
-
-	REAL(dp)               :: LS_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
-	REAL(dp)               :: LS_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
-	INTEGER                :: LS_Alltype   (IIPAR,JJPAR,LLPAR) !lshen
 	
 ! INLINED global variable declarations
 
