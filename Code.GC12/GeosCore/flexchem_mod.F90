@@ -898,8 +898,11 @@ CONTAINS
 		     Lrate = -Lrate/VAR
 		 ELSEWHERE
 		     Lrate = 1e-30_fp
-		 END WHERE		 		 
-	 		 
+		 END WHERE		 		 	 	
+		 WHERE ( ABS(Lrate) < 1e-30_fp)
+		 	Lrate = 1e-30_fp
+		 END WHERE
+		 
 		 State_Chm%LS_K(I,J,L,:)=Lrate
 		 IF (L>=30) THEN
 		 	State_Chm%LS_Alltype(I,J,L)=2
