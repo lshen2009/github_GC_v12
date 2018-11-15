@@ -684,8 +684,11 @@ CONTAINS
 
 
     ALLOCATE( State_Chm%LS_Prate( IM, JM, LM, 234 ), STAT=RC )
+	State_Chm%LS_Prate = 0.0_fp
 	ALLOCATE( State_Chm%LS_Lrate( IM, JM, LM, 234 ), STAT=RC )
+	State_Chm%LS_Lrate = 0.0_fp
 	ALLOCATE( State_Chm%LS_Alltype( IM, JM, LM), STAT=RC )
+	State_Chm%LS_Alltype = 0
     !=======================================================================
     ! Allocate and initialize quantities that are only relevant for the
     ! the various fullchem simulations or the aerosol-only simulation
