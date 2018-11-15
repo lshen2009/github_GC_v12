@@ -49,9 +49,9 @@ MODULE State_Chm_Mod
 !
 ! !PUBLIC DATA MEMBERS:
 !
-  TYPE, PUBLIC,REAL(fp)               :: LS_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen 
-  TYPE, PUBLIC,REAL(fp)               :: LS_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
-  TYPE, PUBLIC,INTEGER                :: LS_Alltype   (IIPAR,JJPAR,LLPAR) !lshen
+  TYPE, PUBLIC,REAL(fp)               :: LS_Prate(:,:,:,:) !lshen 
+  TYPE, PUBLIC,REAL(fp)               :: LS_Lrate(:,:,:,:) !lshen
+  TYPE, PUBLIC,INTEGER                :: LS_Alltype(:,:,:) !lshen
   !=========================================================================
   ! Derived type for Chemistry State
   !=========================================================================
@@ -447,6 +447,9 @@ CONTAINS
        RETURN
     ENDIF
 
+     ALLOCATE( LS_Prate( IIPAR, JJPAR, LLPAR,234 ), STAT=RC )!lshen
+	 ALLOCATE( LS_Lrate( IIPAR, JJPAR, LLPAR,234 ), STAT=RC )!lshen
+	 ALLOCATE( LS_Alltype( IIPAR, JJPAR, LLPAR ), STAT=RC )!lshen
     !=======================================================================
     ! Allocate and initialize mapping vectors to subset species
     !=======================================================================
