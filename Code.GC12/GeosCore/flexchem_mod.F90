@@ -275,8 +275,8 @@ CONTAINS
     Day       =  Get_Day()    ! Current day
     Month     =  Get_Month()  ! Current month
     Year      =  Get_Year()   ! Current year
-	State_Chm%LS_Prate(:,:,:,:)=0.0_fp
-	State_Chm%LS_Lrate(:,:,:,:)=0.0_fp
+	!State_Chm%LS_Prate(:,:,:,:)=0.0_fp
+	!State_Chm%LS_Lrate(:,:,:,:)=0.0_fp
 
     ! Turn heterogeneous chemistry and photolysis on/off here
     ! This is for testing only and may be removed later (mps, 4/26/16)
