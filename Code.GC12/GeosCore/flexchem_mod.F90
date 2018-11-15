@@ -893,12 +893,13 @@ CONTAINS
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 	     LS_Prate(I,J,L,:)=Prate
 	     LS_Lrate(I,J,L,:)=Lrate
+	   ENDIF
+
 		 IF (L>=30) THEN!LS_Alltype
 			LS_Alltype(I,J,L)=2
 	     ELSE
 	        LS_Alltype(I,J,L)=1
-	      END IF
-	   ENDIF
+	     END IF
 !#if defined( DEVEL )
 !       ! Get time when rate computation finished
 !       CALL CPU_TIME( finish )
