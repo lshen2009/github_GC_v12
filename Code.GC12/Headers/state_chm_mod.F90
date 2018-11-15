@@ -450,9 +450,6 @@ CONTAINS
        RETURN
     ENDIF
 
-     ALLOCATE( LS_Prate( IIPAR, JJPAR, LLPAR,234 ), STAT=RC )!lshen
-	 ALLOCATE( LS_Lrate( IIPAR, JJPAR, LLPAR,234 ), STAT=RC )!lshen
-	 ALLOCATE( LS_Alltype( IIPAR, JJPAR, LLPAR ), STAT=RC )!lshen
     !=======================================================================
     ! Allocate and initialize mapping vectors to subset species
     !=======================================================================
