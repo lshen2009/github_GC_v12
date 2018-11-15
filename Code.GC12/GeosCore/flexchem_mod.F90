@@ -931,8 +931,7 @@ CONTAINS
 !         CALL CPU_TIME( start )
 !#endif
        ! Call the KPP integrator
-	   LS_type=State_Chm%LS_Alltype(I,J,L)
-	   !LS_type=1
+	   LS_type=State_Chm%LS_Alltype(I,J,L)	   
 	   SELECT CASE (LS_type)
 	     CASE (1)
 		    LS_NSEL=NVAR_1
@@ -943,7 +942,12 @@ CONTAINS
 		 CASE DEFAULT
 		    print *, "lshen_error",I,J,L,LS_type
 	   END SELECT
-			
+	
+	   IF (I==10 .and. J==10) THEN
+	      print *, "lshen_LS_type", I, J, L, LS_type, LS_NSEL, LS_NDEL
+	   END IF
+	   
+	   
        CALL Integrate( TIN,    TOUT, LS_type, LS_NSEL, LS_NDEL, ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )
 
