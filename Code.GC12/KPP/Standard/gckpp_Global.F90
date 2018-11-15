@@ -70,6 +70,10 @@ MODULE gckpp_Global
 ! CFACTOR - Conversion factor for concentration units
   REAL(kind=dp) :: CFACTOR
 
+	REAL(fp)               :: LS_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
+	REAL(fp)               :: LS_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
+	INTEGER                :: LS_Alltype   (IIPAR,JJPAR,LLPAR) !lshen
+	
 ! INLINED global variable declarations
 
       REAL(kind=dp) :: HET(NSPEC,7), PHOTOL(1000)
@@ -80,6 +84,7 @@ MODULE gckpp_Global
 ! because they get written to within an OpenMP parallel loop
 !-----------------------------------------------------------------------
 !$OMP THREADPRIVATE( C,       VAR, FIX,    RCONST, TIME, TEMP  )
+!$OMP THREADPRIVATE( LS_Prate, LS_Lrate, LS_Alltype  )
 !$OMP THREADPRIVATE( CFACTOR, HET, PHOTOL, NUMDEN, H2O,  PRESS )
 
 ! INLINED global variable declarations
