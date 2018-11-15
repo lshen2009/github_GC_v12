@@ -49,9 +49,9 @@ MODULE State_Chm_Mod
 !
 ! !PUBLIC DATA MEMBERS:
 !
-  REAL(fp)               :: LS_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen 
-  REAL(fp)               :: LS_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
-  PUBLIC,INTEGER         :: LS_Alltype   (IIPAR,JJPAR,LLPAR) !lshen
+  TYPE, PUBLIC,REAL(fp)               :: LS_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen 
+  TYPE, PUBLIC,REAL(fp)               :: LS_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
+  TYPE, PUBLIC,INTEGER                :: LS_Alltype   (IIPAR,JJPAR,LLPAR) !lshen
   !=========================================================================
   ! Derived type for Chemistry State
   !=========================================================================
