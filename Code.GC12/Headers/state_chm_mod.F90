@@ -49,9 +49,9 @@ MODULE State_Chm_Mod
 !
 ! !PUBLIC DATA MEMBERS:
 !
-  TYPE, PUBLIC,REAL(fp)               :: LS_Prate(:,:,:,:) !lshen 
-  TYPE, PUBLIC,REAL(fp)               :: LS_Lrate(:,:,:,:) !lshen
-  TYPE, PUBLIC,INTEGER                :: LS_Alltype(:,:,:) !lshen
+  REAL(fp)               :: LS_Prate(:,:,:,:) !lshen 
+  REAL(fp)               :: LS_Lrate(:,:,:,:) !lshen
+  INTEGER                :: LS_Alltype(:,:,:) !lshen
   !=========================================================================
   ! Derived type for Chemistry State
   !=========================================================================
