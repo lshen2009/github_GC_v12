@@ -49,9 +49,6 @@ MODULE State_Chm_Mod
 !
 ! !PUBLIC DATA MEMBERS:
 !
-  REAL(fp),ALLOCATABLE               :: LS_Prate(:,:,:,:) !lshen 
-  REAL(fp),ALLOCATABLE               :: LS_Lrate(:,:,:,:) !lshen
-  INTEGER,ALLOCATABLE                :: LS_Alltype(:,:,:) !lshen
   !=========================================================================
   ! Derived type for Chemistry State
   !=========================================================================
@@ -103,6 +100,9 @@ MODULE State_Chm_Mod
      REAL(fp),          POINTER :: Species    (:,:,:,:) ! Species [molec/cm3]
      CHARACTER(LEN=20)          :: Spc_Units            ! Species units
 
+     REAL(fp),          POINTER :: LS_Prate    (:,:,:,:) ! Species [molec/cm3]
+	 REAL(fp),          POINTER :: LS_Lrate    (:,:,:,:) ! Species [molec/cm3]
+	 Integer,           POINTER :: LS_Alltype    (:,:,:) ! Species [molec/cm3]
      !----------------------------------------------------------------------
      ! Aerosol quantities
      !----------------------------------------------------------------------
@@ -359,7 +359,10 @@ CONTAINS
     ! Chemical species
     State_Chm%Species       => NULL()
     State_Chm%Spc_Units     = ''
-
+    State_Chm%LS_Prate       => NULL()
+	State_Chm%LS_Lrate       => NULL()
+	State_Chm%LS_Alltype     => NULL()
+	
     ! Species database
     State_Chm%SpcData       => NULL()
     ThisSpc                 => NULL()
@@ -682,6 +685,10 @@ CONTAINS
     State_Chm%Species = 0.0_fp
     CALL Register_ChmField( am_I_Root, chmID, State_Chm%Species, State_Chm, RC )
 
+
+    ALLOCATE( State_Chm%LS_Prate( IM, JM, LM, 234 ), STAT=RC )
+	ALLOCATE( State_Chm%LS_Lrate( IM, JM, LM, 234 ), STAT=RC )
+	ALLOCATE( State_Chm%LS_Alltype( IM, JM, LM), STAT=RC )
     !=======================================================================
     ! Allocate and initialize quantities that are only relevant for the
     ! the various fullchem simulations or the aerosol-only simulation
