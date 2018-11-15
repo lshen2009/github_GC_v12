@@ -100,8 +100,7 @@ MODULE State_Chm_Mod
      REAL(fp),          POINTER :: Species    (:,:,:,:) ! Species [molec/cm3]
      CHARACTER(LEN=20)          :: Spc_Units            ! Species units
 
-     REAL(fp),          POINTER :: LS_Prate    (:,:,:,:) ! Species [molec/cm3]
-	 REAL(fp),          POINTER :: LS_K    (:,:,:,:) ! Species [molec/cm3]
+     REAL(fp),          POINTER :: LS_Prate    (:,:,:,:) ! Species [molec/cm3]	
 	 REAL(fp),          POINTER :: LS_Lrate    (:,:,:,:) ! Species [molec/cm3]
 	 Integer,           POINTER :: LS_Alltype    (:,:,:) ! Species [molec/cm3]
      !----------------------------------------------------------------------
@@ -361,7 +360,6 @@ CONTAINS
     State_Chm%Species       => NULL()
     State_Chm%Spc_Units     = ''
     State_Chm%LS_Prate       => NULL()
-	State_Chm%LS_K       => NULL()
 	State_Chm%LS_Lrate       => NULL()
 	State_Chm%LS_Alltype     => NULL()
 	
@@ -688,9 +686,7 @@ CONTAINS
     ALLOCATE( State_Chm%LS_Prate( IM, JM, LM, 234 ), STAT=RC )
 	State_Chm%LS_Prate = 0.0_fp
 	ALLOCATE( State_Chm%LS_Lrate( IM, JM, LM, 234 ), STAT=RC )
-	State_Chm%LS_Lrate = 0.0_fp
-	ALLOCATE( State_Chm%LS_K( IM, JM, LM, 234 ), STAT=RC )
-	State_Chm%LS_K = 0.0_fp	
+	State_Chm%LS_Lrate = 0.0_fp	
 	ALLOCATE( State_Chm%LS_Alltype( IM, JM, LM), STAT=RC )
 	State_Chm%LS_Alltype = 0
     !=======================================================================
@@ -1398,10 +1394,6 @@ CONTAINS
        DEALLOCATE( State_Chm%LS_Lrate, STAT=RC )       
        RETURN
     ENDIF
-    IF ( ASSOCIATED( State_Chm%LS_K ) ) THEN
-       DEALLOCATE( State_Chm%LS_K, STAT=RC )       
-       RETURN
-    ENDIF	
     IF ( ASSOCIATED( State_Chm%LS_Alltype ) ) THEN
        DEALLOCATE( State_Chm%LS_Alltype, STAT=RC )       
        RETURN

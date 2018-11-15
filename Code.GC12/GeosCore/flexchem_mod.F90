@@ -889,26 +889,28 @@ CONTAINS
        ! Update the array of rate constants
        CALL Update_RCONST( )
 	   
+	   !lshen added this
 	   IF (new_hour) THEN
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
-	     State_Chm%LS_Prate(I,J,L,:)=Prate
-	     State_Chm%LS_Lrate(I,J,L,:)=Lrate
-		 
-		 WHERE ( ABS(VAR) >= 1e-30_fp)
-		     Lrate = -Lrate/VAR
-		 ELSEWHERE
-		     Lrate = 1e-30_fp
-		 END WHERE		 		 	 	
-		 WHERE ( ABS(Lrate) < 1e-30_fp)
-		 	Lrate = 1e-30_fp
-		 END WHERE
-		 
-		 State_Chm%LS_K(I,J,L,:)=Lrate
+		 !determine the type
 		 IF (L>=30) THEN
 		 	State_Chm%LS_Alltype(I,J,L)=2
 	     ELSE
 	        State_Chm%LS_Alltype(I,J,L)=1
 	     END IF		 
+		 !calculate the K
+		 WHERE ( ABS(VAR) >= 1e-60_fp)
+		     Lrate = -Lrate/VAR
+		 ELSEWHERE
+		     Lrate = 1e-60_fp
+		 END WHERE			 
+		 WHERE ( ABS(Lrate) < 1e-60_fp)
+		 	Lrate = 1e-60_fp
+		 END WHERE
+		 !calculate the P/L		 
+	     State_Chm%LS_Prate(I,J,L,:)=Prate/Lrate
+	     State_Chm%LS_Lrate(I,J,L,:)=Lrate		 
+		 
 	   ENDIF
 !#if defined( DEVEL )
 !       ! Get time when rate computation finished
@@ -958,8 +960,7 @@ CONTAINS
 	   IF (I==10 .and. J==10) THEN
 	      print *, "lshen_LS_type", L, LS_type 
 		  print *, "lshen_LS_Prate", State_Chm%LS_Prate(I,J,L,5:7)
-		  print *, "lshen_LS_Lrate", State_Chm%LS_Lrate(I,J,L,9:11)
-		  print *, "lshen_LS_K", State_Chm%LS_K(I,J,L,9:11)
+		  print *, "lshen_LS_Lrate", State_Chm%LS_Lrate(I,J,L,9:11)		  
 	   END IF
 	   
 	   
