@@ -100,9 +100,9 @@ MODULE State_Chm_Mod
      REAL(fp),          POINTER :: Species    (:,:,:,:) ! Species [molec/cm3]
      CHARACTER(LEN=20)          :: Spc_Units            ! Species units
 
-     !REAL(fp),          POINTER :: LS_Prate    (:,:,:,:) ! Species [molec/cm3]
-	 !REAL(fp),          POINTER :: LS_Lrate    (:,:,:,:) ! Species [molec/cm3]
-	 !Integer,           POINTER :: LS_Alltype    (:,:,:) ! Species [molec/cm3]
+     REAL(fp),          POINTER :: LS_Prate    (:,:,:,:) ! Species [molec/cm3]
+	 REAL(fp),          POINTER :: LS_Lrate    (:,:,:,:) ! Species [molec/cm3]
+	 Integer,           POINTER :: LS_Alltype    (:,:,:) ! Species [molec/cm3]
      !----------------------------------------------------------------------
      ! Aerosol quantities
      !----------------------------------------------------------------------
@@ -359,9 +359,9 @@ CONTAINS
     ! Chemical species
     State_Chm%Species       => NULL()
     State_Chm%Spc_Units     = ''
-    !State_Chm%LS_Prate       => NULL()
-	!State_Chm%LS_Lrate       => NULL()
-	!State_Chm%LS_Alltype     => NULL()
+    State_Chm%LS_Prate       => NULL()
+	State_Chm%LS_Lrate       => NULL()
+	State_Chm%LS_Alltype     => NULL()
 	
     ! Species database
     State_Chm%SpcData       => NULL()
@@ -683,9 +683,9 @@ CONTAINS
     CALL Register_ChmField( am_I_Root, chmID, State_Chm%Species, State_Chm, RC )
 
 
-    !ALLOCATE( State_Chm%LS_Prate( IM, JM, LM, 234 ), STAT=RC )
-	!ALLOCATE( State_Chm%LS_Lrate( IM, JM, LM, 234 ), STAT=RC )
-	!ALLOCATE( State_Chm%LS_Alltype( IM, JM, LM), STAT=RC )
+    ALLOCATE( State_Chm%LS_Prate( IM, JM, LM, 234 ), STAT=RC )
+	ALLOCATE( State_Chm%LS_Lrate( IM, JM, LM, 234 ), STAT=RC )
+	ALLOCATE( State_Chm%LS_Alltype( IM, JM, LM), STAT=RC )
     !=======================================================================
     ! Allocate and initialize quantities that are only relevant for the
     ! the various fullchem simulations or the aerosol-only simulation
@@ -1383,18 +1383,18 @@ CONTAINS
        RETURN
     ENDIF
 
-    !IF ( ASSOCIATED( State_Chm%LS_Prate ) ) THEN
-    !   DEALLOCATE( State_Chm%LS_Prate, STAT=RC )       
-    !   RETURN
-    !ENDIF
-    !IF ( ASSOCIATED( State_Chm%LS_Lrate ) ) THEN
-    !   DEALLOCATE( State_Chm%LS_Lrate, STAT=RC )       
-    !   RETURN
-    !ENDIF
-    !IF ( ASSOCIATED( State_Chm%LS_Alltype ) ) THEN
-    !   DEALLOCATE( State_Chm%LS_Alltype, STAT=RC )       
-    !   RETURN
-    !ENDIF
+    IF ( ASSOCIATED( State_Chm%LS_Prate ) ) THEN
+       DEALLOCATE( State_Chm%LS_Prate, STAT=RC )       
+       RETURN
+    ENDIF
+    IF ( ASSOCIATED( State_Chm%LS_Lrate ) ) THEN
+       DEALLOCATE( State_Chm%LS_Lrate, STAT=RC )       
+       RETURN
+    ENDIF
+    IF ( ASSOCIATED( State_Chm%LS_Alltype ) ) THEN
+       DEALLOCATE( State_Chm%LS_Alltype, STAT=RC )       
+       RETURN
+    ENDIF
 	
     IF ( ASSOCIATED( State_Chm%Hg_Cat_Name ) ) THEN
        DEALLOCATE( State_Chm%Hg_Cat_Name, STAT=RC )
