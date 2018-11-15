@@ -1383,6 +1383,19 @@ CONTAINS
        RETURN
     ENDIF
 
+    IF ( ASSOCIATED( State_Chm%LS_Prate ) ) THEN
+       DEALLOCATE( State_Chm%LS_Prate, STAT=RC )       
+       RETURN
+    ENDIF
+    IF ( ASSOCIATED( State_Chm%LS_Lrate ) ) THEN
+       DEALLOCATE( State_Chm%LS_Lrate, STAT=RC )       
+       RETURN
+    ENDIF
+    IF ( ASSOCIATED( State_Chm%LS_Alltype ) ) THEN
+       DEALLOCATE( State_Chm%LS_Alltype, STAT=RC )       
+       RETURN
+    ENDIF
+	
     IF ( ASSOCIATED( State_Chm%Hg_Cat_Name ) ) THEN
        DEALLOCATE( State_Chm%Hg_Cat_Name, STAT=RC )
        CALL GC_CheckVar( 'State_Chm%Hg_Cat_Name', 2, RC )
