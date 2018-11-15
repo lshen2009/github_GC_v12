@@ -275,8 +275,8 @@ CONTAINS
     Day       =  Get_Day()    ! Current day
     Month     =  Get_Month()  ! Current month
     Year      =  Get_Year()   ! Current year
-	State_Chm%LS_Prate(:,:,:,:)=0.0_fp
-	State_Chm%LS_Lrate(:,:,:,:)=0.0_fp
+	!State_Chm%LS_Prate(:,:,:,:)=0.0_fp
+	!State_Chm%LS_Lrate(:,:,:,:)=0.0_fp
 
     ! Turn heterogeneous chemistry and photolysis on/off here
     ! This is for testing only and may be removed later (mps, 4/26/16)
@@ -891,13 +891,13 @@ CONTAINS
 	   
 	   IF (new_hour) THEN
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
-	     State_Chm%LS_Prate(I,J,L,:)=Prate
-	     State_Chm%LS_Lrate(I,J,L,:)=Lrate
-		 IF (L>=30) THEN!LS_Alltype
-			State_Chm%LS_Alltype(I,J,L)=2
-	     ELSE
-	        State_Chm%LS_Alltype(I,J,L)=1
-	     END IF		 
+	     !State_Chm%LS_Prate(I,J,L,:)=Prate
+	     !State_Chm%LS_Lrate(I,J,L,:)=Lrate
+		 !IF (L>=30) THEN!LS_Alltype
+		 !	State_Chm%LS_Alltype(I,J,L)=2
+	     !ELSE
+	     !   State_Chm%LS_Alltype(I,J,L)=1
+	     !END IF		 
 	   ENDIF
 !#if defined( DEVEL )
 !       ! Get time when rate computation finished
@@ -931,7 +931,8 @@ CONTAINS
 !         CALL CPU_TIME( start )
 !#endif
        ! Call the KPP integrator
-	   LS_type=State_Chm%LS_Alltype(I,J,L)
+	   !LS_type=State_Chm%LS_Alltype(I,J,L)
+	   LS_type=1
 	   SELECT CASE (LS_type)
 	     CASE (1)
 		    LS_NSEL=NVAR_1
