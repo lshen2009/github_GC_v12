@@ -908,7 +908,7 @@ CONTAINS
 		 	Lrate = 1e-60_fp
 		 END WHERE
 		 !calculate the P/L		 
-	     State_Chm%LS_Prate(I,J,L,:)=Prate/Lrate
+	     State_Chm%LS_Prate(I,J,L,:)=Prate
 	     State_Chm%LS_Lrate(I,J,L,:)=Lrate		 
 		 
 	   ENDIF
@@ -963,8 +963,9 @@ CONTAINS
 		  print *, "lshen_LS_Lrate", State_Chm%LS_Lrate(I,J,L,9:11)		  
 	   END IF
 	   
-	   
-       CALL Integrate( TIN,    TOUT, LS_type, LS_NSEL, LS_NDEL, ICNTRL, &
+	   Prate=State_Chm%LS_Prate(I,J,L,:)
+	   Lrate=State_Chm%LS_Lrate(I,J,L,:)
+       CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )
 
        ! Print grid box indices to screen if integrate failed
