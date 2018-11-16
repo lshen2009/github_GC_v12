@@ -889,12 +889,8 @@ Stage: DO istage = 1, ros_S
    IF ( Info < 0 ) THEN
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
-#else 
-   IF (LS_type==1) THEN
-   	CALL KppSolve_1(LS_LU_NONZERO,LS_NVAR, A, b )
-   ELSE IF (LS_type==2) THEN
-    CALL KppSolve_2(LS_LU_NONZERO,LS_NVAR, A, b )
-   END iF
+#else  
+   	CALL KppSolve(LS_LU_NONZERO,LS_NVAR, A, b,LS_type )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1

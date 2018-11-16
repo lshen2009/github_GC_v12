@@ -92,6 +92,23 @@ END SUBROUTINE KppDecomp
 !      X         - Vector for variables
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SUBROUTINE KppSolve (LS_LU_NONZERO,LS_NVAR,JVS, X, LS_type)
+  INTEGER, INTENT(IN)    :: LS_LU_NONZERO,LS_NVAR,LS_type
+  REAL(kind=dp) :: JVS(LS_LU_NONZERO)
+  REAL(kind=dp) :: X(LS_NVAR)
+  
+   SELECT CASE (LS_type)
+     CASE (1)
+       CALL KppSolve_1 (LS_LU_NONZERO,LS_NVAR,JVS, X )
+     CASE (2)
+       CALL KppSolve_2 (LS_LU_NONZERO,LS_NVAR,JVS, X )
+     CASE DEFAULT
+       print *, "LS_KppSolve error"
+   END SELECT	
+   
+END SUBROUTINE KppSolve
+
+
 
 SUBROUTINE KppSolve_1 (LS_LU_NONZERO,LS_NVAR,JVS, X )
   INTEGER, INTENT(IN)    :: LS_LU_NONZERO,LS_NVAR
