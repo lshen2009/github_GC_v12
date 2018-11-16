@@ -220,7 +220,7 @@ CONTAINS
     REAL(fp)               :: Start,     Finish,   rtim,      itim
     REAL(fp)               :: SO4_FRAC,  YLAT,     T,         TIN
     REAL(fp)               :: JNoon_Fac, TOUT
-	INTEGER                :: LS_type, LS_NSEL, LS_NDEL
+	INTEGER                :: LS_LU_NONZERO,LS_type, LS_NSEL, LS_NDEL
     ! Strings
     CHARACTER(LEN=63)      :: OrigUnit
     CHARACTER(LEN=255)     :: ErrMsg,   ThisLoc
@@ -618,7 +618,7 @@ CONTAINS
     !$OMP PRIVATE  ( SO4_FRAC, IERR,     RCNTRL,  START, FINISH, ISTATUS    )&
     !$OMP PRIVATE  ( RSTATE,   SpcID,    KppID,   F,     P                  )&
     !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC                 ) &
-	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate ) &
+	!$OMP PRIVATE  ( LS_type,  LS_LU_NONZERO, LS_NSEL,  LS_NDEL, Prate, Lrate ) &
     !$OMP REDUCTION( +:ITIM                                                 )&
     !$OMP REDUCTION( +:RTIM                                                 )&
     !$OMP REDUCTION( +:TOTSTEPS                                             )&
