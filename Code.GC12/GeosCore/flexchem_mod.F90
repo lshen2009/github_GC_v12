@@ -883,30 +883,33 @@ CONTAINS
 
        ! Update the array of rate constants
        CALL Update_RCONST( )
-	   
-	   !lshen added this
-	   IF (new_hour) THEN
-	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
-		 !determine the type
 		 IF (L>=30) THEN
-		 	State_Chm%LS_Alltype(I,J,L)=2
+		 	LS_type=2
 	     ELSE
-	        State_Chm%LS_Alltype(I,J,L)=1
-	     END IF		 
-		 !calculate the K
-		 WHERE ( ABS(VAR) >= 1e-60_fp)
-		     Lrate = -Lrate/VAR
-		 ELSEWHERE
-		     Lrate = 1e-60_fp
-		 END WHERE			 
-		 WHERE ( ABS(Lrate) < 1e-60_fp)
-		 	Lrate = 1e-60_fp
-		 END WHERE
-		 !calculate the P/L		 
-	     State_Chm%LS_Prate(I,J,L,:)=Prate
-	     State_Chm%LS_Lrate(I,J,L,:)=Lrate		 
+	        LS_type=1
+	     END IF
 		 
-	   ENDIF
+	   !lshen added this
+	   !IF (new_hour) THEN
+	   !  CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
+		 !determine the type
+		! IF (L>=30) THEN
+		! 	State_Chm%LS_Alltype(I,J,L)=2
+	    ! ELSE
+	    !    State_Chm%LS_Alltype(I,J,L)=1
+	    ! END IF		 
+		 !calculate the K
+		! WHERE ( ABS(VAR) >= 1e-60_fp)
+		!     Lrate = -Lrate/VAR
+		! ELSEWHERE
+		!     Lrate = 1e-60_fp
+		! END WHERE			 
+
+		 !calculate the P/L		 
+	    ! State_Chm%LS_Prate(I,J,L,:)=Prate
+	    ! State_Chm%LS_Lrate(I,J,L,:)=Lrate		 
+		 
+	   !ENDIF
 !#if defined( DEVEL )
 !       ! Get time when rate computation finished
 !       CALL CPU_TIME( finish )
