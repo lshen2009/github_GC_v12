@@ -135,6 +135,7 @@ CONTAINS
     USE TIME_MOD,             ONLY : Get_Day
     USE TIME_MOD,             ONLY : Get_Month
     USE TIME_MOD,             ONLY : Get_Year
+	USE TIME_MOD,             ONLY : GET_NHMS,GET_NYMD,ITS_A_NEW_HOUR
     USE UnitConv_Mod,         ONLY : Convert_Spc_Units
     USE UCX_MOD,              ONLY : CALC_STRAT_AER
     USE UCX_MOD,              ONLY : SO4_PHOTFRAC
@@ -236,13 +237,17 @@ CONTAINS
     REAL(dp)               :: RSTATE     (                  20               )
     REAL(dp)               :: GLOB_RCONST(IIPAR,JJPAR,LLPAR,NREACT           )
     REAL(fp)               :: Before     (IIPAR,JJPAR,LLPAR,State_Chm%nAdvect)
+	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR)
 
     ! For tagged CO saving
     REAL(fp)               :: LCH4, PCO_TOT, PCO_CH4, PCO_NMVOC
 
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
-
+    INTEGER :: NHMS,NYMD,YMDH
+    LOGICAL :: new_hour,flag
+	character(len=1024) :: outputname1,outputname2,outputname3,outputname4
+	
     ! For testing only, may be removed later (mps, 4/26/16)
     LOGICAL                :: DO_HETCHEM
     REAL(fp)               :: TimeStart,timeEnd
@@ -272,6 +277,11 @@ CONTAINS
     ! This is for testing only and may be removed later (mps, 4/26/16)
     DO_HETCHEM  = .TRUE.
 
+    NHMS=GET_NHMS()!lshen
+    NYMD  = GET_NYMD()!lshen
+    new_hour=ITS_A_NEW_HOUR()!lshen
+	
+	print *,'lshen_test_new_hour',NYMD,NHMS,new_hour
     ! Remove debug output
     !IF ( FIRSTCHEM .AND. am_I_Root ) THEN
     !   WRITE( 6, '(a)' ) REPEAT( '#', 32 )
@@ -608,7 +618,7 @@ CONTAINS
     !$OMP PRIVATE  ( SO4_FRAC, IERR,     RCNTRL,  START, FINISH, ISTATUS    )&
     !$OMP PRIVATE  ( RSTATE,   SpcID,    KppID,   F,     P                  )&
     !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC                 ) &
-	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL                            ) &
+	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate ) &
     !$OMP REDUCTION( +:ITIM                                                 )&
     !$OMP REDUCTION( +:RTIM                                                 )&
     !$OMP REDUCTION( +:TOTSTEPS                                             )&
@@ -619,12 +629,7 @@ CONTAINS
     !$OMP REDUCTION( +:TOTNUMLU                                             )&
     !$OMP SCHEDULE ( DYNAMIC,  1                                            )
     DO L = 1, LLPAR
-       !CALL CPU_TIME(time=timeStart)
-	   IF (L>=30) THEN
-		LS_type=2
-	   ELSE
-	    LS_type=1
-	   END IF	   
+       !CALL CPU_TIME(time=timeStart)	   
     DO J = 1, JJPAR
     DO I = 1, IIPAR
        !====================================================================
@@ -878,7 +883,30 @@ CONTAINS
 
        ! Update the array of rate constants
        CALL Update_RCONST( )
-
+	   
+	   !lshen added this
+	   IF (new_hour) THEN
+	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
+		 !determine the type
+		 IF (L>=30) THEN
+		 	State_Chm%LS_Alltype(I,J,L)=2
+	     ELSE
+	        State_Chm%LS_Alltype(I,J,L)=1
+	     END IF		 
+		 !calculate the K
+		 WHERE ( ABS(VAR) >= 1e-60_fp)
+		     Lrate = -Lrate/VAR
+		 ELSEWHERE
+		     Lrate = 1e-60_fp
+		 END WHERE			 
+		 WHERE ( ABS(Lrate) < 1e-60_fp)
+		 	Lrate = 1e-60_fp
+		 END WHERE
+		 !calculate the P/L		 
+	     State_Chm%LS_Prate(I,J,L,:)=Prate
+	     State_Chm%LS_Lrate(I,J,L,:)=Lrate		 
+		 
+	   ENDIF
 !#if defined( DEVEL )
 !       ! Get time when rate computation finished
 !       CALL CPU_TIME( finish )
