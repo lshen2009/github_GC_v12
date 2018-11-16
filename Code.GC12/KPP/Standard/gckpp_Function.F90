@@ -53,9 +53,9 @@ SUBROUTINE Fun ( V, F, RCT, Vdot, LS_NVAR, LS_type )
 
    SELECT CASE (LS_type)
      CASE (1)
-       CALL Fun_1 ( V, F, RCT, Vdot, LS_NVAR, LS_type )
+       CALL Fun_1 ( V, F, RCT, Vdot, LS_NVAR )
      CASE (2)
-       CALL Fun_2 ( V, F, RCT, Vdot, LS_NVAR, LS_type )
+       CALL Fun_2 ( V, F, RCT, Vdot, LS_NVAR)
      CASE DEFAULT
        print *, "LS_Fun error"
    END SELECT	
