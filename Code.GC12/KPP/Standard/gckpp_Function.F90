@@ -44,6 +44,23 @@ CONTAINS
 !      Vdot      - Time derivative of variable species concentrations
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SUBROUTINE Fun ( V, F, RCT, Vdot, LS_NVAR, LS_type )
+  INTEGER,INTENT(IN)::LS_NVAR, LS_type
+  REAL(kind=dp) :: V(LS_NVAR)
+  REAL(kind=dp) :: F(NFIX)
+  REAL(kind=dp) :: RCT(NREACT)
+  REAL(kind=dp) :: Vdot(LS_NVAR)
+
+   SELECT CASE (LS_type)
+     CASE (1)
+       CALL Fun_1 ( V, F, RCT, Vdot, LS_NVAR, LS_type )
+     CASE (2)
+       CALL Fun_2 ( V, F, RCT, Vdot, LS_NVAR, LS_type )
+     CASE DEFAULT
+       print *, "LS_Fun error"
+   END SELECT	
+
+END SUBROUTINE Fun
 
 SUBROUTINE Fun_1 ( V, F, RCT, Vdot, LS_NVAR )
 

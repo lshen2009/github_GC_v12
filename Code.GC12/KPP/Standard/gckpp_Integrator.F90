@@ -1333,10 +1333,9 @@ SUBROUTINE FunTemplate( T, Y, Ydot, LS_NVAR, LS_type )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
-!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- !USE gckpp_Parameters, ONLY: NVAR2, LS_LU_NONZERO
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Function, ONLY: Fun_1,Fun_2
+ USE gckpp_Function, ONLY: Fun
  INTEGER,INTENT(IN)::LS_NVAR, LS_type
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LS_NVAR)
@@ -1347,13 +1346,7 @@ SUBROUTINE FunTemplate( T, Y, Ydot, LS_NVAR, LS_type )
 
    Told = TIME
    TIME = T
-   IF (LS_type==1) THEN
-       CALL Fun_1( Y, FIX, RCONST, Ydot, LS_NVAR )
-   ELSE IF (LS_type==2) THEN
-       CALL Fun_2( Y, FIX, RCONST, Ydot, LS_NVAR )
-   ENDIF
-   
-   
+   CALL Fun( Y, FIX, RCONST, Ydot, LS_NVAR, LS_type )
    TIME = Told
 
 END SUBROUTINE FunTemplate
