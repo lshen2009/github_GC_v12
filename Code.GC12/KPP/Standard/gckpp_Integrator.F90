@@ -122,7 +122,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,Prate, Lrate, &
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		  LU_NONZERO_2,NVAR_2,LU_CROW_2,LU_DIAG_2,LU_IROW_2,LU_ICOL_2, LS_type)
 		
-		WHERE(LS_L<=(0.01_fp/delta_T))
+		WHERE(LS_L<=(0.01/delta_T))
 			VAR_deleted=VAR_deleted+delta_T*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*delta_T)
