@@ -966,7 +966,7 @@ CONTAINS
 	   else
 	     flag=.FALSE.
 	   END IF
-       CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL,flag, &
+       CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate,flag, ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )
 
        ! Print grid box indices to screen if integrate failed
@@ -1007,7 +1007,7 @@ CONTAINS
           FIX = C(NVAR+1:NSPEC)
           CALL Update_RCONST( )		  		 
 		  
-          CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, flag,&
+          CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate,flag, ICNTRL,&
                           RCNTRL, ISTATUS, RSTATE, IERR )
           IF ( IERR < 0 ) THEN 
              WRITE(6,*) '## INTEGRATE FAILED TWICE !!! '
