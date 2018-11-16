@@ -43,7 +43,7 @@ CONTAINS
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 SUBROUTINE Jac_SP ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO, LS_type)
-  INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO
+  INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO,LS_type
   REAL(kind=dp) :: V(LS_NVAR)
   REAL(kind=dp) :: F(NFIX)
   REAL(kind=dp) :: RCT(NREACT)
