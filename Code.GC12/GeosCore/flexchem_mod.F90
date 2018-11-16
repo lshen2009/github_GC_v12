@@ -135,7 +135,6 @@ CONTAINS
     USE TIME_MOD,             ONLY : Get_Day
     USE TIME_MOD,             ONLY : Get_Month
     USE TIME_MOD,             ONLY : Get_Year
-	USE TIME_MOD,             ONLY : GET_NHMS,GET_NYMD,ITS_A_NEW_HOUR
     USE UnitConv_Mod,         ONLY : Convert_Spc_Units
     USE UCX_MOD,              ONLY : CALC_STRAT_AER
     USE UCX_MOD,              ONLY : SO4_PHOTFRAC
@@ -237,17 +236,13 @@ CONTAINS
     REAL(dp)               :: RSTATE     (                  20               )
     REAL(dp)               :: GLOB_RCONST(IIPAR,JJPAR,LLPAR,NREACT           )
     REAL(fp)               :: Before     (IIPAR,JJPAR,LLPAR,State_Chm%nAdvect)
-	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR)
 
     ! For tagged CO saving
     REAL(fp)               :: LCH4, PCO_TOT, PCO_CH4, PCO_NMVOC
 
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
-    INTEGER :: NHMS,NYMD,YMDH
-    LOGICAL :: new_hour,flag
-	character(len=1024) :: outputname1,outputname2,outputname3,outputname4
-	
+
     ! For testing only, may be removed later (mps, 4/26/16)
     LOGICAL                :: DO_HETCHEM
     REAL(fp)               :: TimeStart,timeEnd
@@ -277,11 +272,6 @@ CONTAINS
     ! This is for testing only and may be removed later (mps, 4/26/16)
     DO_HETCHEM  = .TRUE.
 
-    NHMS=GET_NHMS()!lshen
-    NYMD  = GET_NYMD()!lshen
-    new_hour=ITS_A_NEW_HOUR()!lshen
-	
-	print *,'lshen_test_new_hour',NYMD,NHMS,new_hour
     ! Remove debug output
     !IF ( FIRSTCHEM .AND. am_I_Root ) THEN
     !   WRITE( 6, '(a)' ) REPEAT( '#', 32 )
@@ -618,7 +608,7 @@ CONTAINS
     !$OMP PRIVATE  ( SO4_FRAC, IERR,     RCNTRL,  START, FINISH, ISTATUS    )&
     !$OMP PRIVATE  ( RSTATE,   SpcID,    KppID,   F,     P                  )&
     !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC                 ) &
-	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate ) &
+	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL                            ) &
     !$OMP REDUCTION( +:ITIM                                                 )&
     !$OMP REDUCTION( +:RTIM                                                 )&
     !$OMP REDUCTION( +:TOTSTEPS                                             )&
@@ -629,7 +619,12 @@ CONTAINS
     !$OMP REDUCTION( +:TOTNUMLU                                             )&
     !$OMP SCHEDULE ( DYNAMIC,  1                                            )
     DO L = 1, LLPAR
-       !CALL CPU_TIME(time=timeStart)	   
+       !CALL CPU_TIME(time=timeStart)
+	   IF (L>=30) THEN
+		LS_type=2
+	   ELSE
+	    LS_type=1
+	   END IF	   
     DO J = 1, JJPAR
     DO I = 1, IIPAR
        !====================================================================
@@ -883,30 +878,7 @@ CONTAINS
 
        ! Update the array of rate constants
        CALL Update_RCONST( )
-	   
-	   !lshen added this
-	   IF (new_hour) THEN
-	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
-		 !determine the type
-		 IF (L>=30) THEN
-		 	State_Chm%LS_Alltype(I,J,L)=2
-	     ELSE
-	        State_Chm%LS_Alltype(I,J,L)=1
-	     END IF		 
-		 !calculate the K
-		 WHERE ( ABS(VAR) >= 1e-60_fp)
-		     Lrate = -Lrate/VAR
-		 ELSEWHERE
-		     Lrate = 1e-60_fp
-		 END WHERE			 
-		 WHERE ( ABS(Lrate) < 1e-60_fp)
-		 	Lrate = 1e-60_fp
-		 END WHERE
-		 !calculate the P/L		 
-	     State_Chm%LS_Prate(I,J,L,:)=Prate
-	     State_Chm%LS_Lrate(I,J,L,:)=Lrate		 
-		 
-	   ENDIF
+
 !#if defined( DEVEL )
 !       ! Get time when rate computation finished
 !       CALL CPU_TIME( finish )
@@ -939,8 +911,6 @@ CONTAINS
 !         CALL CPU_TIME( start )
 !#endif
        ! Call the KPP integrator
-	   
-	   LS_type=State_Chm%LS_Alltype(I,J,L)   
 	   SELECT CASE (LS_type)
 	     CASE (1)
 		    LS_NSEL=NVAR_1
@@ -949,24 +919,10 @@ CONTAINS
 		    LS_NSEL=NVAR_2
 			LS_NDEL=LU_DEL_2
 		 CASE DEFAULT
-		    print *, "lshen_error",I,J,L,LS_type
+		    print *, "error"
 	   END SELECT
-	
-	   !IF (I==10 .and. J==10) THEN
-	      !print *, "lshen_LS_type", L, LS_type 
-		  !print *, "lshen_LS_Prate", State_Chm%LS_Prate(I,J,L,5:7)
-		  !print *, "lshen_LS_Lrate", State_Chm%LS_Lrate(I,J,L,9:11)		  
-	   !END IF
-	   
-	   Prate=State_Chm%LS_Prate(I,J,L,:)
-	   Lrate=State_Chm%LS_Lrate(I,J,L,:)	   
-	   
-	   IF(I==10 .and. J==10) THEN
-	     flag=.TRUE.
-	   else
-	     flag=.FALSE.
-	   END IF
-       CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate,flag, ICNTRL, &
+			
+       CALL Integrate( TIN,    TOUT, LS_type, LS_NSEL, LS_NDEL, ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )
 
        ! Print grid box indices to screen if integrate failed
@@ -1005,9 +961,8 @@ CONTAINS
           CALL Init_KPP( )
           VAR = C(1:NVAR)
           FIX = C(NVAR+1:NSPEC)
-          CALL Update_RCONST( )		  		 
-		  
-          CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate,flag, ICNTRL,&
+          CALL Update_RCONST( )
+          CALL Integrate( TIN,    TOUT, LS_type, LS_NSEL, LS_NDEL,  ICNTRL,      &
                           RCNTRL, ISTATUS, RSTATE, IERR )
           IF ( IERR < 0 ) THEN 
              WRITE(6,*) '## INTEGRATE FAILED TWICE !!! '
@@ -1304,26 +1259,6 @@ CONTAINS
     ! Set FIRSTCHEM = .FALSE. -- we have gone thru one chem step
     FIRSTCHEM = .FALSE.
 
-  !print *,'lshen_test_new_hour',NHMS,new_hour
-  !if (new_hour) then    
-  !  YMDH=NYMD*100+NHMS/10000
-  !  print *,NYMD,NHMS,YMDH
-  !  write (outputname1, "(A15,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
-  !  write (outputname2, "(A15,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'		
-  !  OPEN(unit=1101,file=outputname1)
-  !  OPEN(unit=1102,file=outputname2)
-  !       DO L=1,LLPAR
-  !         DO J=1,JJPAR
-  !          DO I=1,IIPAR
-  !            write(1101,'(3I4,234E15.3)'), I,J,L,LS_Prate(I,J,L,:)
-  !            write(1102,'(3I4,234E15.3)'), I,J,L,LS_Lrate(I,J,L,:)
-  !          ENDDO
-  !         ENDDO
-  !       ENDDO
-  !  close(1101)!lshen
-  !  close(1102)
-  !endif
-  
   END SUBROUTINE Do_FlexChem
 !EOC
 !------------------------------------------------------------------------------

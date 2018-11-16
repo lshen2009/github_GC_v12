@@ -64,14 +64,13 @@ MODULE gckpp_Integrator
 
 CONTAINS
 
-SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,Prate, Lrate, flag, &
+SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
 
    IMPLICIT NONE
 
    REAL(kind=dp), INTENT(IN) :: TIN  ! Start Time
    REAL(kind=dp), INTENT(IN) :: TOUT ! End Time
-   LOGICAL, INTENT(IN)::flag
    ! Optional input parameters and statistics
    INTEGER,       INTENT(IN),  OPTIONAL :: ICNTRL_U(20)
    REAL(kind=dp), INTENT(IN),  OPTIONAL :: RCNTRL_U(20)
@@ -79,11 +78,10 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,Prate, Lrate, flag, &
    REAL(kind=dp), INTENT(OUT), OPTIONAL :: RSTATUS_U(20)
    INTEGER,       INTENT(OUT), OPTIONAL :: IERR_U
    INTEGER,		  INTENT(IN) :: LS_type,LS_NSEL,LS_NDEL
-   REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    
-   REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
+   REAL(kind=dp) :: RCNTRL(20), RSTATUS(20)
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL),VAR_deleted(LS_NDEL),LS_P(LS_NDEL),LS_L(LS_NDEL)
+   REAL(kind=dp) :: VAR_selected(LS_NSEL),VAR_deleted(LS_NDEL)
    
    INTEGER, SAVE :: Ntotal = 0
 
@@ -91,7 +89,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,Prate, Lrate, flag, &
    RCNTRL(:)  = 0.0_dp
    ISTATUS(:) = 0
    RSTATUS(:) = 0.0_dp
-   deltaT =  TOUT-TIN
+
    !~~~> fine-tune the integrator:
    ICNTRL(1) = 0	! 0 - non-autonomous, 1 - autonomous
    ICNTRL(2) = 0	! 0 - vector tolerances, 1 - scalars
@@ -107,36 +105,19 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,Prate, Lrate, flag, &
    
    SELECT CASE (LS_type)
      CASE (1)
-        VAR_selected=VAR(select_ind_1)
-        CALL Rosenbrock(NVAR_1,VAR_selected,TIN,TOUT,   &
+       VAR_selected=VAR(select_ind_1)
+       CALL Rosenbrock(NVAR_1,VAR_selected,TIN,TOUT,   &
            ATOL,RTOL,                &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
    	       LU_NONZERO_1,NVAR_1,LU_CROW_1,LU_DIAG_1,LU_IROW_1,LU_ICOL_1, LS_type)
-   	     VAR(select_ind_1)=VAR_selected		 
+   	    VAR(select_ind_1)=VAR_selected
       CASE (2)
-        VAR_selected=VAR(select_ind_2)
-	    VAR_deleted=VAR(delete_ind_2)
-		LS_P=Prate(delete_ind_2)
-		LS_L=Lrate(delete_ind_2)
-        CALL Rosenbrock(NVAR_2,VAR_selected,TIN,TOUT,&
-          ATOL,RTOL,                &
-          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		  LU_NONZERO_2,NVAR_2,LU_CROW_2,LU_DIAG_2,LU_IROW_2,LU_ICOL_2, LS_type)
-		
-		!IF (flag) THEN
-		!	print *,"lshen_flag", 0.01/deltaT
-		!	print *,"VAR_deleted",VAR_deleted(1:10)
-		!	print *,"LS_P",LS_P(1:10)
-		!	print *,"LS_L",LS_L(1:10)
-		!END IF
-		WHERE(LS_L<=(0.01/deltaT))			
-			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
-		ELSEWHERE
-			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE
-		!IF (flag) THEN
-		!    print *,"VAR_deleted",VAR_deleted(1:10)
-		!END IF
+       VAR_selected=VAR(select_ind_2)
+	   VAR_deleted=VAR(delete_ind_2)
+       CALL Rosenbrock(NVAR_2,VAR_selected,TIN,TOUT,   &
+         ATOL,RTOL,                &
+         RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		 LU_NONZERO_2,NVAR_2,LU_CROW_2,LU_DIAG_2,LU_IROW_2,LU_ICOL_2, LS_type)
 	    VAR(select_ind_2)=VAR_selected
 	    VAR(delete_ind_2)=VAR_deleted
       CASE DEFAULT
