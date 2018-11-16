@@ -943,11 +943,11 @@ CONTAINS
 	   LS_type=State_Chm%LS_Alltype(I,J,L)   
 	   SELECT CASE (LS_type)
 	     CASE (1)
-		    LS_NSEL=NVAR_1
-			LS_NDEL=0
+		    LS_NSEL=LU_NSEL_1
+			LS_NDEL=LU_NDEL_1
 	     CASE (2)
-		    LS_NSEL=NVAR_2
-			LS_NDEL=LU_DEL_2
+		    LS_NSEL=LU_NSEL_2
+			LS_NDEL=LU_NDEL_2
 		 CASE DEFAULT
 		    print *, "lshen_error",I,J,L,LS_type
 	   END SELECT
