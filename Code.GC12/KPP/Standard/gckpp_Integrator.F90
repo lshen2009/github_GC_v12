@@ -125,13 +125,18 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,Prate, Lrate, flag, &
 		
 		IF (flag) THEN
 			print *,"lshen_flag", 0.01/deltaT
+			print *,"VAR_deleted",VAR_deleted(1:10)
+			print *,"LS_P",LS_P(1:10)
+			print *,"LS_L",LS_L(1:10)
 		END IF
 		WHERE(LS_L<=(0.01/deltaT))			
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
 		END WHERE
-		
+		IF (flag) THEN
+		    print *,"VAR_deleted",VAR_deleted(1:10)
+		END IF
 	    VAR(select_ind_2)=VAR_selected
 	    VAR(delete_ind_2)=VAR_deleted
       CASE DEFAULT

@@ -952,11 +952,11 @@ CONTAINS
 		    print *, "lshen_error",I,J,L,LS_type
 	   END SELECT
 	
-	   IF (I==10 .and. J==10) THEN
-	      print *, "lshen_LS_type", L, LS_type 
-		  print *, "lshen_LS_Prate", State_Chm%LS_Prate(I,J,L,5:7)
-		  print *, "lshen_LS_Lrate", State_Chm%LS_Lrate(I,J,L,9:11)		  
-	   END IF
+	   !IF (I==10 .and. J==10) THEN
+	      !print *, "lshen_LS_type", L, LS_type 
+		  !print *, "lshen_LS_Prate", State_Chm%LS_Prate(I,J,L,5:7)
+		  !print *, "lshen_LS_Lrate", State_Chm%LS_Lrate(I,J,L,9:11)		  
+	   !END IF
 	   
 	   Prate=State_Chm%LS_Prate(I,J,L,:)
 	   Lrate=State_Chm%LS_Lrate(I,J,L,:)	   
