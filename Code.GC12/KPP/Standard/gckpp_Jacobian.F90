@@ -42,7 +42,25 @@ CONTAINS
 !      JVS       - sparse Jacobian of variables
 ! 
 ! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SUBROUTINE Jac_SP ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO, LS_type)
+  INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO
+  REAL(kind=dp) :: V(LS_NVAR)
+  REAL(kind=dp) :: F(NFIX)
+  REAL(kind=dp) :: RCT(NREACT)
+  REAL(kind=dp) :: JVS(LS_LU_NONZERO)  
+  
+   SELECT CASE (LS_type)
+     CASE (1)
+       CALL Jac_SP_1 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+     CASE (2)
+       CALL Jac_SP_2 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+     CASE DEFAULT
+       print *, "LS_Jac_SP error"
+   END SELECT	
+  
+END SUBROUTINE Jac_SP
 
+!-------------------------------------------------------------
 SUBROUTINE Jac_SP_1 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
 
   INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO

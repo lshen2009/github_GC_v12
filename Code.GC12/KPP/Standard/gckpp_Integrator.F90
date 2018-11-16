@@ -1367,7 +1367,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  !USE gckpp_Parameters, ONLY: NVAR2, LS_LU_NONZERO
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Jacobian, ONLY: Jac_SP_1,Jac_SP_2
+ USE gckpp_Jacobian, ONLY: Jac_SP
  USE gckpp_LinearAlgebra
  
  INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO, LS_type
@@ -1388,12 +1388,8 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
 
     Told = TIME
     TIME = T
-#ifdef FULL_ALGEBRA
-    IF (LS_type==1) THEN
-       CALL Jac_SP_1(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO)
-	ELSE IF (LS_type==2) THEN
-	   CALL Jac_SP_2(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO)
-	END IF
+#ifdef FULL_ALGEBRA        	
+	CALL Jac_SP(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO,LS_type)	
     DO j=1,LS_NVAR
       DO i=1,LS_NVAR
          Jcb(i,j) = 0.0_dp
@@ -1402,12 +1398,8 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
     DO i=1,LS_LU_NONZERO
        Jcb(LS_LU_IROW(i),LS_LU_ICOL(i)) = JV(i)
     END DO
-#else
-    IF (LS_type==1) THEN
-       CALL Jac_SP_1( Y, FIX, RCONST, Jcb,LS_NVAR,LS_LU_NONZERO)
-	ELSE IF (LS_type==2) THEN
-	   CALL Jac_SP_2( Y, FIX, RCONST, Jcb,LS_NVAR,LS_LU_NONZERO)
-	END IF
+#else   
+       CALL Jac_SP( Y, FIX, RCONST, Jcb,LS_NVAR,LS_LU_NONZERO,LS_type)	 
 #endif   
     TIME = Told
 
