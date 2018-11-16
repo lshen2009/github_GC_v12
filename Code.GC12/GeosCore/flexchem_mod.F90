@@ -245,7 +245,7 @@ CONTAINS
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
     INTEGER :: NHMS,NYMD,YMDH
-    LOGICAL :: new_hour
+    LOGICAL :: new_hour,flag
 	character(len=1024) :: outputname1,outputname2,outputname3,outputname4
 	
     ! For testing only, may be removed later (mps, 4/26/16)
@@ -272,8 +272,6 @@ CONTAINS
     Day       =  Get_Day()    ! Current day
     Month     =  Get_Month()  ! Current month
     Year      =  Get_Year()   ! Current year
-	!State_Chm%LS_Prate(:,:,:,:)=0.0_fp
-	!State_Chm%LS_Lrate(:,:,:,:)=0.0_fp
 
     ! Turn heterogeneous chemistry and photolysis on/off here
     ! This is for testing only and may be removed later (mps, 4/26/16)
@@ -961,8 +959,14 @@ CONTAINS
 	   END IF
 	   
 	   Prate=State_Chm%LS_Prate(I,J,L,:)
-	   Lrate=State_Chm%LS_Lrate(I,J,L,:)
-       CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+	   Lrate=State_Chm%LS_Lrate(I,J,L,:)	   
+	   
+	   IF(I==10 .and. J==10) THEN
+	     flag=.TRUE.
+	   else
+	     flag=.FALSE.
+	   END IF
+       CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL,flag, &
                        RCNTRL, ISTATUS, RSTATE, IERR )
 
        ! Print grid box indices to screen if integrate failed
@@ -1003,7 +1007,7 @@ CONTAINS
           FIX = C(NVAR+1:NSPEC)
           CALL Update_RCONST( )		  		 
 		  
-          CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+          CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, flag,&
                           RCNTRL, ISTATUS, RSTATE, IERR )
           IF ( IERR < 0 ) THEN 
              WRITE(6,*) '## INTEGRATE FAILED TWICE !!! '

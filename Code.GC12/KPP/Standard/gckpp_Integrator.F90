@@ -64,13 +64,14 @@ MODULE gckpp_Integrator
 
 CONTAINS
 
-SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,Prate, Lrate, &
+SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,Prate, Lrate, flag, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
 
    IMPLICIT NONE
 
    REAL(kind=dp), INTENT(IN) :: TIN  ! Start Time
    REAL(kind=dp), INTENT(IN) :: TOUT ! End Time
+   LOGICAL, INTENT(IN)::flag
    ! Optional input parameters and statistics
    INTEGER,       INTENT(IN),  OPTIONAL :: ICNTRL_U(20)
    REAL(kind=dp), INTENT(IN),  OPTIONAL :: RCNTRL_U(20)
@@ -80,8 +81,8 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,Prate, Lrate, &
    INTEGER,		  INTENT(IN) :: LS_type,LS_NSEL,LS_NDEL
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    
-   REAL(kind=dp) :: RCNTRL(20), RSTATUS(20)
-   INTEGER       :: ICNTRL(20), ISTATUS(20), IERR,deltaT
+   REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
+   INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
    REAL(kind=dp) :: VAR_selected(LS_NSEL),VAR_deleted(LS_NDEL),LS_P(LS_NDEL),LS_L(LS_NDEL)
    
    INTEGER, SAVE :: Ntotal = 0
@@ -122,7 +123,10 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,Prate, Lrate, &
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		  LU_NONZERO_2,NVAR_2,LU_CROW_2,LU_DIAG_2,LU_IROW_2,LU_ICOL_2, LS_type)
 		
-		WHERE(LS_L<=(0.01/deltaT))
+		IF (flag) THEN
+			print *,"lshen_flag", 0.01/deltaT
+		END IF
+		WHERE(LS_L<=(0.01/deltaT))			
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
