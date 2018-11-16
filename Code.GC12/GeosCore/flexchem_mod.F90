@@ -945,9 +945,11 @@ CONTAINS
 	     CASE (1)
 		    LS_NSEL=LU_NSEL_1
 			LS_NDEL=LU_NDEL_1
+			LS_LU_NONZERO=LU_NONZERO_1
 	     CASE (2)
 		    LS_NSEL=LU_NSEL_2
 			LS_NDEL=LU_NDEL_2
+			LS_LU_NONZERO=LU_NONZERO_2
 		 CASE DEFAULT
 		    print *, "lshen_error",I,J,L,LS_type
 	   END SELECT
