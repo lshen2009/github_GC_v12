@@ -961,12 +961,7 @@ CONTAINS
 	   Prate=State_Chm%LS_Prate(I,J,L,:)
 	   Lrate=State_Chm%LS_Lrate(I,J,L,:)	   
 	   
-	   IF(I==10 .and. J==10) THEN
-	     flag=.TRUE.
-	   else
-	     flag=.FALSE.
-	   END IF
-       CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate,flag, ICNTRL, &
+       CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )
 
        ! Print grid box indices to screen if integrate failed
@@ -1007,7 +1002,7 @@ CONTAINS
           FIX = C(NVAR+1:NSPEC)
           CALL Update_RCONST( )		  		 
 		  
-          CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate,flag, ICNTRL,&
+          CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL,&
                           RCNTRL, ISTATUS, RSTATE, IERR )
           IF ( IERR < 0 ) THEN 
              WRITE(6,*) '## INTEGRATE FAILED TWICE !!! '
