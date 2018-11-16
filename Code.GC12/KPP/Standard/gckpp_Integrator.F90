@@ -160,7 +160,7 @@ END SUBROUTINE INTEGRATE
 SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-		   LS_LU_NONZERO,LS_NVAR,LS_LU_CROW,LS_LU_DIAG,LS_LU_IROW,LS_LU_ICOL, LS_type)
+		   LS_LU_NONZERO,LS_NSEL,LS_LU_CROW,LS_LU_DIAG,LS_LU_IROW,LS_LU_ICOL, LS_type)
 		    
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !
@@ -281,8 +281,8 @@ SUBROUTINE Rosenbrock(N,Y,Tstart,Tend, &
   IMPLICIT NONE
 
 !~~~>  Arguments
-   INTEGER,       INTENT(IN)    :: N,LS_LU_NONZERO,LS_NVAR,LS_type   
-   INTEGER,INTENT(IN)::LS_LU_CROW(LS_NVAR+1),LS_LU_DIAG(LS_NVAR+1)
+   INTEGER,       INTENT(IN)    :: N,LS_LU_NONZERO,LS_NSEL,LS_type   
+   INTEGER,INTENT(IN)::LS_LU_CROW(LS_NSEL+1),LS_LU_DIAG(LS_NSEL+1)
    INTEGER,INTENT(IN)::LS_LU_IROW(LS_LU_NONZERO),LS_LU_ICOL(LS_LU_NONZERO)   
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
@@ -582,7 +582,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate(T,Y,Fcn0, LS_NVAR, LS_type)
+   CALL FunTemplate(T,Y,Fcn0, LS_NSEL, LS_type)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -592,7 +592,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate(T,Y,Jac0,LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICOL, LS_type)   
+   CALL JacTemplate(T,Y,Jac0,LS_NSEL, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICOL, LS_type)   
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -624,7 +624,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate(Tau,Ynew,Fcn, LS_NVAR, LS_type)
+         CALL FunTemplate(Tau,Ynew,Fcn, LS_NSEL, LS_type)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -751,7 +751,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate(T+Delta,Y,dFdT, LS_NVAR, LS_type)
+   CALL FunTemplate(T+Delta,Y,dFdT, LS_NSEL, LS_type)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -859,7 +859,7 @@ Stage: DO istage = 1, ros_S
 #ifdef FULL_ALGEBRA    
    CALL  DGETRF( N, N, A, N, Pivot, ISING )
 #else   
-   CALL KppDecomp ( A, ISING,LS_NVAR,LS_LU_NONZERO,LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL)   
+   CALL KppDecomp ( A, ISING,LS_NSEL,LS_LU_NONZERO,LS_LU_CROW,LS_LU_DIAG,LS_LU_ICOL)   
    Pivot(1) = 1
 #endif
    ISTATUS(Ndec) = ISTATUS(Ndec) + 1
@@ -890,7 +890,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else  
-   	CALL KppSolve(LS_LU_NONZERO,LS_NVAR, A, b,LS_type )
+   	CALL KppSolve(LS_LU_NONZERO,LS_NSEL, A, b,LS_type )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -1325,31 +1325,31 @@ END SUBROUTINE Rosenbrock
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate( T, Y, Ydot, LS_NVAR, LS_type )
+SUBROUTINE FunTemplate( T, Y, Ydot, LS_NSEL, LS_type )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun
- INTEGER,INTENT(IN)::LS_NVAR, LS_type
+ INTEGER,INTENT(IN)::LS_NSEL, LS_type
 !~~~> Input variables
-   REAL(kind=dp) :: T, Y(LS_NVAR)
+   REAL(kind=dp) :: T, Y(LS_NSEL)
 !~~~> Output variables
-   REAL(kind=dp) :: Ydot(LS_NVAR)
+   REAL(kind=dp) :: Ydot(LS_NSEL)
 !~~~> Local variables
    REAL(kind=dp) :: Told
 
    Told = TIME
    TIME = T
-   CALL Fun( Y, FIX, RCONST, Ydot, LS_NVAR, LS_type )
+   CALL Fun( Y, FIX, RCONST, Ydot, LS_NSEL, LS_type )
    TIME = Told
 
 END SUBROUTINE FunTemplate
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICOL, LS_type)
+SUBROUTINE JacTemplate( T, Y, Jcb, LS_NSEL, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICOL, LS_type)
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -1359,13 +1359,13 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
  USE gckpp_Jacobian, ONLY: Jac_SP
  USE gckpp_LinearAlgebra
  
- INTEGER,INTENT(IN)::LS_NVAR, LS_LU_NONZERO, LS_type
+ INTEGER,INTENT(IN)::LS_NSEL, LS_LU_NONZERO, LS_type
  INTEGER,INTENT(IN)::LS_LU_IROW(LS_LU_NONZERO), LS_LU_ICOL(LS_LU_NONZERO)
 !~~~> Input variables
-    REAL(kind=dp) :: T, Y(LS_NVAR)
+    REAL(kind=dp) :: T, Y(LS_NSEL)
 !~~~> Output variables
 #ifdef FULL_ALGEBRA    
-    REAL(kind=dp) :: JV(LS_LU_NONZERO), Jcb(LS_NVAR,LS_NVAR)
+    REAL(kind=dp) :: JV(LS_LU_NONZERO), Jcb(LS_NSEL,LS_NSEL)
 #else
     REAL(kind=dp) :: Jcb(LS_LU_NONZERO)
 #endif   
@@ -1378,9 +1378,9 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA        	
-	CALL Jac_SP(Y, FIX, RCONST, JV,LS_NVAR,LS_LU_NONZERO,LS_type)	
-    DO j=1,LS_NVAR
-      DO i=1,LS_NVAR
+	CALL Jac_SP(Y, FIX, RCONST, JV,LS_NSEL,LS_LU_NONZERO,LS_type)	
+    DO j=1,LS_NSEL
+      DO i=1,LS_NSEL
          Jcb(i,j) = 0.0_dp
       END DO
     END DO
@@ -1388,7 +1388,7 @@ SUBROUTINE JacTemplate( T, Y, Jcb, LS_NVAR, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICO
        Jcb(LS_LU_IROW(i),LS_LU_ICOL(i)) = JV(i)
     END DO
 #else   
-       CALL Jac_SP( Y, FIX, RCONST, Jcb,LS_NVAR,LS_LU_NONZERO,LS_type)	 
+       CALL Jac_SP( Y, FIX, RCONST, Jcb,LS_NSEL,LS_LU_NONZERO,LS_type)	 
 #endif   
     TIME = Told
 
