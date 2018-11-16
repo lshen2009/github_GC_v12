@@ -78,7 +78,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,Prate, Lrate, &
    REAL(kind=dp), INTENT(OUT), OPTIONAL :: RSTATUS_U(20)
    INTEGER,       INTENT(OUT), OPTIONAL :: IERR_U
    INTEGER,		  INTENT(IN) :: LS_type,LS_NSEL,LS_NDEL
-   INTEGER,		  INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
+   REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20)
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
