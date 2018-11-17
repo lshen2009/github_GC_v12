@@ -116,21 +116,21 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 		 
       CASE (2)
         VAR_selected=VAR(select_ind_2)
-	    VAR_deleted=VAR(delete_ind_2)
-		LS_P=Prate(delete_ind_2)
-		LS_L=Lrate(delete_ind_2)
+	    !VAR_deleted=VAR(delete_ind_2)
+		!LS_P=Prate(delete_ind_2)
+		!LS_L=Lrate(delete_ind_2)
         CALL Rosenbrock(LU_NSEL_2,VAR_selected,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		  LU_NONZERO_2,LU_NSEL_2,LU_CROW_2,LU_DIAG_2,LU_IROW_2,LU_ICOL_2, LS_type)
 		
-		WHERE(LS_L<=(0.01/deltaT))			
-			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
-		ELSEWHERE
-			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE
+		!WHERE(LS_L<=(0.01/deltaT))			
+		!	VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
+		!ELSEWHERE
+		!	VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
+		!END WHERE
 		
 	    VAR(select_ind_2)=VAR_selected
-	    VAR(delete_ind_2)=VAR_deleted
+	    !VAR(delete_ind_2)=VAR_deleted
 		
       CASE DEFAULT
 	     print *, "error"
