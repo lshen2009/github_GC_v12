@@ -8749,7 +8749,7 @@ END SUBROUTINE Fun_PL
 
 FUNCTION Determine_type (Prate,Lrate) RESULT( flag )   
   REAL(kind=dp) :: Prate(NVAR),Lrate(NVAR)  
-  INTEGER ::Vdot(NVAR),PP(10),ap,flag
+  INTEGER ::Vdot(NVAR),PP(10),ap,flag,I
   flag=0
   Vdot=0
   WHERE (abs(Prate)>=100 .and. abs(Lrate)>=100) Vdot=1
