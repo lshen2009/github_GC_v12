@@ -23,7 +23,7 @@
 
 
 MODULE gckpp_Function
-
+  USE gckpp_JacobianSP
   USE gckpp_Parameters
   IMPLICIT NONE
 
@@ -8746,6 +8746,35 @@ SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate)
 
   !Diff=Prate+Lrate-Vdot
 END SUBROUTINE Fun_PL
+
+FUNCTION Determine_type (Prate,Lrate) RESULT( flag )   
+  REAL(kind=dp) :: Prate(NVAR),Lrate(NVAR)  
+  INTEGER ::Vdot(NVAR),PP(10),ap,flag
+  flag=0
+  Vdot=0
+  WHERE (abs(Prate)>=100 .and. abs(Lrate)>=100) Vdot=1
+  PP(1)=SUM(Vdot(LS_ind_1))
+  PP(2)=SUM(Vdot(LS_ind_2))
+  PP(3)=SUM(Vdot(LS_ind_3))
+  PP(4)=SUM(Vdot(LS_ind_4))
+  PP(5)=SUM(Vdot(LS_ind_5))
+  PP(6)=SUM(Vdot(LS_ind_6))
+  PP(7)=SUM(Vdot(LS_ind_7))
+  PP(8)=SUM(Vdot(LS_ind_8))
+  PP(9)=SUM(Vdot(LS_ind_9))
+  PP(10)=SUM(Vdot(LS_ind_10))  
+  WHERE (PP>=1) PP=1
+  ap=sum(LS_bin_base*PP)
+  DO I=1,10
+     IF (LS_group(I)==ap) THEN
+	    flag=I
+		CONTINUE
+	 END IF
+  END DO
+  IF (flag>=1) THEN
+  	flag=1
+  END IF
+END FUNCTION Determine_type
 
 END MODULE gckpp_Function
 

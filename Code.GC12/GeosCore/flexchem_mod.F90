@@ -887,12 +887,15 @@ CONTAINS
 	   !lshen added this
 	   IF (new_hour) THEN
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
+		 State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)
+		 
 		 !determine the type
-		 IF (L>=30) THEN
-		 	State_Chm%LS_Alltype(I,J,L)=1
-	     ELSE
-	        State_Chm%LS_Alltype(I,J,L)=0
-	     END IF		 
+		 !IF (L>=30) THEN
+		 !	State_Chm%LS_Alltype(I,J,L)=1
+	     !ELSE
+	     !   State_Chm%LS_Alltype(I,J,L)=0
+	     !END IF
+		 
 		 !calculate the K
 		 WHERE ( ABS(VAR) >= 1e-60_fp)
 		     Lrate = -Lrate/VAR
@@ -940,7 +943,10 @@ CONTAINS
 !#endif
        ! Call the KPP integrator
 	   
-	   LS_type=State_Chm%LS_Alltype(I,J,L)   
+	   LS_type=State_Chm%LS_Alltype(I,J,L)
+	   IF (I==10 .and. J==10) THEN
+	       print *,'lshen_LS_type',L, LS_type
+	   END IF
 	   SELECT CASE (LS_type)
 	     CASE (0)
 		    LS_NSEL=LU_NSEL_0
