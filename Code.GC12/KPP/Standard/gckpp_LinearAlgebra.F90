@@ -98,10 +98,10 @@ SUBROUTINE KppSolve (LS_LU_NONZERO,LS_NVAR,JVS, X, LS_type)
   REAL(kind=dp) :: X(LS_NVAR)
   
    SELECT CASE (LS_type)
+     CASE (0)
+       CALL KppSolve_0 (LS_LU_NONZERO,LS_NVAR,JVS, X )
      CASE (1)
        CALL KppSolve_1 (LS_LU_NONZERO,LS_NVAR,JVS, X )
-     CASE (2)
-       CALL KppSolve_2 (LS_LU_NONZERO,LS_NVAR,JVS, X )
      CASE DEFAULT
        print *, "LS_KppSolve error"
    END SELECT	

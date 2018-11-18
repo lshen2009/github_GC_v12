@@ -220,7 +220,7 @@ CONTAINS
     REAL(fp)               :: Start,     Finish,   rtim,      itim
     REAL(fp)               :: SO4_FRAC,  YLAT,     T,         TIN
     REAL(fp)               :: JNoon_Fac, TOUT
-	INTEGER                :: LS_LU_NONZERO,LS_type, LS_NSEL, LS_NDEL
+	INTEGER                :: LS_type, LS_NSEL, LS_NDEL
     ! Strings
     CHARACTER(LEN=63)      :: OrigUnit
     CHARACTER(LEN=255)     :: ErrMsg,   ThisLoc
@@ -618,7 +618,7 @@ CONTAINS
     !$OMP PRIVATE  ( SO4_FRAC, IERR,     RCNTRL,  START, FINISH, ISTATUS    )&
     !$OMP PRIVATE  ( RSTATE,   SpcID,    KppID,   F,     P                  )&
     !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC                 ) &
-	!$OMP PRIVATE  ( LS_type,  LS_LU_NONZERO, LS_NSEL,  LS_NDEL, Prate, Lrate ) &
+	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate ) &
     !$OMP REDUCTION( +:ITIM                                                 )&
     !$OMP REDUCTION( +:RTIM                                                 )&
     !$OMP REDUCTION( +:TOTSTEPS                                             )&
@@ -889,9 +889,9 @@ CONTAINS
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 		 !determine the type
 		 IF (L>=30) THEN
-		 	State_Chm%LS_Alltype(I,J,L)=2
+		 	State_Chm%LS_Alltype(I,J,L)=1
 	     ELSE
-	        State_Chm%LS_Alltype(I,J,L)=1
+	        State_Chm%LS_Alltype(I,J,L)=0
 	     END IF		 
 		 !calculate the K
 		 WHERE ( ABS(VAR) >= 1e-60_fp)
@@ -942,23 +942,15 @@ CONTAINS
 	   
 	   LS_type=State_Chm%LS_Alltype(I,J,L)   
 	   SELECT CASE (LS_type)
+	     CASE (0)
+		    LS_NSEL=LU_NSEL_0
+			LS_NDEL=LU_NDEL_0			
 	     CASE (1)
 		    LS_NSEL=LU_NSEL_1
-			LS_NDEL=LU_NDEL_1
-			LS_LU_NONZERO=LU_NONZERO_1
-	     CASE (2)
-		    LS_NSEL=LU_NSEL_2
-			LS_NDEL=LU_NDEL_2
-			LS_LU_NONZERO=LU_NONZERO_2
+			LS_NDEL=LU_NDEL_1			
 		 CASE DEFAULT
 		    print *, "lshen_error",I,J,L,LS_type
-	   END SELECT
-	
-	   !IF (I==10 .and. J==10) THEN
-	      !print *, "lshen_LS_type", L, LS_type 
-		  !print *, "lshen_LS_Prate", State_Chm%LS_Prate(I,J,L,5:7)
-		  !print *, "lshen_LS_Lrate", State_Chm%LS_Lrate(I,J,L,9:11)		  
-	   !END IF
+	   END SELECT	
 	   
 	   Prate=State_Chm%LS_Prate(I,J,L,:)
 	   Lrate=State_Chm%LS_Lrate(I,J,L,:)	   
