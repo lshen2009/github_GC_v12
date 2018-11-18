@@ -944,9 +944,9 @@ CONTAINS
        ! Call the KPP integrator
 	   
 	   LS_type=State_Chm%LS_Alltype(I,J,L)
-	   IF (I==10 .and. J==10) THEN
-	       print *,'lshen_LS_type',L, LS_type
-	   END IF
+	   !IF (I==10 .and. J==10) THEN
+	    !   print *,'lshen_LS_type',L, LS_type
+	   !END IF
 	   SELECT CASE (LS_type)
 	     CASE (1)
 		    LS_NSEL=LU_NSEL_1
