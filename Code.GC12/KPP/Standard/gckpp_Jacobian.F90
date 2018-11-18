@@ -50,12 +50,28 @@ SUBROUTINE Jac_SP ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO, LS_type)
   REAL(kind=dp) :: JVS(LS_LU_NONZERO)  
   
    SELECT CASE (LS_type)
-     CASE (0)
-       CALL Jac_SP_0 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
      CASE (1)
        CALL Jac_SP_1 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+     CASE (2)
+       CALL Jac_SP_2 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+     CASE (3)
+       CALL Jac_SP_3 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+     CASE (4)
+       CALL Jac_SP_4 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+     CASE (5)
+       CALL Jac_SP_5 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+     CASE (6)
+       CALL Jac_SP_6 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+     CASE (7)
+       CALL Jac_SP_7 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+     CASE (8)
+       CALL Jac_SP_8 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+     CASE (9)
+       CALL Jac_SP_9 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
+     CASE (10)
+       CALL Jac_SP_10 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )	   
      CASE DEFAULT
-       print *, "LS_Jac_SP error"
+       CALL Jac_SP_0 ( V, F, RCT, JVS, LS_NVAR, LS_LU_NONZERO )
    END SELECT	
   
 END SUBROUTINE Jac_SP

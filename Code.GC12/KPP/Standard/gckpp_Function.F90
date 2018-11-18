@@ -52,12 +52,28 @@ SUBROUTINE Fun ( V, F, RCT, Vdot, LS_NVAR, LS_type )
   REAL(kind=dp) :: Vdot(LS_NVAR)
 
    SELECT CASE (LS_type)
-     CASE (0)
-       CALL Fun_0 ( V, F, RCT, Vdot, LS_NVAR )
      CASE (1)
-       CALL Fun_1 ( V, F, RCT, Vdot, LS_NVAR)
+       CALL Fun_1 ( V, F, RCT, Vdot, LS_NVAR )
+     CASE (2)
+       CALL Fun_2 ( V, F, RCT, Vdot, LS_NVAR)
+     CASE (3)
+       CALL Fun_3 ( V, F, RCT, Vdot, LS_NVAR)
+     CASE (4)
+       CALL Fun_4 ( V, F, RCT, Vdot, LS_NVAR)
+     CASE (5)
+       CALL Fun_5 ( V, F, RCT, Vdot, LS_NVAR)
+     CASE (6)
+       CALL Fun_6 ( V, F, RCT, Vdot, LS_NVAR)
+     CASE (7)
+       CALL Fun_7 ( V, F, RCT, Vdot, LS_NVAR)
+     CASE (8)
+       CALL Fun_8 ( V, F, RCT, Vdot, LS_NVAR)
+     CASE (9)
+       CALL Fun_9 ( V, F, RCT, Vdot, LS_NVAR)
+     CASE (10)
+       CALL Fun_10 ( V, F, RCT, Vdot, LS_NVAR)
      CASE DEFAULT
-       print *, "LS_Fun error"
+       CALL Fun_0 ( V, F, RCT, Vdot, LS_NVAR )
    END SELECT	
 
 END SUBROUTINE Fun

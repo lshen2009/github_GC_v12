@@ -106,14 +106,7 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
    
-   SELECT CASE (LS_type)
-     CASE (0)
-        VAR_selected=VAR(select_ind_0)
-        CALL Rosenbrock(LU_NSEL_0,VAR_selected,TIN,TOUT,ATOL,RTOL,&
-           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
-   	       LU_NONZERO_0,LU_NSEL_0,LU_CROW_0,LU_DIAG_0,LU_IROW_0,LU_ICOL_0, LS_type)
-   	     VAR(select_ind_0)=VAR_selected		 
-		 
+   SELECT CASE (LS_type) 		 		 
       CASE (1)
         VAR_selected=VAR(select_ind_1)
 	    VAR_deleted=VAR(delete_ind_1)
@@ -129,9 +122,148 @@ SUBROUTINE INTEGRATE( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 		END WHERE		
 	    VAR(select_ind_1)=VAR_selected
 	    VAR(delete_ind_1)=VAR_deleted
-		
+      CASE (2)
+        VAR_selected=VAR(select_ind_2)
+	    VAR_deleted=VAR(delete_ind_2)
+		LS_P=Prate(delete_ind_2)
+		LS_L=Lrate(delete_ind_2)
+        CALL Rosenbrock(LU_NSEL_2,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		  LU_NONZERO_2,LU_NSEL_2,LU_CROW_2,LU_DIAG_2,LU_IROW_2,LU_ICOL_2, LS_type)		
+		WHERE(LS_L<=(0.01/deltaT))			
+			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
+		ELSEWHERE
+			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
+		END WHERE		
+	    VAR(select_ind_2)=VAR_selected
+	    VAR(delete_ind_2)=VAR_deleted
+      CASE (3)
+        VAR_selected=VAR(select_ind_3)
+	    VAR_deleted=VAR(delete_ind_3)
+		LS_P=Prate(delete_ind_3)
+		LS_L=Lrate(delete_ind_3)
+        CALL Rosenbrock(LU_NSEL_3,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		  LU_NONZERO_3,LU_NSEL_3,LU_CROW_3,LU_DIAG_3,LU_IROW_3,LU_ICOL_3, LS_type)		
+		WHERE(LS_L<=(0.01/deltaT))			
+			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
+		ELSEWHERE
+			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
+		END WHERE		
+	    VAR(select_ind_3)=VAR_selected
+	    VAR(delete_ind_3)=VAR_deleted
+      CASE (4)
+        VAR_selected=VAR(select_ind_4)
+	    VAR_deleted=VAR(delete_ind_4)
+		LS_P=Prate(delete_ind_4)
+		LS_L=Lrate(delete_ind_4)
+        CALL Rosenbrock(LU_NSEL_4,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		  LU_NONZERO_4,LU_NSEL_4,LU_CROW_4,LU_DIAG_4,LU_IROW_4,LU_ICOL_4, LS_type)		
+		WHERE(LS_L<=(0.01/deltaT))			
+			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
+		ELSEWHERE
+			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
+		END WHERE		
+	    VAR(select_ind_4)=VAR_selected
+	    VAR(delete_ind_4)=VAR_deleted
+      CASE (5)
+        VAR_selected=VAR(select_ind_5)
+	    VAR_deleted=VAR(delete_ind_5)
+		LS_P=Prate(delete_ind_5)
+		LS_L=Lrate(delete_ind_5)
+        CALL Rosenbrock(LU_NSEL_5,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		  LU_NONZERO_5,LU_NSEL_5,LU_CROW_5,LU_DIAG_5,LU_IROW_5,LU_ICOL_5, LS_type)		
+		WHERE(LS_L<=(0.01/deltaT))			
+			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
+		ELSEWHERE
+			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
+		END WHERE		
+	    VAR(select_ind_5)=VAR_selected
+	    VAR(delete_ind_5)=VAR_deleted
+      CASE (6)
+        VAR_selected=VAR(select_ind_6)
+	    VAR_deleted=VAR(delete_ind_6)
+		LS_P=Prate(delete_ind_6)
+		LS_L=Lrate(delete_ind_6)
+        CALL Rosenbrock(LU_NSEL_6,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		  LU_NONZERO_6,LU_NSEL_6,LU_CROW_6,LU_DIAG_6,LU_IROW_6,LU_ICOL_6, LS_type)		
+		WHERE(LS_L<=(0.01/deltaT))			
+			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
+		ELSEWHERE
+			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
+		END WHERE		
+	    VAR(select_ind_6)=VAR_selected
+	    VAR(delete_ind_6)=VAR_deleted
+      CASE (7)
+        VAR_selected=VAR(select_ind_7)
+	    VAR_deleted=VAR(delete_ind_7)
+		LS_P=Prate(delete_ind_7)
+		LS_L=Lrate(delete_ind_7)
+        CALL Rosenbrock(LU_NSEL_7,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		  LU_NONZERO_7,LU_NSEL_7,LU_CROW_7,LU_DIAG_7,LU_IROW_7,LU_ICOL_7, LS_type)		
+		WHERE(LS_L<=(0.01/deltaT))			
+			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
+		ELSEWHERE
+			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
+		END WHERE		
+	    VAR(select_ind_7)=VAR_selected
+	    VAR(delete_ind_7)=VAR_deleted
+      CASE (8)
+        VAR_selected=VAR(select_ind_8)
+	    VAR_deleted=VAR(delete_ind_8)
+		LS_P=Prate(delete_ind_8)
+		LS_L=Lrate(delete_ind_8)
+        CALL Rosenbrock(LU_NSEL_8,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		  LU_NONZERO_8,LU_NSEL_8,LU_CROW_8,LU_DIAG_8,LU_IROW_8,LU_ICOL_8, LS_type)		
+		WHERE(LS_L<=(0.01/deltaT))			
+			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
+		ELSEWHERE
+			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
+		END WHERE		
+	    VAR(select_ind_8)=VAR_selected
+	    VAR(delete_ind_8)=VAR_deleted
+      CASE (9)
+        VAR_selected=VAR(select_ind_9)
+	    VAR_deleted=VAR(delete_ind_9)
+		LS_P=Prate(delete_ind_9)
+		LS_L=Lrate(delete_ind_9)
+        CALL Rosenbrock(LU_NSEL_9,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		  LU_NONZERO_9,LU_NSEL_9,LU_CROW_9,LU_DIAG_9,LU_IROW_9,LU_ICOL_9, LS_type)		
+		WHERE(LS_L<=(0.01/deltaT))			
+			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
+		ELSEWHERE
+			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
+		END WHERE		
+	    VAR(select_ind_9)=VAR_selected
+	    VAR(delete_ind_9)=VAR_deleted
+      CASE (10)
+        VAR_selected=VAR(select_ind_10)
+	    VAR_deleted=VAR(delete_ind_10)
+		LS_P=Prate(delete_ind_10)
+		LS_L=Lrate(delete_ind_10)
+        CALL Rosenbrock(LU_NSEL_10,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+          RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+		  LU_NONZERO_10,LU_NSEL_10,LU_CROW_10,LU_DIAG_10,LU_IROW_10,LU_ICOL_10, LS_type)		
+		WHERE(LS_L<=(0.01/deltaT))			
+			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
+		ELSEWHERE
+			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
+		END WHERE		
+	    VAR(select_ind_10)=VAR_selected
+	    VAR(delete_ind_10)=VAR_deleted
+
       CASE DEFAULT
-	     print *, "error"
+        VAR_selected=VAR(select_ind_0)
+        CALL Rosenbrock(LU_NSEL_0,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
+   	       LU_NONZERO_0,LU_NSEL_0,LU_CROW_0,LU_DIAG_0,LU_IROW_0,LU_ICOL_0, LS_type)
+   	     VAR(select_ind_0)=VAR_selected
     END SELECT	 
    
    !~~~> Debug option: show no of steps

@@ -948,14 +948,40 @@ CONTAINS
 	       print *,'lshen_LS_type',L, LS_type
 	   END IF
 	   SELECT CASE (LS_type)
-	     CASE (0)
-		    LS_NSEL=LU_NSEL_0
-			LS_NDEL=LU_NDEL_0			
 	     CASE (1)
 		    LS_NSEL=LU_NSEL_1
-			LS_NDEL=LU_NDEL_1			
+			LS_NDEL=LU_NDEL_1		
+	     CASE (2)
+		    LS_NSEL=LU_NSEL_2
+			LS_NDEL=LU_NDEL_2		
+	     CASE (3)
+		    LS_NSEL=LU_NSEL_3
+			LS_NDEL=LU_NDEL_3		
+	     CASE (4)
+		    LS_NSEL=LU_NSEL_4
+			LS_NDEL=LU_NDEL_4		
+	     CASE (5)
+		    LS_NSEL=LU_NSEL_5
+			LS_NDEL=LU_NDEL_5		
+	     CASE (6)
+		    LS_NSEL=LU_NSEL_6
+			LS_NDEL=LU_NDEL_6		
+	     CASE (7)
+		    LS_NSEL=LU_NSEL_7
+			LS_NDEL=LU_NDEL_7		
+	     CASE (8)
+		    LS_NSEL=LU_NSEL_8
+			LS_NDEL=LU_NDEL_8	
+	     CASE (9)
+		    LS_NSEL=LU_NSEL_9
+			LS_NDEL=LU_NDEL_9		
+	     CASE (10)
+		    LS_NSEL=LU_NSEL_10
+			LS_NDEL=LU_NDEL_10					
 		 CASE DEFAULT
-		    print *, "lshen_error",I,J,L,LS_type
+		    LS_NSEL=LU_NSEL_0
+			LS_NDEL=LU_NDEL_0				 
+		    !print *, "lshen_error",I,J,L,LS_type
 	   END SELECT	
 	   
 	   Prate=State_Chm%LS_Prate(I,J,L,:)
