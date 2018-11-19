@@ -947,14 +947,59 @@ CONTAINS
 	   Prate=State_Chm%LS_Prate(I,J,L,:)
 	   Lrate=State_Chm%LS_Lrate(I,J,L,:)
 	   LS_type=State_Chm%LS_Alltype(I,J,L)
-	   IF (I==10 .and. J==10) THEN
-	       print *,'lshen_LS_type',L, LS_type
-	   END IF
+	   !IF (I==10 .and. J==10) THEN
+	   !    print *,'lshen_LS_type',L, LS_type
+	   !END IF
 	   SELECT CASE (LS_type)
 	     CASE (1)
 		    LS_NSEL=LU_NSEL_1
 			LS_NDEL=LU_NDEL_1	
             CALL Integrate_1( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )			
+	     CASE (2)
+		    LS_NSEL=LU_NSEL_2
+			LS_NDEL=LU_NDEL_2	
+            CALL Integrate_2( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )			
+	     CASE (3)
+		    LS_NSEL=LU_NSEL_3
+			LS_NDEL=LU_NDEL_3	
+            CALL Integrate_3( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )			
+	     CASE (4)
+		    LS_NSEL=LU_NSEL_4
+			LS_NDEL=LU_NDEL_4	
+            CALL Integrate_4( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )			
+	     CASE (5)
+		    LS_NSEL=LU_NSEL_5
+			LS_NDEL=LU_NDEL_5	
+            CALL Integrate_5( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )			
+	     CASE (6)
+		    LS_NSEL=LU_NSEL_6
+			LS_NDEL=LU_NDEL_6	
+            CALL Integrate_6( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )			
+	     CASE (7)
+		    LS_NSEL=LU_NSEL_7
+			LS_NDEL=LU_NDEL_7	
+            CALL Integrate_7( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )			
+	     CASE (8)
+		    LS_NSEL=LU_NSEL_8
+			LS_NDEL=LU_NDEL_8	
+            CALL Integrate_8( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )			
+	     CASE (9)
+		    LS_NSEL=LU_NSEL_9
+			LS_NDEL=LU_NDEL_9	
+            CALL Integrate_9( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )			
+	     CASE (10)
+		    LS_NSEL=LU_NSEL_10
+			LS_NDEL=LU_NDEL_10	
+            CALL Integrate_10( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )			
 		 CASE DEFAULT
 		    LS_NSEL=LU_NSEL_0
