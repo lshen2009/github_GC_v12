@@ -1250,7 +1250,7 @@ END SUBROUTINE JacTemplate_1
 !========================================================================================
 !========================================================================================
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_2(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_0(N,Y,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		   LS_LU_NONZERO,LS_NSEL,LS_LU_CROW,LS_LU_DIAG,LS_LU_IROW,LS_LU_ICOL, LS_type)
@@ -1559,7 +1559,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_2(T,Y,Fcn0, LS_NSEL, LS_type)
+   CALL FunTemplate_0(T,Y,Fcn0, LS_NSEL, LS_type)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -1569,7 +1569,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_2(T,Y,Jac0,LS_NSEL, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICOL, LS_type)   
+   CALL JacTemplate_0(T,Y,Jac0,LS_NSEL, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICOL, LS_type)   
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -1601,7 +1601,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_2(Tau,Ynew,Fcn, LS_NSEL, LS_type)
+         CALL FunTemplate_0(Tau,Ynew,Fcn, LS_NSEL, LS_type)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -1728,7 +1728,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_2(T+Delta,Y,dFdT, LS_NSEL, LS_type)
+   CALL FunTemplate_0(T+Delta,Y,dFdT, LS_NSEL, LS_type)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -2293,10 +2293,10 @@ Stage: DO istage = 1, ros_S
   END SUBROUTINE Rang3
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-END SUBROUTINE Rosenbrock_2
+END SUBROUTINE Rosenbrock_0
 
 
-SUBROUTINE FunTemplate_2( T, Y, Ydot, LS_NSEL, LS_type )
+SUBROUTINE FunTemplate_0( T, Y, Ydot, LS_NSEL, LS_type )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun
  INTEGER,INTENT(IN)::LS_NSEL, LS_type
@@ -2307,9 +2307,9 @@ SUBROUTINE FunTemplate_2( T, Y, Ydot, LS_NSEL, LS_type )
    TIME = T
    CALL Fun_2( Y, FIX, RCONST, Ydot, LS_NSEL)
    TIME = Told
-END SUBROUTINE FunTemplate_2
+END SUBROUTINE FunTemplate_0
 
-SUBROUTINE JacTemplate_2( T, Y, Jcb, LS_NSEL, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICOL, LS_type)
+SUBROUTINE JacTemplate_0( T, Y, Jcb, LS_NSEL, LS_LU_NONZERO, LS_LU_IROW, LS_LU_ICOL, LS_type)
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian
  USE gckpp_LinearAlgebra
@@ -2343,7 +2343,7 @@ SUBROUTINE JacTemplate_2( T, Y, Jcb, LS_NSEL, LS_LU_NONZERO, LS_LU_IROW, LS_LU_I
        CALL Jac_SP_2( Y, FIX, RCONST, Jcb,LS_NSEL,LS_LU_NONZERO,LS_type)	 
 #endif   
     TIME = Told
-END SUBROUTINE JacTemplate_2
+END SUBROUTINE JacTemplate_0
 
 
 END MODULE gckpp_Integrator
