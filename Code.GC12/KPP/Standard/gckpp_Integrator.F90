@@ -4724,11 +4724,9 @@ SUBROUTINE INTEGRATE_4( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
         CALL Rosenbrock_4(LU_NSEL_4,VAR_selected,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		  LU_NONZERO_4,LU_NSEL_4,LU_CROW_4,LU_DIAG_4,LU_IROW_4,LU_ICOL_4, LS_type)		
-		!WHERE(LS_L<=(0.01/deltaT))
-		!	VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
-		!ELSEWHERE
-		!	VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		WHERE(LS_L>(0.01/deltaT))
+		WHERE(LS_L<=(0.01/deltaT))
+			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
+		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
 		END WHERE		
 	    VAR(select_ind_4)=VAR_selected
