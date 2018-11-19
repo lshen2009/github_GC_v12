@@ -8787,6 +8787,9 @@ FUNCTION Determine_type (Prate,Lrate) RESULT( flag )
 		CONTINUE
 	 END IF
   END DO
+  IF (flag>=6) THEN
+     flag=0
+  END IF
 END FUNCTION Determine_type
 
 END MODULE gckpp_Function

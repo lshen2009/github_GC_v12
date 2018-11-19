@@ -975,32 +975,7 @@ CONTAINS
 		    LS_NSEL=LU_NSEL_5
 			LS_NDEL=LU_NDEL_5	
             CALL Integrate_5( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
-                       RCNTRL, ISTATUS, RSTATE, IERR )			
-	     CASE (6)
-		    LS_NSEL=LU_NSEL_6
-			LS_NDEL=LU_NDEL_6	
-            CALL Integrate_6( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
-                       RCNTRL, ISTATUS, RSTATE, IERR )			
-	     CASE (7)
-		    LS_NSEL=LU_NSEL_7
-			LS_NDEL=LU_NDEL_7	
-            CALL Integrate_7( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
-                       RCNTRL, ISTATUS, RSTATE, IERR )			
-	     CASE (8)
-		    LS_NSEL=LU_NSEL_8
-			LS_NDEL=LU_NDEL_8	
-            CALL Integrate_8( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
-                       RCNTRL, ISTATUS, RSTATE, IERR )			
-	     CASE (9)
-		    LS_NSEL=LU_NSEL_9
-			LS_NDEL=LU_NDEL_9	
-            CALL Integrate_9( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
-                       RCNTRL, ISTATUS, RSTATE, IERR )			
-	     CASE (10)
-		    LS_NSEL=LU_NSEL_10
-			LS_NDEL=LU_NDEL_10	
-            CALL Integrate_10( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
-                       RCNTRL, ISTATUS, RSTATE, IERR )			
+                       RCNTRL, ISTATUS, RSTATE, IERR )					
 		 CASE DEFAULT
 		    LS_NSEL=LU_NSEL_0
 			LS_NDEL=LU_NDEL_0				 
