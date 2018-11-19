@@ -56,20 +56,9 @@ SUBROUTINE INTEGRATE_0( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
    
-        VAR_selected=VAR(select_ind_0)
-	    VAR_deleted=VAR(delete_ind_0)
-		LS_P=Prate(delete_ind_0)
-		LS_L=Lrate(delete_ind_0)
-        CALL Rosenbrock_0(LU_NSEL_0,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+        CALL Rosenbrock_0(LU_NSEL_0,VAR,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		  LU_NONZERO_0,LU_NSEL_0,LU_CROW_0,LU_DIAG_0,LU_IROW_0,LU_ICOL_0, LS_type)		
-		WHERE(LS_L<=(0.01/deltaT))
-			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
-		ELSEWHERE
-			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE		
-	    VAR(select_ind_0)=VAR_selected
-	    VAR(delete_ind_0)=VAR_deleted
    
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
