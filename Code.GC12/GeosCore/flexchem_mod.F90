@@ -887,7 +887,9 @@ CONTAINS
 	   !lshen added this
 	   !IF (new_hour) THEN
 	   IF (MOD(NHMS,2000)==0) then
-	     print *, "lshen_Determine_type"
+	   IF (I==10 .and. J==10) THEN
+	       print *, "lshen_Determine_type",L
+	   END IF	   	     
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 		 State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)
 		 
