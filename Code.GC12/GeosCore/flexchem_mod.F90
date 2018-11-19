@@ -885,7 +885,8 @@ CONTAINS
        CALL Update_RCONST( )
 	   
 	   !lshen added this
-	   IF (new_hour) THEN
+	   !IF (new_hour) THEN
+	   IF (MOD(NHMS,30000)==0) then
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 		 State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)
 		 
