@@ -2305,7 +2305,7 @@ SUBROUTINE FunTemplate_0( T, Y, Ydot, LS_NSEL, LS_type )
    REAL(kind=dp) :: Told
    Told = TIME
    TIME = T
-   CALL Fun_2( Y, FIX, RCONST, Ydot, LS_NSEL)
+   CALL Fun_0( Y, FIX, RCONST, Ydot, LS_NSEL)
    TIME = Told
 END SUBROUTINE FunTemplate_0
 
@@ -2330,7 +2330,7 @@ SUBROUTINE JacTemplate_0( T, Y, Jcb, LS_NSEL, LS_LU_NONZERO, LS_LU_IROW, LS_LU_I
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA        	
-	CALL Jac_SP_2(Y, FIX, RCONST, JV,LS_NSEL,LS_LU_NONZERO,LS_type)	
+	CALL Jac_SP_0(Y, FIX, RCONST, JV,LS_NSEL,LS_LU_NONZERO)	
     DO j=1,LS_NSEL
       DO i=1,LS_NSEL
          Jcb(i,j) = 0.0_dp
@@ -2340,7 +2340,7 @@ SUBROUTINE JacTemplate_0( T, Y, Jcb, LS_NSEL, LS_LU_NONZERO, LS_LU_IROW, LS_LU_I
        Jcb(LS_LU_IROW(i),LS_LU_ICOL(i)) = JV(i)
     END DO
 #else   
-       CALL Jac_SP_2( Y, FIX, RCONST, Jcb,LS_NSEL,LS_LU_NONZERO,LS_type)	 
+       CALL Jac_SP_0( Y, FIX, RCONST, Jcb,LS_NSEL,LS_LU_NONZERO)	 
 #endif   
     TIME = Told
 END SUBROUTINE JacTemplate_0
