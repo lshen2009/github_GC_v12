@@ -1199,7 +1199,7 @@ END SUBROUTINE Rosenbrock_1
 
 SUBROUTINE FunTemplate_1( T, Y, Ydot, LS_NSEL, LS_type )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Function, ONLY: Fun
+ USE gckpp_Function
  INTEGER,INTENT(IN)::LS_NSEL, LS_type
    REAL(kind=dp) :: T, Y(LS_NSEL)
    REAL(kind=dp) :: Ydot(LS_NSEL)
@@ -2298,7 +2298,7 @@ END SUBROUTINE Rosenbrock_0
 
 SUBROUTINE FunTemplate_0( T, Y, Ydot, LS_NSEL, LS_type )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
- USE gckpp_Function, ONLY: Fun
+ USE gckpp_Function
  INTEGER,INTENT(IN)::LS_NSEL, LS_type
    REAL(kind=dp) :: T, Y(LS_NSEL)
    REAL(kind=dp) :: Ydot(LS_NSEL)
