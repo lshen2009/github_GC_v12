@@ -8787,7 +8787,7 @@ FUNCTION Determine_type (Prate,Lrate) RESULT( flag )
 		CONTINUE
 	 END IF
   END DO
-  IF (flag < 3 .or. flag>4) THEN
+  IF (flag >=3) THEN
      flag=0
   END IF
 END FUNCTION Determine_type
