@@ -114,7 +114,7 @@ CONTAINS
     USE GCKPP_Monitor,        ONLY : SPC_NAMES, FAM_NAMES
     USE GCKPP_Parameters
 	USE gckpp_JacobianSP
-    USE GCKPP_Integrator,     ONLY : INTEGRATE, NHnew
+    USE GCKPP_Integrator,     ONLY : INTEGRATE_0,INTEGRATE_1, NHnew
     USE GCKPP_Function 
     USE GCKPP_Model
     USE GCKPP_Global
@@ -943,53 +943,25 @@ CONTAINS
 !         CALL CPU_TIME( start )
 !#endif
        ! Call the KPP integrator
-	   
+
+	   Prate=State_Chm%LS_Prate(I,J,L,:)
+	   Lrate=State_Chm%LS_Lrate(I,J,L,:)
 	   LS_type=State_Chm%LS_Alltype(I,J,L)
-	   !IF (I==10 .and. J==10) THEN
-	    !   print *,'lshen_LS_type',L, LS_type
-	   !END IF
+	   IF (I==10 .and. J==10) THEN
+	       print *,'lshen_LS_type',L, LS_type
+	   END IF
 	   SELECT CASE (LS_type)
 	     CASE (1)
 		    LS_NSEL=LU_NSEL_1
-			LS_NDEL=LU_NDEL_1		
-	     CASE (2)
-		    LS_NSEL=LU_NSEL_2
-			LS_NDEL=LU_NDEL_2		
-	     CASE (3)
-		    LS_NSEL=LU_NSEL_3
-			LS_NDEL=LU_NDEL_3		
-	     CASE (4)
-		    LS_NSEL=LU_NSEL_4
-			LS_NDEL=LU_NDEL_4		
-	     CASE (5)
-		    LS_NSEL=LU_NSEL_5
-			LS_NDEL=LU_NDEL_5		
-	     CASE (6)
-		    LS_NSEL=LU_NSEL_6
-			LS_NDEL=LU_NDEL_6		
-	     CASE (7)
-		    LS_NSEL=LU_NSEL_7
-			LS_NDEL=LU_NDEL_7		
-	     CASE (8)
-		    LS_NSEL=LU_NSEL_8
-			LS_NDEL=LU_NDEL_8	
-	     CASE (9)
-		    LS_NSEL=LU_NSEL_9
-			LS_NDEL=LU_NDEL_9		
-	     CASE (10)
-		    LS_NSEL=LU_NSEL_10
-			LS_NDEL=LU_NDEL_10					
+			LS_NDEL=LU_NDEL_1	
+            CALL Integrate_1( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )			
 		 CASE DEFAULT
 		    LS_NSEL=LU_NSEL_0
 			LS_NDEL=LU_NDEL_0				 
-		    !print *, "lshen_error",I,J,L,LS_type
-	   END SELECT	
-	   
-	   Prate=State_Chm%LS_Prate(I,J,L,:)
-	   Lrate=State_Chm%LS_Lrate(I,J,L,:)	   
-	   
-       CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
-                       RCNTRL, ISTATUS, RSTATE, IERR )
+            CALL Integrate_0( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )					    
+	   END SELECT		 	   	  
 
        ! Print grid box indices to screen if integrate failed
        IF ( IERR < 0 ) THEN
@@ -1029,7 +1001,7 @@ CONTAINS
           FIX = C(NVAR+1:NSPEC)
           CALL Update_RCONST( )		  		 
 		  
-          CALL Integrate( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL,&
+          CALL Integrate_0( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL,&
                           RCNTRL, ISTATUS, RSTATE, IERR )
           IF ( IERR < 0 ) THEN 
              WRITE(6,*) '## INTEGRATE FAILED TWICE !!! '
