@@ -4726,11 +4726,11 @@ SUBROUTINE INTEGRATE_4( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 		  LU_NONZERO_4,LU_NSEL_4,LU_CROW_4,LU_DIAG_4,LU_IROW_4,LU_ICOL_4, LS_type)		
 		WHERE(LS_L<=(0.01/deltaT))
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
-		ELSEWHERE
-			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
+		!ELSEWHERE
+		!	VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
 		END WHERE		
 	    VAR(select_ind_4)=VAR_selected
-	    !VAR(delete_ind_4)=VAR_deleted
+	    VAR(delete_ind_4)=VAR_deleted
    
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
