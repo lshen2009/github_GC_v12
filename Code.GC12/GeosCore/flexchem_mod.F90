@@ -1046,8 +1046,10 @@ CONTAINS
           FIX = C(NVAR+1:NSPEC)
           CALL Update_RCONST( )		  		 
 		  
-          CALL Integrate_0( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL,&
-                          RCNTRL, ISTATUS, RSTATE, IERR )
+		    LS_NSEL=LU_NSEL_0
+			LS_NDEL=LU_NDEL_0				 
+            CALL Integrate_0( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )	
           IF ( IERR < 0 ) THEN 
              WRITE(6,*) '## INTEGRATE FAILED TWICE !!! '
              WRITE(ERRMSG,'(a,i3)') 'Integrator error code :',IERR
