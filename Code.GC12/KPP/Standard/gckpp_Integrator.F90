@@ -59,6 +59,7 @@ SUBROUTINE INTEGRATE_0( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
         CALL Rosenbrock_0(LU_NSEL_0,VAR,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR, &
 		  LU_NONZERO_0,LU_NSEL_0,LU_CROW_0,LU_DIAG_0,LU_IROW_0,LU_ICOL_0, LS_type)		
+
    
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
@@ -1224,7 +1225,10 @@ SUBROUTINE INTEGRATE_1( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE		
+		END WHERE
+		WHERE(LS_L>(10/deltaT))
+		    VAR_deleted=LS_P/LS_L
+		END WHERE				
 	    VAR(select_ind_1)=VAR_selected
 	    VAR(delete_ind_1)=VAR_deleted
    
@@ -2392,7 +2396,10 @@ SUBROUTINE INTEGRATE_2( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE		
+		END WHERE
+		WHERE(LS_L>(10/deltaT))
+		    VAR_deleted=LS_P/LS_L
+		END WHERE				
 	    VAR(select_ind_2)=VAR_selected
 	    VAR(delete_ind_2)=VAR_deleted
    
@@ -3560,7 +3567,10 @@ SUBROUTINE INTEGRATE_3( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE		
+		END WHERE
+		WHERE(LS_L>(10/deltaT))
+		    VAR_deleted=LS_P/LS_L
+		END WHERE				
 	    VAR(select_ind_3)=VAR_selected
 	    VAR(delete_ind_3)=VAR_deleted
    
@@ -4728,7 +4738,10 @@ SUBROUTINE INTEGRATE_4( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE		
+		END WHERE
+		WHERE(LS_L>(10/deltaT))
+		    VAR_deleted=LS_P/LS_L
+		END WHERE				
 	    VAR(select_ind_4)=VAR_selected
 	    VAR(delete_ind_4)=VAR_deleted
    
@@ -5896,7 +5909,10 @@ SUBROUTINE INTEGRATE_5( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE		
+		END WHERE
+		WHERE(LS_L>(10/deltaT))
+		    VAR_deleted=LS_P/LS_L
+		END WHERE				
 	    VAR(select_ind_5)=VAR_selected
 	    VAR(delete_ind_5)=VAR_deleted
    
@@ -7064,7 +7080,10 @@ SUBROUTINE INTEGRATE_6( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE		
+		END WHERE
+		WHERE(LS_L>(10/deltaT))
+		    VAR_deleted=LS_P/LS_L
+		END WHERE				
 	    VAR(select_ind_6)=VAR_selected
 	    VAR(delete_ind_6)=VAR_deleted
    
@@ -8232,7 +8251,10 @@ SUBROUTINE INTEGRATE_7( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE		
+		END WHERE
+		WHERE(LS_L>(10/deltaT))
+		    VAR_deleted=LS_P/LS_L
+		END WHERE				
 	    VAR(select_ind_7)=VAR_selected
 	    VAR(delete_ind_7)=VAR_deleted
    
@@ -9400,7 +9422,10 @@ SUBROUTINE INTEGRATE_8( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE		
+		END WHERE
+		WHERE(LS_L>(10/deltaT))
+		    VAR_deleted=LS_P/LS_L
+		END WHERE				
 	    VAR(select_ind_8)=VAR_selected
 	    VAR(delete_ind_8)=VAR_deleted
    
@@ -10568,7 +10593,10 @@ SUBROUTINE INTEGRATE_9( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE		
+		END WHERE
+		WHERE(LS_L>(10/deltaT))
+		    VAR_deleted=LS_P/LS_L
+		END WHERE				
 	    VAR(select_ind_9)=VAR_selected
 	    VAR(delete_ind_9)=VAR_deleted
    
@@ -11736,7 +11764,10 @@ SUBROUTINE INTEGRATE_10( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
 			VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
 		ELSEWHERE
 			VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-		END WHERE		
+		END WHERE
+		WHERE(LS_L>(10/deltaT))
+		    VAR_deleted=LS_P/LS_L
+		END WHERE				
 	    VAR(select_ind_10)=VAR_selected
 	    VAR(delete_ind_10)=VAR_deleted
    
