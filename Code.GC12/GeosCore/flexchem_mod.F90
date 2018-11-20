@@ -885,8 +885,8 @@ CONTAINS
        CALL Update_RCONST( )
 	   
 	   !lshen added this
-	   !IF (new_hour) THEN
-	   IF (MOD(NHMS,2000)==0) then	  
+	   IF (new_hour) THEN
+	   !IF (MOD(NHMS,2000)==0) then	  
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 		 State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)		
 		 
@@ -940,9 +940,9 @@ CONTAINS
 	   Prate=State_Chm%LS_Prate(I,J,L,:)
 	   Lrate=State_Chm%LS_Lrate(I,J,L,:)
 	   LS_type=State_Chm%LS_Alltype(I,J,L)
-	   IF (I==10 .and. J==10) THEN
-	       print *,'lshen_LS_type',L, LS_type
-	   END IF
+	   !IF (I==10 .and. J==10) THEN
+	   !    print *,'lshen_LS_type',L, LS_type
+	   !END IF
 	   SELECT CASE (LS_type)
 	     CASE (1)
 		    LS_NSEL=LU_NSEL_1
