@@ -885,17 +885,10 @@ CONTAINS
        CALL Update_RCONST( )
 	   
 	   !lshen added this
-	   IF (new_hour) THEN
-	   !IF (MOD(NHMS,2000)==0) then	  
+	   !IF (new_hour) THEN
+	   IF (MOD(NHMS,2000)==0) then	  
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
-		 State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)
-		 
-		 !determine the type
-		 !IF (L>=30) THEN
-		 !	State_Chm%LS_Alltype(I,J,L)=1
-	     !ELSE
-	     !   State_Chm%LS_Alltype(I,J,L)=0
-	     !END IF
+		 State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)		
 		 
 		 !calculate the K
 		 WHERE ( ABS(VAR) >= 1e-30_fp)
