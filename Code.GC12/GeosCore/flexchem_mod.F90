@@ -885,10 +885,11 @@ CONTAINS
        CALL Update_RCONST( )
 	   
 	   !lshen added this
-	   IF (new_hour) THEN
+	   !IF (new_hour) THEN
 	   !IF (MOD(NHMS,2000)==0) then	  
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
-		 State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)		
+		 LS_type=Determine_type(Prate,Lrate)
+		! State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)		
 		 
 		 !calculate the K
 		 WHERE ( ABS(VAR) >= 1e-30_fp)
@@ -896,14 +897,11 @@ CONTAINS
 		 ELSEWHERE
 		     Lrate = 0.0_fp
 		 END WHERE			 
-		 !WHERE ( ABS(Lrate) < 1e-60_fp)
-		 !	Lrate = 1e-60_fp
-		 !END WHERE
-		 !calculate the P/L		 
-	     State_Chm%LS_Prate(I,J,L,:)=Prate
-	     State_Chm%LS_Lrate(I,J,L,:)=Lrate		 
+	 
+	     !State_Chm%LS_Prate(I,J,L,:)=Prate
+	     !State_Chm%LS_Lrate(I,J,L,:)=Lrate		 
 		 
-	   ENDIF
+	   !ENDIF
 !#if defined( DEVEL )
 !       ! Get time when rate computation finished
 !       CALL CPU_TIME( finish )
@@ -937,9 +935,9 @@ CONTAINS
 !#endif
        ! Call the KPP integrator
 
-	   Prate=State_Chm%LS_Prate(I,J,L,:)
-	   Lrate=State_Chm%LS_Lrate(I,J,L,:)
-	   LS_type=State_Chm%LS_Alltype(I,J,L)
+	   !Prate=State_Chm%LS_Prate(I,J,L,:)
+	   !Lrate=State_Chm%LS_Lrate(I,J,L,:)
+	   !LS_type=State_Chm%LS_Alltype(I,J,L)
 	   !IF (I==10 .and. J==10) THEN
 	   !    print *,'lshen_LS_type',L, LS_type
 	   !END IF
