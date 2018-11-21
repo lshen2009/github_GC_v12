@@ -10,3 +10,5 @@ Code.GC12_Nov13: Now the gckpp_Integrator can adapt to varying dimensions of fas
 Code.GC12_Nov15: Now the code can deal with both fast and slow species. But the simulation speed doesnot improve.
 Code.GC12_Nov17: Based on Code.GC12_Nov15, but the code becomes more elegant.
 Code.GC12_Nov18: Based on Code.GC12_Nov17, I have added all 10 types of chemistry regimes. But the speed does not improve.
+Code.GC12_Nov20: The code works for 10 tyeps of chemistry regimes.
+
