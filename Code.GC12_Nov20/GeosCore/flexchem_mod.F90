@@ -250,7 +250,7 @@ CONTAINS
 	
     ! For testing only, may be removed later (mps, 4/26/16)
     LOGICAL                :: DO_HETCHEM
-    REAL(fp)               :: TimeStart,timeEnd
+    REAL(fp)               :: TimeStart,TimeEnd
     !=======================================================================
     ! Do_FlexChem begins here!
     !=======================================================================
@@ -605,7 +605,7 @@ CONTAINS
            '       computed Y upon return:            ', f11.4, /,          &
            'Hexit, last accepted step before exit:    ', f11.4, /,          &
            'Hnew, last predicted step (not yet taken):', f11.4 )
-
+     CALL CPU_TIME(time=TimeStart)
     !-----------------------------------------------------------------------
     ! NOTE: The following variables are held THREADPRIVATE and 
     ! therefore do not need to be included in the !$OMP+PRIVATE 
@@ -1213,7 +1213,8 @@ CONTAINS
     !PRINT *,'lshen: L is',L,'time is',timeEnd-TimeStart
     ENDDO
     !$OMP END PARALLEL DO
-
+    CALL CPU_TIME(time=TimeEnd)
+    PRINT *,'lshen_test_CPUtime: ',TimeEnd-TimeStart
 !!!#if defined( DEVEL )
 !    write(*,'(a,F10.3)') 'Flex Rate Time     : ', rtim
 !    write(*,'(a,F10.3)') 'Flex Intg Time     : ', itim
