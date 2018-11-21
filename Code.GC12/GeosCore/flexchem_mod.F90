@@ -114,7 +114,7 @@ CONTAINS
     USE GCKPP_Monitor,        ONLY : SPC_NAMES, FAM_NAMES
     USE GCKPP_Parameters
 	USE gckpp_JacobianSP
-    USE GCKPP_Integrator,     ONLY : INTEGRATE_0,INTEGRATE_1, NHnew
+    USE GCKPP_Integrator
     USE GCKPP_Function 
     USE GCKPP_Model
     USE GCKPP_Global
