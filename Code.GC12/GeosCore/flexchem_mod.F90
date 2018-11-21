@@ -159,7 +159,7 @@ CONTAINS
 ! !OUTPUT PARAMETERS:
 !
     INTEGER,        INTENT(OUT)   :: RC         ! Success or failure
-! 
+    INTEGER :: LS_time(8)   
 ! !REVISION HISTORY:
 !  14 Dec 2015 - M.S. Long   - Initial version
 !  18 Dec 2015 - M. Sulprizio- Add calls to OHSAVE and DO_DIAG_OH
@@ -605,7 +605,7 @@ CONTAINS
            '       computed Y upon return:            ', f11.4, /,          &
            'Hexit, last accepted step before exit:    ', f11.4, /,          &
            'Hnew, last predicted step (not yet taken):', f11.4 )
-
+    CALL CPU_TIME(time=timeStart)
     !-----------------------------------------------------------------------
     ! NOTE: The following variables are held THREADPRIVATE and 
     ! therefore do not need to be included in the !$OMP+PRIVATE 
@@ -628,8 +628,7 @@ CONTAINS
     !$OMP REDUCTION( +:TOTREJEC                                             )&
     !$OMP REDUCTION( +:TOTNUMLU                                             )&
     !$OMP SCHEDULE ( DYNAMIC,  1                                            )
-    DO L = 1, LLPAR
-       !CALL CPU_TIME(time=timeStart)	   
+    DO L = 1, LLPAR       	   
     DO J = 1, JJPAR
     DO I = 1, IIPAR
        !====================================================================
@@ -1234,11 +1233,12 @@ CONTAINS
 
     ENDDO
     ENDDO
-    !CALL CPU_TIME(time=timeEnd)
-    !PRINT *,'lshen: L is',L,'time is',timeEnd-TimeStart
     ENDDO
     !$OMP END PARALLEL DO
 
+    CALL CPU_TIME(time=timeEnd)
+    PRINT *,'lshen_test_CPUtime: ',timeEnd-TimeStart
+	
 !!!#if defined( DEVEL )
 !    write(*,'(a,F10.3)') 'Flex Rate Time     : ', rtim
 !    write(*,'(a,F10.3)') 'Flex Intg Time     : ', itim
