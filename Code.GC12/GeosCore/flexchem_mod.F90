@@ -991,11 +991,36 @@ CONTAINS
 		    LS_NSEL=LU_NSEL_10
 			LS_NDEL=LU_NDEL_10	
             CALL Integrate_10( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
-                       RCNTRL, ISTATUS, RSTATE, IERR )			
+                       RCNTRL, ISTATUS, RSTATE, IERR )	
+	     CASE (11)
+		    LS_NSEL=LU_NSEL_11
+			LS_NDEL=LU_NDEL_11	
+            CALL Integrate_11( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )	
+	     CASE (12)
+		    LS_NSEL=LU_NSEL_12
+			LS_NDEL=LU_NDEL_12	
+            CALL Integrate_12( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )	
+	     CASE (13)
+		    LS_NSEL=LU_NSEL_13
+			LS_NDEL=LU_NDEL_13	
+            CALL Integrate_13( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )	
+	     CASE (14)
+		    LS_NSEL=LU_NSEL_14
+			LS_NDEL=LU_NDEL_14	
+            CALL Integrate_14( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )	
+	     CASE (15)
+		    LS_NSEL=LU_NSEL_15
+			LS_NDEL=LU_NDEL_15	
+            CALL Integrate_15( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )	
 		 CASE DEFAULT
-		    LS_NSEL=LU_NSEL_0
-			LS_NDEL=LU_NDEL_0				 
-            CALL Integrate_0( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+		    LS_NSEL=LU_NSEL_13
+			LS_NDEL=LU_NDEL_13				 
+            CALL Integrate_13( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )					    
 	   END SELECT		 	   	  
 
@@ -1037,9 +1062,9 @@ CONTAINS
           FIX = C(NVAR+1:NSPEC)
           CALL Update_RCONST( )		  		 
 		  
-		    LS_NSEL=LU_NSEL_0
-			LS_NDEL=LU_NDEL_0				 
-            CALL Integrate_0( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
+		    LS_NSEL=LU_NSEL_13
+			LS_NDEL=LU_NDEL_13				 
+            CALL Integrate_13( TIN,TOUT, LS_type, LS_NSEL, LS_NDEL, Prate, Lrate, ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )	
           IF ( IERR < 0 ) THEN 
              WRITE(6,*) '## INTEGRATE FAILED TWICE !!! '
