@@ -52,7 +52,8 @@ SUBROUTINE INTEGRATE_1( TIN, TOUT, &
    IF (PRESENT(RCNTRL_U)) THEN
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
-  	
+
+  		
    WHERE(Lrate<=(0.01/deltaT))
 		VAR=VAR+deltaT*(Prate-Lrate*VAR)
    ELSEWHERE
@@ -72,7 +73,7 @@ SUBROUTINE INTEGRATE_1( TIN, TOUT, &
 
 END SUBROUTINE INTEGRATE_1
 
-
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 SUBROUTINE INTEGRATE_2( TIN, TOUT, &
   Prate, Lrate, &
@@ -91,7 +92,7 @@ SUBROUTINE INTEGRATE_2( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_2),VAR_deleted(LS_NDEL_2),LS_P(LS_NDEL_2),LS_L(LS_NDEL_2)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_2),VAR_deleted(LU_NDEL_2),LS_P(LU_NDEL_2),LS_L(LU_NDEL_2)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -1275,7 +1276,7 @@ SUBROUTINE INTEGRATE_3( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_3),VAR_deleted(LS_NDEL_3),LS_P(LS_NDEL_3),LS_L(LS_NDEL_3)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_3),VAR_deleted(LU_NDEL_3),LS_P(LU_NDEL_3),LS_L(LU_NDEL_3)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -2459,7 +2460,7 @@ SUBROUTINE INTEGRATE_4( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_4),VAR_deleted(LS_NDEL_4),LS_P(LS_NDEL_4),LS_L(LS_NDEL_4)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_4),VAR_deleted(LU_NDEL_4),LS_P(LU_NDEL_4),LS_L(LU_NDEL_4)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -3643,7 +3644,7 @@ SUBROUTINE INTEGRATE_5( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_5),VAR_deleted(LS_NDEL_5),LS_P(LS_NDEL_5),LS_L(LS_NDEL_5)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_5),VAR_deleted(LU_NDEL_5),LS_P(LU_NDEL_5),LS_L(LU_NDEL_5)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -4827,7 +4828,7 @@ SUBROUTINE INTEGRATE_6( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_6),VAR_deleted(LS_NDEL_6),LS_P(LS_NDEL_6),LS_L(LS_NDEL_6)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_6),VAR_deleted(LU_NDEL_6),LS_P(LU_NDEL_6),LS_L(LU_NDEL_6)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -6011,7 +6012,7 @@ SUBROUTINE INTEGRATE_7( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_7),VAR_deleted(LS_NDEL_7),LS_P(LS_NDEL_7),LS_L(LS_NDEL_7)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_7),VAR_deleted(LU_NDEL_7),LS_P(LU_NDEL_7),LS_L(LU_NDEL_7)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -7195,7 +7196,7 @@ SUBROUTINE INTEGRATE_8( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_8),VAR_deleted(LS_NDEL_8),LS_P(LS_NDEL_8),LS_L(LS_NDEL_8)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_8),VAR_deleted(LU_NDEL_8),LS_P(LU_NDEL_8),LS_L(LU_NDEL_8)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -8379,7 +8380,7 @@ SUBROUTINE INTEGRATE_9( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_9),VAR_deleted(LS_NDEL_9),LS_P(LS_NDEL_9),LS_L(LS_NDEL_9)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_9),VAR_deleted(LU_NDEL_9),LS_P(LU_NDEL_9),LS_L(LU_NDEL_9)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -9563,7 +9564,7 @@ SUBROUTINE INTEGRATE_10( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_10),VAR_deleted(LS_NDEL_10),LS_P(LS_NDEL_10),LS_L(LS_NDEL_10)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_10),VAR_deleted(LU_NDEL_10),LS_P(LU_NDEL_10),LS_L(LU_NDEL_10)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -10747,7 +10748,7 @@ SUBROUTINE INTEGRATE_11( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_11),VAR_deleted(LS_NDEL_11),LS_P(LS_NDEL_11),LS_L(LS_NDEL_11)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_11),VAR_deleted(LU_NDEL_11),LS_P(LU_NDEL_11),LS_L(LU_NDEL_11)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -11931,7 +11932,7 @@ SUBROUTINE INTEGRATE_12( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_12),VAR_deleted(LS_NDEL_12),LS_P(LS_NDEL_12),LS_L(LS_NDEL_12)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_12),VAR_deleted(LU_NDEL_12),LS_P(LU_NDEL_12),LS_L(LU_NDEL_12)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -13136,6 +13137,7 @@ SUBROUTINE INTEGRATE_13( TIN, TOUT, &
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
 
+
    CALL Rosenbrock_13(LU_NSEL_13,VAR,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
 	    
@@ -14287,7 +14289,7 @@ SUBROUTINE INTEGRATE_14( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_14),VAR_deleted(LS_NDEL_14),LS_P(LS_NDEL_14),LS_L(LS_NDEL_14)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_14),VAR_deleted(LU_NDEL_14),LS_P(LU_NDEL_14),LS_L(LU_NDEL_14)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -15471,7 +15473,7 @@ SUBROUTINE INTEGRATE_15( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
-   REAL(kind=dp) :: VAR_selected(LS_NSEL_15),VAR_deleted(LS_NDEL_15),LS_P(LS_NDEL_15),LS_L(LS_NDEL_15)
+   REAL(kind=dp) :: VAR_selected(LU_NSEL_15),VAR_deleted(LU_NDEL_15),LS_P(LU_NDEL_15),LS_L(LU_NDEL_15)
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
