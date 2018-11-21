@@ -57,7 +57,7 @@ SUBROUTINE INTEGRATE_1( TIN, TOUT, LS_type,LS_NSEL, LS_NDEL,&
    END IF
    		
 		WHERE(Lrate<=(0.01/deltaT))
-			VAR=VAR+deltaT*(Prate-Lrate*VAR_deleted)
+			VAR=VAR+deltaT*(Prate-Lrate*VAR)
 		ELSEWHERE
 			VAR=Prate/Lrate+(VAR-Prate/Lrate)*EXP(-Lrate*deltaT)
 		END WHERE
