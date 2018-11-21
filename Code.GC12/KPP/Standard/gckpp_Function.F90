@@ -9118,12 +9118,6 @@ END SUBROUTINE Fun_PL
 FUNCTION Determine_type (Prate,Lrate) RESULT( flag )   
   REAL(kind=dp) :: Prate(NVAR),Lrate(NVAR)  
   INTEGER ::Vdot(NVAR),PP(10),ap,flag,I
-  flag=1  
-END FUNCTION Determine_type
-
-FUNCTION Determine_type2 (Prate,Lrate) RESULT( flag )   
-  REAL(kind=dp) :: Prate(NVAR),Lrate(NVAR)  
-  INTEGER ::Vdot(NVAR),PP(10),ap,flag,I
   flag=0
   Vdot=0
   WHERE (abs(Prate)>=100 .or. abs(Lrate)>=100) Vdot=1
@@ -9145,7 +9139,7 @@ FUNCTION Determine_type2 (Prate,Lrate) RESULT( flag )
 		CONTINUE
 	 END IF
   END DO  
-END FUNCTION Determine_type2
+END FUNCTION Determine_type
 
 END MODULE gckpp_Function
 
