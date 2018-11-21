@@ -53,7 +53,6 @@ SUBROUTINE INTEGRATE_1( TIN, TOUT, &
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
 
-  		
    WHERE(Lrate<=(0.01/deltaT))
 		VAR=VAR+deltaT*(Prate-Lrate*VAR)
    ELSEWHERE
@@ -759,7 +758,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_2( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -1943,7 +1942,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_3( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -3127,7 +3126,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_4( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -4311,7 +4310,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_5( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -5495,7 +5494,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_6( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -6679,7 +6678,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_7( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -7863,7 +7862,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_8( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -9047,7 +9046,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_9( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -10231,7 +10230,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_10( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -11415,7 +11414,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_11( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -12599,7 +12598,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_12( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -13116,6 +13115,7 @@ SUBROUTINE INTEGRATE_13( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
+  
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -13140,6 +13140,7 @@ SUBROUTINE INTEGRATE_13( TIN, TOUT, &
 
    CALL Rosenbrock_13(LU_NSEL_13,VAR,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
+
 	    
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
@@ -13772,7 +13773,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_13( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -14956,7 +14957,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_14( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
@@ -16140,7 +16141,7 @@ Stage: DO istage = 1, ros_S
       PRINT*,"Error in DGETRS. ISING=",ISING
    END IF  
 #else   
-   CALL KppSolve( A, b )
+   CALL KppSolve_15( A, b )
 #endif
 
    ISTATUS(Nsol) = ISTATUS(Nsol) + 1
