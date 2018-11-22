@@ -56,8 +56,7 @@ SUBROUTINE Fun_10 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_10)
 
-  V(select_ind_10)=VAR_selected
-  V(delete_ind_10)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -1186,8 +1185,7 @@ SUBROUTINE Fun_11 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_11)
 
-  V(select_ind_11)=VAR_selected
-  V(delete_ind_11)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -2217,8 +2215,7 @@ SUBROUTINE Fun_12 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_12)
 
-  V(select_ind_12)=VAR_selected
-  V(delete_ind_12)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -4333,8 +4330,7 @@ SUBROUTINE Fun_14 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_14)
 
-  V(select_ind_14)=VAR_selected
-  V(delete_ind_14)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -5372,8 +5368,7 @@ SUBROUTINE Fun_15 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_15)
 
-  V(select_ind_15)=VAR_selected
-  V(delete_ind_15)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -6510,8 +6505,7 @@ SUBROUTINE Fun_2 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_2)
 
-  V(select_ind_2)=VAR_selected
-  V(delete_ind_2)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -7365,8 +7359,7 @@ SUBROUTINE Fun_3 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_3)
 
-  V(select_ind_3)=VAR_selected
-  V(delete_ind_3)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -8312,8 +8305,7 @@ SUBROUTINE Fun_4 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_4)
 
-  V(select_ind_4)=VAR_selected
-  V(delete_ind_4)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -9230,8 +9222,7 @@ SUBROUTINE Fun_5 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_5)
 
-  V(select_ind_5)=VAR_selected
-  V(delete_ind_5)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -10235,8 +10226,7 @@ SUBROUTINE Fun_6 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_6)
 
-  V(select_ind_6)=VAR_selected
-  V(delete_ind_6)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -11190,8 +11180,7 @@ SUBROUTINE Fun_7 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_7)
 
-  V(select_ind_7)=VAR_selected
-  V(delete_ind_7)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -12074,8 +12063,7 @@ SUBROUTINE Fun_8 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_8)
 
-  V(select_ind_8)=VAR_selected
-  V(delete_ind_8)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -13056,8 +13044,7 @@ SUBROUTINE Fun_9 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! Vdot - Time derivative of variable species concentrations
   REAL(kind=dp) :: Vdot(LU_NSEL_9)
 
-  V(select_ind_9)=VAR_selected
-  V(delete_ind_9)=VAR_deleted
+  V=0
 
 
 ! Computation of equation rates
@@ -14113,8 +14100,13 @@ SUBROUTINE Fun_9 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
                 &+A(365)+A(368)-A(395)-A(396)-A(397)-A(669)+A(670)+A(674)
   Vdot(149) = -0.91*A(299)+A(321)-A(324)+A(336)+A(337)+A(339)+A(340)+A(341)+2*A(361)+A(362)+A(363)+A(364)+A(366)+A(367)&
                 &+A(369)+A(370)+A(371)+A(372)+A(373)+A(374)+A(375)+A(376)+A(377)-A(540)-A(543)-A(545)-A(549)-A(552)-A(558)&
-                &-A(559)     
+                &-A(559)
+      
+
+
 END SUBROUTINE Fun_9
+
+
 
 
 SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate)
