@@ -31,6 +31,7 @@ SUBROUTINE INTEGRATE_1( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
+
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -114,7 +115,7 @@ SUBROUTINE INTEGRATE_2( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_2)
    LS_P=Prate(delete_ind_2)
    LS_L=Lrate(delete_ind_2)
-   CALL Rosenbrock_2(LU_NSEL_2,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_2(LU_NSEL_2,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -138,7 +139,7 @@ SUBROUTINE INTEGRATE_2( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_2
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_2(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_2(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -150,6 +151,7 @@ SUBROUTINE Rosenbrock_2(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_2)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -447,7 +449,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_2(T,Y,Fcn0)
+   CALL FunTemplate_2(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -489,7 +491,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_2(Tau,Ynew,Fcn)
+         CALL FunTemplate_2(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -616,7 +618,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_2(T+Delta,Y,dFdT)
+   CALL FunTemplate_2(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -1190,13 +1192,15 @@ END SUBROUTINE Rosenbrock_2
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_2( T, Y, Ydot )
+SUBROUTINE FunTemplate_2(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_2
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_2)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_2)
 !~~~> Output variables
@@ -1206,7 +1210,7 @@ SUBROUTINE FunTemplate_2( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_2( Y, FIX, RCONST, Ydot, LU_NSEL_2 )
+   CALL Fun_2( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_2
@@ -1255,6 +1259,7 @@ SUBROUTINE JacTemplate_2( T, Y, Jcb )
 END SUBROUTINE JacTemplate_2
 
 
+
 SUBROUTINE INTEGRATE_3( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -1298,7 +1303,7 @@ SUBROUTINE INTEGRATE_3( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_3)
    LS_P=Prate(delete_ind_3)
    LS_L=Lrate(delete_ind_3)
-   CALL Rosenbrock_3(LU_NSEL_3,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_3(LU_NSEL_3,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -1322,7 +1327,7 @@ SUBROUTINE INTEGRATE_3( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_3
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_3(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_3(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -1334,6 +1339,7 @@ SUBROUTINE Rosenbrock_3(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_3)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -1631,7 +1637,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_3(T,Y,Fcn0)
+   CALL FunTemplate_3(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -1673,7 +1679,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_3(Tau,Ynew,Fcn)
+         CALL FunTemplate_3(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -1800,7 +1806,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_3(T+Delta,Y,dFdT)
+   CALL FunTemplate_3(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -2374,13 +2380,15 @@ END SUBROUTINE Rosenbrock_3
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_3( T, Y, Ydot )
+SUBROUTINE FunTemplate_3(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_3
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_3)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_3)
 !~~~> Output variables
@@ -2390,7 +2398,7 @@ SUBROUTINE FunTemplate_3( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_3( Y, FIX, RCONST, Ydot, LU_NSEL_3 )
+   CALL Fun_3( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_3
@@ -2439,6 +2447,7 @@ SUBROUTINE JacTemplate_3( T, Y, Jcb )
 END SUBROUTINE JacTemplate_3
 
 
+
 SUBROUTINE INTEGRATE_4( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -2482,7 +2491,7 @@ SUBROUTINE INTEGRATE_4( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_4)
    LS_P=Prate(delete_ind_4)
    LS_L=Lrate(delete_ind_4)
-   CALL Rosenbrock_4(LU_NSEL_4,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_4(LU_NSEL_4,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -2506,7 +2515,7 @@ SUBROUTINE INTEGRATE_4( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_4
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_4(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_4(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -2518,6 +2527,7 @@ SUBROUTINE Rosenbrock_4(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_4)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -2815,7 +2825,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_4(T,Y,Fcn0)
+   CALL FunTemplate_4(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -2857,7 +2867,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_4(Tau,Ynew,Fcn)
+         CALL FunTemplate_4(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -2984,7 +2994,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_4(T+Delta,Y,dFdT)
+   CALL FunTemplate_4(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -3558,13 +3568,15 @@ END SUBROUTINE Rosenbrock_4
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_4( T, Y, Ydot )
+SUBROUTINE FunTemplate_4(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_4
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_4)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_4)
 !~~~> Output variables
@@ -3574,7 +3586,7 @@ SUBROUTINE FunTemplate_4( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_4( Y, FIX, RCONST, Ydot, LU_NSEL_4 )
+   CALL Fun_4( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_4
@@ -3623,6 +3635,7 @@ SUBROUTINE JacTemplate_4( T, Y, Jcb )
 END SUBROUTINE JacTemplate_4
 
 
+
 SUBROUTINE INTEGRATE_5( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -3666,7 +3679,7 @@ SUBROUTINE INTEGRATE_5( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_5)
    LS_P=Prate(delete_ind_5)
    LS_L=Lrate(delete_ind_5)
-   CALL Rosenbrock_5(LU_NSEL_5,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_5(LU_NSEL_5,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -3690,7 +3703,7 @@ SUBROUTINE INTEGRATE_5( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_5
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_5(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_5(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -3702,6 +3715,7 @@ SUBROUTINE Rosenbrock_5(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_5)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -3999,7 +4013,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_5(T,Y,Fcn0)
+   CALL FunTemplate_5(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -4041,7 +4055,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_5(Tau,Ynew,Fcn)
+         CALL FunTemplate_5(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -4168,7 +4182,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_5(T+Delta,Y,dFdT)
+   CALL FunTemplate_5(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -4742,13 +4756,15 @@ END SUBROUTINE Rosenbrock_5
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_5( T, Y, Ydot )
+SUBROUTINE FunTemplate_5(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_5
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_5)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_5)
 !~~~> Output variables
@@ -4758,7 +4774,7 @@ SUBROUTINE FunTemplate_5( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_5( Y, FIX, RCONST, Ydot, LU_NSEL_5 )
+   CALL Fun_5( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_5
@@ -4807,6 +4823,7 @@ SUBROUTINE JacTemplate_5( T, Y, Jcb )
 END SUBROUTINE JacTemplate_5
 
 
+
 SUBROUTINE INTEGRATE_6( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -4850,7 +4867,7 @@ SUBROUTINE INTEGRATE_6( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_6)
    LS_P=Prate(delete_ind_6)
    LS_L=Lrate(delete_ind_6)
-   CALL Rosenbrock_6(LU_NSEL_6,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_6(LU_NSEL_6,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -4874,7 +4891,7 @@ SUBROUTINE INTEGRATE_6( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_6
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_6(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_6(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -4886,6 +4903,7 @@ SUBROUTINE Rosenbrock_6(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_6)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -5183,7 +5201,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_6(T,Y,Fcn0)
+   CALL FunTemplate_6(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -5225,7 +5243,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_6(Tau,Ynew,Fcn)
+         CALL FunTemplate_6(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -5352,7 +5370,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_6(T+Delta,Y,dFdT)
+   CALL FunTemplate_6(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -5926,13 +5944,15 @@ END SUBROUTINE Rosenbrock_6
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_6( T, Y, Ydot )
+SUBROUTINE FunTemplate_6(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_6
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_6)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_6)
 !~~~> Output variables
@@ -5942,7 +5962,7 @@ SUBROUTINE FunTemplate_6( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_6( Y, FIX, RCONST, Ydot, LU_NSEL_6 )
+   CALL Fun_6( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_6
@@ -5991,6 +6011,7 @@ SUBROUTINE JacTemplate_6( T, Y, Jcb )
 END SUBROUTINE JacTemplate_6
 
 
+
 SUBROUTINE INTEGRATE_7( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -6034,7 +6055,7 @@ SUBROUTINE INTEGRATE_7( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_7)
    LS_P=Prate(delete_ind_7)
    LS_L=Lrate(delete_ind_7)
-   CALL Rosenbrock_7(LU_NSEL_7,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_7(LU_NSEL_7,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -6058,7 +6079,7 @@ SUBROUTINE INTEGRATE_7( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_7
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_7(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_7(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -6070,6 +6091,7 @@ SUBROUTINE Rosenbrock_7(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_7)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -6367,7 +6389,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_7(T,Y,Fcn0)
+   CALL FunTemplate_7(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -6409,7 +6431,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_7(Tau,Ynew,Fcn)
+         CALL FunTemplate_7(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -6536,7 +6558,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_7(T+Delta,Y,dFdT)
+   CALL FunTemplate_7(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -7110,13 +7132,15 @@ END SUBROUTINE Rosenbrock_7
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_7( T, Y, Ydot )
+SUBROUTINE FunTemplate_7(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_7
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_7)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_7)
 !~~~> Output variables
@@ -7126,7 +7150,7 @@ SUBROUTINE FunTemplate_7( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_7( Y, FIX, RCONST, Ydot, LU_NSEL_7 )
+   CALL Fun_7( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_7
@@ -7175,6 +7199,7 @@ SUBROUTINE JacTemplate_7( T, Y, Jcb )
 END SUBROUTINE JacTemplate_7
 
 
+
 SUBROUTINE INTEGRATE_8( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -7218,7 +7243,7 @@ SUBROUTINE INTEGRATE_8( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_8)
    LS_P=Prate(delete_ind_8)
    LS_L=Lrate(delete_ind_8)
-   CALL Rosenbrock_8(LU_NSEL_8,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_8(LU_NSEL_8,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -7242,7 +7267,7 @@ SUBROUTINE INTEGRATE_8( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_8
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_8(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_8(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -7254,6 +7279,7 @@ SUBROUTINE Rosenbrock_8(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_8)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -7551,7 +7577,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_8(T,Y,Fcn0)
+   CALL FunTemplate_8(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -7593,7 +7619,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_8(Tau,Ynew,Fcn)
+         CALL FunTemplate_8(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -7720,7 +7746,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_8(T+Delta,Y,dFdT)
+   CALL FunTemplate_8(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -8294,13 +8320,15 @@ END SUBROUTINE Rosenbrock_8
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_8( T, Y, Ydot )
+SUBROUTINE FunTemplate_8(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_8
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_8)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_8)
 !~~~> Output variables
@@ -8310,7 +8338,7 @@ SUBROUTINE FunTemplate_8( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_8( Y, FIX, RCONST, Ydot, LU_NSEL_8 )
+   CALL Fun_8( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_8
@@ -8359,6 +8387,7 @@ SUBROUTINE JacTemplate_8( T, Y, Jcb )
 END SUBROUTINE JacTemplate_8
 
 
+
 SUBROUTINE INTEGRATE_9( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -8402,7 +8431,7 @@ SUBROUTINE INTEGRATE_9( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_9)
    LS_P=Prate(delete_ind_9)
    LS_L=Lrate(delete_ind_9)
-   CALL Rosenbrock_9(LU_NSEL_9,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_9(LU_NSEL_9,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -8426,7 +8455,7 @@ SUBROUTINE INTEGRATE_9( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_9
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_9(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_9(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -8438,6 +8467,7 @@ SUBROUTINE Rosenbrock_9(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_9)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -8735,7 +8765,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_9(T,Y,Fcn0)
+   CALL FunTemplate_9(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -8777,7 +8807,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_9(Tau,Ynew,Fcn)
+         CALL FunTemplate_9(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -8904,7 +8934,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_9(T+Delta,Y,dFdT)
+   CALL FunTemplate_9(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -9478,13 +9508,15 @@ END SUBROUTINE Rosenbrock_9
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_9( T, Y, Ydot )
+SUBROUTINE FunTemplate_9(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_9
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_9)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_9)
 !~~~> Output variables
@@ -9494,7 +9526,7 @@ SUBROUTINE FunTemplate_9( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_9( Y, FIX, RCONST, Ydot, LU_NSEL_9 )
+   CALL Fun_9( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_9
@@ -9543,6 +9575,7 @@ SUBROUTINE JacTemplate_9( T, Y, Jcb )
 END SUBROUTINE JacTemplate_9
 
 
+
 SUBROUTINE INTEGRATE_10( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -9586,7 +9619,7 @@ SUBROUTINE INTEGRATE_10( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_10)
    LS_P=Prate(delete_ind_10)
    LS_L=Lrate(delete_ind_10)
-   CALL Rosenbrock_10(LU_NSEL_10,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_10(LU_NSEL_10,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -9610,7 +9643,7 @@ SUBROUTINE INTEGRATE_10( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_10
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_10(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_10(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -9622,6 +9655,7 @@ SUBROUTINE Rosenbrock_10(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_10)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -9919,7 +9953,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_10(T,Y,Fcn0)
+   CALL FunTemplate_10(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -9961,7 +9995,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_10(Tau,Ynew,Fcn)
+         CALL FunTemplate_10(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -10088,7 +10122,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_10(T+Delta,Y,dFdT)
+   CALL FunTemplate_10(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -10662,13 +10696,15 @@ END SUBROUTINE Rosenbrock_10
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_10( T, Y, Ydot )
+SUBROUTINE FunTemplate_10(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_10
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_10)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_10)
 !~~~> Output variables
@@ -10678,7 +10714,7 @@ SUBROUTINE FunTemplate_10( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_10( Y, FIX, RCONST, Ydot, LU_NSEL_10 )
+   CALL Fun_10( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_10
@@ -10727,6 +10763,7 @@ SUBROUTINE JacTemplate_10( T, Y, Jcb )
 END SUBROUTINE JacTemplate_10
 
 
+
 SUBROUTINE INTEGRATE_11( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -10770,7 +10807,7 @@ SUBROUTINE INTEGRATE_11( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_11)
    LS_P=Prate(delete_ind_11)
    LS_L=Lrate(delete_ind_11)
-   CALL Rosenbrock_11(LU_NSEL_11,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_11(LU_NSEL_11,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -10794,7 +10831,7 @@ SUBROUTINE INTEGRATE_11( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_11
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_11(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_11(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -10806,6 +10843,7 @@ SUBROUTINE Rosenbrock_11(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_11)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -11103,7 +11141,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_11(T,Y,Fcn0)
+   CALL FunTemplate_11(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -11145,7 +11183,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_11(Tau,Ynew,Fcn)
+         CALL FunTemplate_11(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -11272,7 +11310,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_11(T+Delta,Y,dFdT)
+   CALL FunTemplate_11(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -11846,13 +11884,15 @@ END SUBROUTINE Rosenbrock_11
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_11( T, Y, Ydot )
+SUBROUTINE FunTemplate_11(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_11
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_11)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_11)
 !~~~> Output variables
@@ -11862,7 +11902,7 @@ SUBROUTINE FunTemplate_11( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_11( Y, FIX, RCONST, Ydot, LU_NSEL_11 )
+   CALL Fun_11( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_11
@@ -11911,6 +11951,7 @@ SUBROUTINE JacTemplate_11( T, Y, Jcb )
 END SUBROUTINE JacTemplate_11
 
 
+
 SUBROUTINE INTEGRATE_12( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -11954,7 +11995,7 @@ SUBROUTINE INTEGRATE_12( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_12)
    LS_P=Prate(delete_ind_12)
    LS_L=Lrate(delete_ind_12)
-   CALL Rosenbrock_12(LU_NSEL_12,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_12(LU_NSEL_12,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -11978,7 +12019,7 @@ SUBROUTINE INTEGRATE_12( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_12
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_12(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_12(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -11990,6 +12031,7 @@ SUBROUTINE Rosenbrock_12(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_12)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -12287,7 +12329,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_12(T,Y,Fcn0)
+   CALL FunTemplate_12(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -12329,7 +12371,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_12(Tau,Ynew,Fcn)
+         CALL FunTemplate_12(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -12456,7 +12498,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_12(T+Delta,Y,dFdT)
+   CALL FunTemplate_12(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -13030,13 +13072,15 @@ END SUBROUTINE Rosenbrock_12
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_12( T, Y, Ydot )
+SUBROUTINE FunTemplate_12(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_12
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_12)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_12)
 !~~~> Output variables
@@ -13046,7 +13090,7 @@ SUBROUTINE FunTemplate_12( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_12( Y, FIX, RCONST, Ydot, LU_NSEL_12 )
+   CALL Fun_12( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_12
@@ -13095,6 +13139,23 @@ SUBROUTINE JacTemplate_12( T, Y, Jcb )
 END SUBROUTINE JacTemplate_12
 
 
+
+MODULE gckpp_Integrator
+
+  USE gckpp_Parameters, ONLY: NVAR, NFIX, NSPEC
+  USE gckpp_JacobianSP
+  USE gckpp_Global
+  IMPLICIT NONE
+  PUBLIC
+  SAVE
+  
+!~~~>  Statistics on the work performed by the Rosenbrock method
+  INTEGER, PARAMETER :: Nfun=1, Njac=2, Nstp=3, Nacc=4, &
+                        Nrej=5, Ndec=6, Nsol=7, Nsng=8, &
+                        Ntexit=1, Nhexit=2, Nhnew = 3
+
+CONTAINS
+
 SUBROUTINE INTEGRATE_13( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -13112,6 +13173,7 @@ SUBROUTINE INTEGRATE_13( TIN, TOUT, &
 
    REAL(kind=dp) :: RCNTRL(20), RSTATUS(20),deltaT
    INTEGER       :: ICNTRL(20), ISTATUS(20), IERR
+
    REAL(kind=dp), INTENT(IN) :: Prate(NVAR),Lrate(NVAR)
    INTEGER, SAVE :: Ntotal = 0
 
@@ -13132,6 +13194,7 @@ SUBROUTINE INTEGRATE_13( TIN, TOUT, &
    IF (PRESENT(RCNTRL_U)) THEN
      WHERE(RCNTRL_U(:) > 0) RCNTRL(:) = RCNTRL_U(:)
    END IF
+
 
    CALL Rosenbrock_13(LU_NSEL_13,VAR,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
@@ -14266,6 +14329,7 @@ SUBROUTINE JacTemplate_13( T, Y, Jcb )
 
 END SUBROUTINE JacTemplate_13
 
+END MODULE gckpp_Integrator
 
 SUBROUTINE INTEGRATE_14( TIN, TOUT, &
   Prate, Lrate, &
@@ -14310,7 +14374,7 @@ SUBROUTINE INTEGRATE_14( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_14)
    LS_P=Prate(delete_ind_14)
    LS_L=Lrate(delete_ind_14)
-   CALL Rosenbrock_14(LU_NSEL_14,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_14(LU_NSEL_14,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -14334,7 +14398,7 @@ SUBROUTINE INTEGRATE_14( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_14
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_14(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_14(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -14346,6 +14410,7 @@ SUBROUTINE Rosenbrock_14(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_14)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -14643,7 +14708,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_14(T,Y,Fcn0)
+   CALL FunTemplate_14(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -14685,7 +14750,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_14(Tau,Ynew,Fcn)
+         CALL FunTemplate_14(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -14812,7 +14877,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_14(T+Delta,Y,dFdT)
+   CALL FunTemplate_14(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -15386,13 +15451,15 @@ END SUBROUTINE Rosenbrock_14
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_14( T, Y, Ydot )
+SUBROUTINE FunTemplate_14(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_14
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_14)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_14)
 !~~~> Output variables
@@ -15402,7 +15469,7 @@ SUBROUTINE FunTemplate_14( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_14( Y, FIX, RCONST, Ydot, LU_NSEL_14 )
+   CALL Fun_14( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_14
@@ -15451,6 +15518,7 @@ SUBROUTINE JacTemplate_14( T, Y, Jcb )
 END SUBROUTINE JacTemplate_14
 
 
+
 SUBROUTINE INTEGRATE_15( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -15494,7 +15562,7 @@ SUBROUTINE INTEGRATE_15( TIN, TOUT, &
    VAR_deleted=VAR(delete_ind_15)
    LS_P=Prate(delete_ind_15)
    LS_L=Lrate(delete_ind_15)
-   CALL Rosenbrock_15(LU_NSEL_15,VAR_selected,TIN,TOUT,ATOL,RTOL,&
+   CALL Rosenbrock_15(LU_NSEL_15,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    WHERE(LS_L<=(0.01/deltaT))!LS
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
@@ -15518,7 +15586,7 @@ SUBROUTINE INTEGRATE_15( TIN, TOUT, &
 END SUBROUTINE INTEGRATE_15
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE Rosenbrock_15(N,Y,Tstart,Tend, &
+SUBROUTINE Rosenbrock_15(N,Y,VAR_deleted,Tstart,Tend, &
            AbsTol,RelTol,              &
            RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)
 
@@ -15530,6 +15598,7 @@ SUBROUTINE Rosenbrock_15(N,Y,Tstart,Tend, &
 !~~~>  Arguments
    INTEGER,       INTENT(IN)    :: N
    REAL(kind=dp), INTENT(INOUT) :: Y(N)
+   REAL(kind=dp), INTENT(IN)    :: VAR_deleted(LU_NDEL_15)
    REAL(kind=dp), INTENT(IN)    :: Tstart,Tend
    REAL(kind=dp), INTENT(IN)    :: AbsTol(N),RelTol(N)
    INTEGER,       INTENT(IN)    :: ICNTRL(20)
@@ -15827,7 +15896,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    H = MIN(H,ABS(Tend-T))
 
 !~~~>   Compute the function at current time
-   CALL FunTemplate_15(T,Y,Fcn0)
+   CALL FunTemplate_15(T,Y,Fcn0,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
 
 !~~~>  Compute the function derivative with respect to T
@@ -15869,7 +15938,7 @@ Stage: DO istage = 1, ros_S
             K(N*(j-1)+1),1,Ynew,1)
          END DO
          Tau = T + ros_Alpha(istage)*Direction*H
-         CALL FunTemplate_15(Tau,Ynew,Fcn)
+         CALL FunTemplate_15(Tau,Ynew,Fcn,VAR_deleted)
          ISTATUS(Nfun) = ISTATUS(Nfun) + 1
        END IF ! if istage == 1 elseif ros_NewF(istage)
        !slim: CALL WCOPY(N,Fcn,1,K(ioffset+1),1)
@@ -15996,7 +16065,7 @@ Stage: DO istage = 1, ros_S
    REAL(kind=dp), PARAMETER :: ONE = 1.0_dp, DeltaMin = 1.0E-6_dp
 
    Delta = SQRT(Roundoff)*MAX(DeltaMin,ABS(T))
-   CALL FunTemplate_15(T+Delta,Y,dFdT)
+   CALL FunTemplate_15(T+Delta,Y,dFdT,VAR_deleted)
    ISTATUS(Nfun) = ISTATUS(Nfun) + 1
    CALL WAXPY(N,(-ONE),Fcn0,1,dFdT,1)
    CALL WSCAL(N,(ONE/Delta),dFdT,1)
@@ -16570,13 +16639,15 @@ END SUBROUTINE Rosenbrock_15
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE FunTemplate_15( T, Y, Ydot )
+SUBROUTINE FunTemplate_15(T, Y, Ydot,VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE function call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Function, ONLY: Fun_15
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_15)
 !~~~> Input variables
    REAL(kind=dp) :: T, Y(LU_NSEL_15)
 !~~~> Output variables
@@ -16586,7 +16657,7 @@ SUBROUTINE FunTemplate_15( T, Y, Ydot )
 
    Told = TIME
    TIME = T
-   CALL Fun_15( Y, FIX, RCONST, Ydot, LU_NSEL_15 )
+   CALL Fun_15( Y,VAR_deleted, FIX, RCONST, Ydot )
    TIME = Told
 
 END SUBROUTINE FunTemplate_15
@@ -16633,6 +16704,7 @@ SUBROUTINE JacTemplate_15( T, Y, Jcb )
     TIME = Told
 
 END SUBROUTINE JacTemplate_15
+
 
 
 END MODULE gckpp_Integrator
