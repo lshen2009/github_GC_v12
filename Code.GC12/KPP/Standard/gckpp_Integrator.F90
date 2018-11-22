@@ -13140,22 +13140,6 @@ END SUBROUTINE JacTemplate_12
 
 
 
-MODULE gckpp_Integrator
-
-  USE gckpp_Parameters, ONLY: NVAR, NFIX, NSPEC
-  USE gckpp_JacobianSP
-  USE gckpp_Global
-  IMPLICIT NONE
-  PUBLIC
-  SAVE
-  
-!~~~>  Statistics on the work performed by the Rosenbrock method
-  INTEGER, PARAMETER :: Nfun=1, Njac=2, Nstp=3, Nacc=4, &
-                        Nrej=5, Ndec=6, Nsol=7, Nsng=8, &
-                        Ntexit=1, Nhexit=2, Nhnew = 3
-
-CONTAINS
-
 SUBROUTINE INTEGRATE_13( TIN, TOUT, &
   Prate, Lrate, &
   ICNTRL_U, RCNTRL_U, ISTATUS_U, RSTATUS_U, IERR_U )
@@ -14328,8 +14312,6 @@ SUBROUTINE JacTemplate_13( T, Y, Jcb )
     TIME = Told
 
 END SUBROUTINE JacTemplate_13
-
-END MODULE gckpp_Integrator
 
 SUBROUTINE INTEGRATE_14( TIN, TOUT, &
   Prate, Lrate, &
