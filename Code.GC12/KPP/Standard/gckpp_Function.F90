@@ -54,7 +54,7 @@ SUBROUTINE Fun_10 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_10)
 
   V(select_ind_10)=VAR_selected
   V(delete_ind_10)=VAR_deleted
@@ -1184,7 +1184,7 @@ SUBROUTINE Fun_11 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_11)
 
   V(select_ind_11)=VAR_selected
   V(delete_ind_11)=VAR_deleted
@@ -2215,7 +2215,7 @@ SUBROUTINE Fun_12 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_12)
 
   V(select_ind_12)=VAR_selected
   V(delete_ind_12)=VAR_deleted
@@ -3168,7 +3168,7 @@ SUBROUTINE Fun_13 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_13)
 
   V(select_ind_13)=VAR_selected
   V(delete_ind_13)=VAR_deleted
@@ -4334,7 +4334,7 @@ SUBROUTINE Fun_14 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_14)
 
   V(select_ind_14)=VAR_selected
   V(delete_ind_14)=VAR_deleted
@@ -5373,7 +5373,7 @@ SUBROUTINE Fun_15 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_15)
 
   V(select_ind_15)=VAR_selected
   V(delete_ind_15)=VAR_deleted
@@ -6511,7 +6511,7 @@ SUBROUTINE Fun_2 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_2)
 
   V(select_ind_2)=VAR_selected
   V(delete_ind_2)=VAR_deleted
@@ -7366,7 +7366,7 @@ SUBROUTINE Fun_3 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_3)
 
   V(select_ind_3)=VAR_selected
   V(delete_ind_3)=VAR_deleted
@@ -8313,7 +8313,7 @@ SUBROUTINE Fun_4 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_4)
 
   V(select_ind_4)=VAR_selected
   V(delete_ind_4)=VAR_deleted
@@ -9231,7 +9231,7 @@ SUBROUTINE Fun_5 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_5)
 
   V(select_ind_5)=VAR_selected
   V(delete_ind_5)=VAR_deleted
@@ -10236,7 +10236,7 @@ SUBROUTINE Fun_6 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_6)
 
   V(select_ind_6)=VAR_selected
   V(delete_ind_6)=VAR_deleted
@@ -11191,7 +11191,7 @@ SUBROUTINE Fun_7 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_7)
 
   V(select_ind_7)=VAR_selected
   V(delete_ind_7)=VAR_deleted
@@ -12075,7 +12075,7 @@ SUBROUTINE Fun_8 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_8)
 
   V(select_ind_8)=VAR_selected
   V(delete_ind_8)=VAR_deleted
@@ -13057,7 +13057,7 @@ SUBROUTINE Fun_9 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LS_NVAR)
+  REAL(kind=dp) :: Vdot(LU_NSEL_9)
 
   V(select_ind_9)=VAR_selected
   V(delete_ind_9)=VAR_deleted
@@ -14121,6 +14121,8 @@ SUBROUTINE Fun_9 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 
 
 END SUBROUTINE Fun_9
+
+
 
 
 SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate)
