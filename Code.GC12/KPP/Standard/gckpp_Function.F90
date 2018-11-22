@@ -3158,20 +3158,17 @@ SUBROUTINE Fun_12 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
 END SUBROUTINE Fun_12
 
 
-SUBROUTINE Fun_13 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
+SUBROUTINE Fun_13 ( V, F, RCT, Vdot, LS_NVAR )
 
-  REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_13),VAR_selected(LU_NSEL_13)
+  INTEGER,INTENT(IN)::LS_NVAR
 ! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
+  REAL(kind=dp) :: V(LS_NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
 ! Vdot - Time derivative of variable species concentrations
-  REAL(kind=dp) :: Vdot(LU_NSEL_13)
-
-  V(select_ind_13)=VAR_selected
-  V(delete_ind_13)=VAR_deleted
+  REAL(kind=dp) :: Vdot(LS_NVAR)
 
 
 ! Computation of equation rates
@@ -14116,13 +14113,8 @@ SUBROUTINE Fun_9 ( VAR_selected,VAR_deleted, F, RCT, Vdot)
                 &+A(365)+A(368)-A(395)-A(396)-A(397)-A(669)+A(670)+A(674)
   Vdot(149) = -0.91*A(299)+A(321)-A(324)+A(336)+A(337)+A(339)+A(340)+A(341)+2*A(361)+A(362)+A(363)+A(364)+A(366)+A(367)&
                 &+A(369)+A(370)+A(371)+A(372)+A(373)+A(374)+A(375)+A(376)+A(377)-A(540)-A(543)-A(545)-A(549)-A(552)-A(558)&
-                &-A(559)
-      
-
-
+                &-A(559)     
 END SUBROUTINE Fun_9
-
-
 
 
 SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate)
