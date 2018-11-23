@@ -459,7 +459,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_2(T,Y,Jac0)
+   CALL JacTemplate_2(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -1217,7 +1217,7 @@ END SUBROUTINE FunTemplate_2
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_2( T, Y, Jcb )
+SUBROUTINE JacTemplate_2( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -1225,6 +1225,8 @@ SUBROUTINE JacTemplate_2( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_2
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_2)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_2)
 !~~~> Output variables
@@ -1242,7 +1244,7 @@ SUBROUTINE JacTemplate_2( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_2(Y, FIX, RCONST, JV, LU_NSEL_2, LU_NONZERO_2)
+    CALL Jac_SP_2(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_2
       DO i=1,LU_NSEL_2
          Jcb(i,j) = 0.0_dp
@@ -1252,7 +1254,7 @@ SUBROUTINE JacTemplate_2( T, Y, Jcb )
        Jcb(LU_IROW_2(i),LU_ICOL_2(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_2( Y, FIX, RCONST, Jcb, LU_NSEL_2, LU_NONZERO_2 )
+    CALL Jac_SP_2( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -1647,7 +1649,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_3(T,Y,Jac0)
+   CALL JacTemplate_3(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -2405,7 +2407,7 @@ END SUBROUTINE FunTemplate_3
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_3( T, Y, Jcb )
+SUBROUTINE JacTemplate_3( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -2413,6 +2415,8 @@ SUBROUTINE JacTemplate_3( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_3
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_3)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_3)
 !~~~> Output variables
@@ -2430,7 +2434,7 @@ SUBROUTINE JacTemplate_3( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_3(Y, FIX, RCONST, JV, LU_NSEL_3, LU_NONZERO_3)
+    CALL Jac_SP_3(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_3
       DO i=1,LU_NSEL_3
          Jcb(i,j) = 0.0_dp
@@ -2440,7 +2444,7 @@ SUBROUTINE JacTemplate_3( T, Y, Jcb )
        Jcb(LU_IROW_3(i),LU_ICOL_3(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_3( Y, FIX, RCONST, Jcb, LU_NSEL_3, LU_NONZERO_3 )
+    CALL Jac_SP_3( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -2835,7 +2839,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_4(T,Y,Jac0)
+   CALL JacTemplate_4(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -3593,7 +3597,7 @@ END SUBROUTINE FunTemplate_4
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_4( T, Y, Jcb )
+SUBROUTINE JacTemplate_4( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -3601,6 +3605,8 @@ SUBROUTINE JacTemplate_4( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_4
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_4)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_4)
 !~~~> Output variables
@@ -3618,7 +3624,7 @@ SUBROUTINE JacTemplate_4( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_4(Y, FIX, RCONST, JV, LU_NSEL_4, LU_NONZERO_4)
+    CALL Jac_SP_4(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_4
       DO i=1,LU_NSEL_4
          Jcb(i,j) = 0.0_dp
@@ -3628,7 +3634,7 @@ SUBROUTINE JacTemplate_4( T, Y, Jcb )
        Jcb(LU_IROW_4(i),LU_ICOL_4(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_4( Y, FIX, RCONST, Jcb, LU_NSEL_4, LU_NONZERO_4 )
+    CALL Jac_SP_4( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -4023,7 +4029,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_5(T,Y,Jac0)
+   CALL JacTemplate_5(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -4781,7 +4787,7 @@ END SUBROUTINE FunTemplate_5
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_5( T, Y, Jcb )
+SUBROUTINE JacTemplate_5( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -4789,6 +4795,8 @@ SUBROUTINE JacTemplate_5( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_5
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_5)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_5)
 !~~~> Output variables
@@ -4806,7 +4814,7 @@ SUBROUTINE JacTemplate_5( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_5(Y, FIX, RCONST, JV, LU_NSEL_5, LU_NONZERO_5)
+    CALL Jac_SP_5(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_5
       DO i=1,LU_NSEL_5
          Jcb(i,j) = 0.0_dp
@@ -4816,7 +4824,7 @@ SUBROUTINE JacTemplate_5( T, Y, Jcb )
        Jcb(LU_IROW_5(i),LU_ICOL_5(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_5( Y, FIX, RCONST, Jcb, LU_NSEL_5, LU_NONZERO_5 )
+    CALL Jac_SP_5( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -5211,7 +5219,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_6(T,Y,Jac0)
+   CALL JacTemplate_6(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -5969,7 +5977,7 @@ END SUBROUTINE FunTemplate_6
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_6( T, Y, Jcb )
+SUBROUTINE JacTemplate_6( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -5977,6 +5985,8 @@ SUBROUTINE JacTemplate_6( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_6
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_6)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_6)
 !~~~> Output variables
@@ -5994,7 +6004,7 @@ SUBROUTINE JacTemplate_6( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_6(Y, FIX, RCONST, JV, LU_NSEL_6, LU_NONZERO_6)
+    CALL Jac_SP_6(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_6
       DO i=1,LU_NSEL_6
          Jcb(i,j) = 0.0_dp
@@ -6004,7 +6014,7 @@ SUBROUTINE JacTemplate_6( T, Y, Jcb )
        Jcb(LU_IROW_6(i),LU_ICOL_6(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_6( Y, FIX, RCONST, Jcb, LU_NSEL_6, LU_NONZERO_6 )
+    CALL Jac_SP_6( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -6399,7 +6409,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_7(T,Y,Jac0)
+   CALL JacTemplate_7(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -7157,7 +7167,7 @@ END SUBROUTINE FunTemplate_7
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_7( T, Y, Jcb )
+SUBROUTINE JacTemplate_7( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -7165,6 +7175,8 @@ SUBROUTINE JacTemplate_7( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_7
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_7)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_7)
 !~~~> Output variables
@@ -7182,7 +7194,7 @@ SUBROUTINE JacTemplate_7( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_7(Y, FIX, RCONST, JV, LU_NSEL_7, LU_NONZERO_7)
+    CALL Jac_SP_7(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_7
       DO i=1,LU_NSEL_7
          Jcb(i,j) = 0.0_dp
@@ -7192,7 +7204,7 @@ SUBROUTINE JacTemplate_7( T, Y, Jcb )
        Jcb(LU_IROW_7(i),LU_ICOL_7(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_7( Y, FIX, RCONST, Jcb, LU_NSEL_7, LU_NONZERO_7 )
+    CALL Jac_SP_7( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -7587,7 +7599,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_8(T,Y,Jac0)
+   CALL JacTemplate_8(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -8345,7 +8357,7 @@ END SUBROUTINE FunTemplate_8
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_8( T, Y, Jcb )
+SUBROUTINE JacTemplate_8( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -8353,6 +8365,8 @@ SUBROUTINE JacTemplate_8( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_8
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_8)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_8)
 !~~~> Output variables
@@ -8370,7 +8384,7 @@ SUBROUTINE JacTemplate_8( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_8(Y, FIX, RCONST, JV, LU_NSEL_8, LU_NONZERO_8)
+    CALL Jac_SP_8(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_8
       DO i=1,LU_NSEL_8
          Jcb(i,j) = 0.0_dp
@@ -8380,7 +8394,7 @@ SUBROUTINE JacTemplate_8( T, Y, Jcb )
        Jcb(LU_IROW_8(i),LU_ICOL_8(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_8( Y, FIX, RCONST, Jcb, LU_NSEL_8, LU_NONZERO_8 )
+    CALL Jac_SP_8( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -8775,7 +8789,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_9(T,Y,Jac0)
+   CALL JacTemplate_9(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -9533,7 +9547,7 @@ END SUBROUTINE FunTemplate_9
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_9( T, Y, Jcb )
+SUBROUTINE JacTemplate_9( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -9541,6 +9555,8 @@ SUBROUTINE JacTemplate_9( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_9
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_9)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_9)
 !~~~> Output variables
@@ -9558,7 +9574,7 @@ SUBROUTINE JacTemplate_9( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_9(Y, FIX, RCONST, JV, LU_NSEL_9, LU_NONZERO_9)
+    CALL Jac_SP_9(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_9
       DO i=1,LU_NSEL_9
          Jcb(i,j) = 0.0_dp
@@ -9568,7 +9584,7 @@ SUBROUTINE JacTemplate_9( T, Y, Jcb )
        Jcb(LU_IROW_9(i),LU_ICOL_9(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_9( Y, FIX, RCONST, Jcb, LU_NSEL_9, LU_NONZERO_9 )
+    CALL Jac_SP_9( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -9963,7 +9979,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_10(T,Y,Jac0)
+   CALL JacTemplate_10(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -10721,7 +10737,7 @@ END SUBROUTINE FunTemplate_10
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_10( T, Y, Jcb )
+SUBROUTINE JacTemplate_10( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -10729,6 +10745,8 @@ SUBROUTINE JacTemplate_10( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_10
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_10)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_10)
 !~~~> Output variables
@@ -10746,7 +10764,7 @@ SUBROUTINE JacTemplate_10( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_10(Y, FIX, RCONST, JV, LU_NSEL_10, LU_NONZERO_10)
+    CALL Jac_SP_10(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_10
       DO i=1,LU_NSEL_10
          Jcb(i,j) = 0.0_dp
@@ -10756,7 +10774,7 @@ SUBROUTINE JacTemplate_10( T, Y, Jcb )
        Jcb(LU_IROW_10(i),LU_ICOL_10(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_10( Y, FIX, RCONST, Jcb, LU_NSEL_10, LU_NONZERO_10 )
+    CALL Jac_SP_10( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -11151,7 +11169,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_11(T,Y,Jac0)
+   CALL JacTemplate_11(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -11909,7 +11927,7 @@ END SUBROUTINE FunTemplate_11
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_11( T, Y, Jcb )
+SUBROUTINE JacTemplate_11( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -11917,6 +11935,8 @@ SUBROUTINE JacTemplate_11( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_11
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_11)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_11)
 !~~~> Output variables
@@ -11934,7 +11954,7 @@ SUBROUTINE JacTemplate_11( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_11(Y, FIX, RCONST, JV, LU_NSEL_11, LU_NONZERO_11)
+    CALL Jac_SP_11(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_11
       DO i=1,LU_NSEL_11
          Jcb(i,j) = 0.0_dp
@@ -11944,7 +11964,7 @@ SUBROUTINE JacTemplate_11( T, Y, Jcb )
        Jcb(LU_IROW_11(i),LU_ICOL_11(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_11( Y, FIX, RCONST, Jcb, LU_NSEL_11, LU_NONZERO_11 )
+    CALL Jac_SP_11( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -12339,7 +12359,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_12(T,Y,Jac0)
+   CALL JacTemplate_12(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -13097,7 +13117,7 @@ END SUBROUTINE FunTemplate_12
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_12( T, Y, Jcb )
+SUBROUTINE JacTemplate_12( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -13105,6 +13125,8 @@ SUBROUTINE JacTemplate_12( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_12
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_12)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_12)
 !~~~> Output variables
@@ -13122,7 +13144,7 @@ SUBROUTINE JacTemplate_12( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_12(Y, FIX, RCONST, JV, LU_NSEL_12, LU_NONZERO_12)
+    CALL Jac_SP_12(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_12
       DO i=1,LU_NSEL_12
          Jcb(i,j) = 0.0_dp
@@ -13132,7 +13154,7 @@ SUBROUTINE JacTemplate_12( T, Y, Jcb )
        Jcb(LU_IROW_12(i),LU_ICOL_12(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_12( Y, FIX, RCONST, Jcb, LU_NSEL_12, LU_NONZERO_12 )
+    CALL Jac_SP_12( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -14297,7 +14319,7 @@ SUBROUTINE JacTemplate_13( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_13(Y, FIX, RCONST, JV, LU_NSEL_13, LU_NONZERO_13)
+    CALL Jac_SP_13(Y, FIX, RCONST, JV)
     DO j=1,LU_NSEL_13
       DO i=1,LU_NSEL_13
          Jcb(i,j) = 0.0_dp
@@ -14307,7 +14329,7 @@ SUBROUTINE JacTemplate_13( T, Y, Jcb )
        Jcb(LU_IROW_13(i),LU_ICOL_13(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_13( Y, FIX, RCONST, Jcb, LU_NSEL_13, LU_NONZERO_13 )
+    CALL Jac_SP_13( Y, FIX, RCONST, Jcb)
 #endif   
     TIME = Told
 
@@ -14700,7 +14722,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_14(T,Y,Jac0)
+   CALL JacTemplate_14(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -15458,7 +15480,7 @@ END SUBROUTINE FunTemplate_14
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_14( T, Y, Jcb )
+SUBROUTINE JacTemplate_14( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -15466,6 +15488,8 @@ SUBROUTINE JacTemplate_14( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_14
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_14)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_14)
 !~~~> Output variables
@@ -15483,7 +15507,7 @@ SUBROUTINE JacTemplate_14( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_14(Y, FIX, RCONST, JV, LU_NSEL_14, LU_NONZERO_14)
+    CALL Jac_SP_14(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_14
       DO i=1,LU_NSEL_14
          Jcb(i,j) = 0.0_dp
@@ -15493,7 +15517,7 @@ SUBROUTINE JacTemplate_14( T, Y, Jcb )
        Jcb(LU_IROW_14(i),LU_ICOL_14(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_14( Y, FIX, RCONST, Jcb, LU_NSEL_14, LU_NONZERO_14 )
+    CALL Jac_SP_14( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
@@ -15888,7 +15912,7 @@ TimeLoop: DO WHILE ( (Direction > 0).AND.((T-Tend)+Roundoff <= ZERO) &
    END IF
 
 !~~~>   Compute the Jacobian at current time
-   CALL JacTemplate_15(T,Y,Jac0)
+   CALL JacTemplate_15(T,Y,Jac0, VAR_deleted)
    ISTATUS(Njac) = ISTATUS(Njac) + 1
 
 !~~~>  Repeat step calculation until current step accepted
@@ -16646,7 +16670,7 @@ END SUBROUTINE FunTemplate_15
 
 
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-SUBROUTINE JacTemplate_15( T, Y, Jcb )
+SUBROUTINE JacTemplate_15( T, Y, Jcb, VAR_deleted )
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !  Template for the ODE Jacobian call.
 !  Updates the rate coefficients (and possibly the fixed species) at each call
@@ -16654,6 +16678,8 @@ SUBROUTINE JacTemplate_15( T, Y, Jcb )
  USE gckpp_Global, ONLY: FIX, RCONST, TIME
  USE gckpp_Jacobian, ONLY: Jac_SP_15
  USE gckpp_LinearAlgebra
+ 
+ REAL(kind=dp),INTENT(IN)::VAR_deleted(LU_NDEL_15)
 !~~~> Input variables
     REAL(kind=dp) :: T, Y(LU_NSEL_15)
 !~~~> Output variables
@@ -16671,7 +16697,7 @@ SUBROUTINE JacTemplate_15( T, Y, Jcb )
     Told = TIME
     TIME = T
 #ifdef FULL_ALGEBRA    
-    CALL Jac_SP_15(Y, FIX, RCONST, JV, LU_NSEL_15, LU_NONZERO_15)
+    CALL Jac_SP_15(Y,VAR_deleted, FIX, RCONST, JV)
     DO j=1,LU_NSEL_15
       DO i=1,LU_NSEL_15
          Jcb(i,j) = 0.0_dp
@@ -16681,7 +16707,7 @@ SUBROUTINE JacTemplate_15( T, Y, Jcb )
        Jcb(LU_IROW_15(i),LU_ICOL_15(i)) = JV(i)
     END DO
 #else
-    CALL Jac_SP_15( Y, FIX, RCONST, Jcb, LU_NSEL_15, LU_NONZERO_15 )
+    CALL Jac_SP_15( Y, VAR_deleted, FIX, RCONST, Jcb )
 #endif   
     TIME = Told
 
