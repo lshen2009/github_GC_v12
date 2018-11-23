@@ -15131,7 +15131,8 @@ FUNCTION Determine_type (Prate,Lrate) RESULT( flag )
 	    flag=I
 		CONTINUE
 	 END IF
-  END DO    
+  END DO 
+  flag=2
 END FUNCTION Determine_type
 
 END MODULE gckpp_Function
