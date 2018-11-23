@@ -45,8 +45,6 @@ CONTAINS
 SUBROUTINE Jac_SP_10(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_10),VAR1(LU_NSEL_10)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -4357,8 +4355,6 @@ END SUBROUTINE Jac_SP_10
 SUBROUTINE Jac_SP_11(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_11),VAR1(LU_NSEL_11)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -6939,8 +6935,6 @@ END SUBROUTINE Jac_SP_11
 SUBROUTINE Jac_SP_12(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_12),VAR1(LU_NSEL_12)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -8517,8 +8511,6 @@ END SUBROUTINE Jac_SP_12
 SUBROUTINE Jac_SP_13(V, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN):: V(LU_NSEL_13)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -13244,8 +13236,6 @@ END SUBROUTINE Jac_SP_13
 SUBROUTINE Jac_SP_14(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_14),VAR1(LU_NSEL_14)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -15935,8 +15925,6 @@ END SUBROUTINE Jac_SP_14
 SUBROUTINE Jac_SP_15(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_15),VAR1(LU_NSEL_15)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -20356,8 +20344,6 @@ END SUBROUTINE Jac_SP_15
 SUBROUTINE Jac_SP_2(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_2),VAR1(LU_NSEL_2)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -21158,8 +21144,6 @@ END SUBROUTINE Jac_SP_2
 SUBROUTINE Jac_SP_3(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_3),VAR1(LU_NSEL_3)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -22807,8 +22791,6 @@ END SUBROUTINE Jac_SP_3
 SUBROUTINE Jac_SP_4(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_4),VAR1(LU_NSEL_4)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -24015,8 +23997,6 @@ END SUBROUTINE Jac_SP_4
 SUBROUTINE Jac_SP_5(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_5),VAR1(LU_NSEL_5)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -26302,8 +26282,6 @@ END SUBROUTINE Jac_SP_5
 SUBROUTINE Jac_SP_6(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_6),VAR1(LU_NSEL_6)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -28059,8 +28037,6 @@ END SUBROUTINE Jac_SP_6
 SUBROUTINE Jac_SP_7(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_7),VAR1(LU_NSEL_7)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -29256,8 +29232,6 @@ END SUBROUTINE Jac_SP_7
 SUBROUTINE Jac_SP_8(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_8),VAR1(LU_NSEL_8)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -31295,8 +31269,6 @@ END SUBROUTINE Jac_SP_8
 SUBROUTINE Jac_SP_9(VAR1,VAR2, F, RCT, JVS)
 
   REAL(kind=dp),INTENT(IN)::VAR2(LU_NDEL_9),VAR1(LU_NSEL_9)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -34680,6 +34652,7 @@ SUBROUTINE Jac_SP_9(VAR1,VAR2, F, RCT, JVS)
 
 
 END SUBROUTINE Jac_SP_9
+
 
 
 
