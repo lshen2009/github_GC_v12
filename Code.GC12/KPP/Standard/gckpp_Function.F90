@@ -47,8 +47,6 @@ CONTAINS
 SUBROUTINE Fun_10 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_10),VAR2(LU_NDEL_10)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -1174,8 +1172,6 @@ END SUBROUTINE Fun_10
 SUBROUTINE Fun_11 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_11),VAR2(LU_NDEL_11)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -2202,8 +2198,6 @@ END SUBROUTINE Fun_11
 SUBROUTINE Fun_12 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_12),VAR2(LU_NDEL_12)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -4315,8 +4309,6 @@ END SUBROUTINE Fun_13
 SUBROUTINE Fun_14 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_14),VAR2(LU_NDEL_14)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -5351,8 +5343,6 @@ END SUBROUTINE Fun_14
 SUBROUTINE Fun_15 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_15),VAR2(LU_NDEL_15)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -6486,8 +6476,6 @@ END SUBROUTINE Fun_15
 SUBROUTINE Fun_2 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_2),VAR2(LU_NDEL_2)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -7338,8 +7326,6 @@ END SUBROUTINE Fun_2
 SUBROUTINE Fun_3 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_3),VAR2(LU_NDEL_3)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -8282,8 +8268,6 @@ END SUBROUTINE Fun_3
 SUBROUTINE Fun_4 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_4),VAR2(LU_NDEL_4)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -9197,8 +9181,6 @@ END SUBROUTINE Fun_4
 SUBROUTINE Fun_5 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_5),VAR2(LU_NDEL_5)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -10199,8 +10181,6 @@ END SUBROUTINE Fun_5
 SUBROUTINE Fun_6 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_6),VAR2(LU_NDEL_6)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -11151,8 +11131,6 @@ END SUBROUTINE Fun_6
 SUBROUTINE Fun_7 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_7),VAR2(LU_NDEL_7)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -12032,8 +12010,6 @@ END SUBROUTINE Fun_7
 SUBROUTINE Fun_8 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_8),VAR2(LU_NDEL_8)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -13011,8 +12987,6 @@ END SUBROUTINE Fun_8
 SUBROUTINE Fun_9 ( VAR1,VAR2, F, RCT, Vdot)
 
   REAL(kind=dp),INTENT(IN)::VAR1(LU_NSEL_9),VAR2(LU_NDEL_9)
-! V - Concentrations of variable species (local)
-  REAL(kind=dp) :: V(NVAR)
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
@@ -14079,6 +14053,8 @@ SUBROUTINE Fun_9 ( VAR1,VAR2, F, RCT, Vdot)
 
 
 END SUBROUTINE Fun_9
+
+
 
 
 
