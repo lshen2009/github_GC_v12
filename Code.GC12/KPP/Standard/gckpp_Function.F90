@@ -7147,9 +7147,6 @@ SUBROUTINE Fun_2 ( VAR1,VAR2, F, RCT, Vdot)
   Vdot(21) = -0.91*A(299)+A(321)-A(324)+A(336)+A(337)+A(339)+A(340)+A(341)+2*A(361)+A(362)+A(363)+A(364)+A(366)+A(367)&
                 &+A(369)+A(370)+A(371)+A(372)+A(373)+A(374)+A(375)+A(376)+A(377)-A(540)-A(543)-A(545)-A(549)-A(552)-A(558)&
                 &-A(559)
-      
-
-
 END SUBROUTINE Fun_2
 
 
@@ -15135,7 +15132,7 @@ FUNCTION Determine_type (Prate,Lrate) RESULT( flag )
 		CONTINUE
 	 END IF
   END DO  
-  
+  flag=1
 END FUNCTION Determine_type
 
 END MODULE gckpp_Function
