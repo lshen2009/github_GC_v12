@@ -13,4 +13,4 @@ Code.GC12_Nov18: Based on Code.GC12_Nov17, I have added all 10 types of chemistr
 Code.GC12_Nov20: The code works for 10 tyeps of chemistry regimes.
 Code.GC12_Nov21: The code works for 15 tyeps of chemistry regimes.
 Code.GC12_Nov21_afternoon: The code works for 15 tyeps of chemistry regimes. I have reduced the number of input parameters.
-
+Code.GC12_Nov25: The code works for 15 tyeps of chemistry regimes. I consider both fast and slow species in FUN and Jac_SP functions.
