@@ -1036,11 +1036,6 @@ CONTAINS
 			LS_NDEL=LU_NDEL_19	
             CALL Integrate_19( TIN,TOUT, Prate, Lrate, ICNTRL, &
                        RCNTRL, ISTATUS, RSTATE, IERR )
-	     CASE (20)
-		    LS_NSEL=LU_NSEL_20
-			LS_NDEL=LU_NDEL_20	
-            CALL Integrate_20( TIN,TOUT, Prate, Lrate, ICNTRL, &
-                       RCNTRL, ISTATUS, RSTATE, IERR )
 				   
 		 CASE DEFAULT
 		    LS_NSEL=LU_NSEL_13
