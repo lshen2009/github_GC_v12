@@ -1015,7 +1015,33 @@ CONTAINS
 		    LS_NSEL=LU_NSEL_15
 			LS_NDEL=LU_NDEL_15	
             CALL Integrate_15( TIN,TOUT, Prate, Lrate, ICNTRL, &
-                       RCNTRL, ISTATUS, RSTATE, IERR )	
+                       RCNTRL, ISTATUS, RSTATE, IERR )
+	     CASE (16)
+		    LS_NSEL=LU_NSEL_16
+			LS_NDEL=LU_NDEL_16	
+            CALL Integrate_16( TIN,TOUT, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )
+	     CASE (17)
+		    LS_NSEL=LU_NSEL_17
+			LS_NDEL=LU_NDEL_17	
+            CALL Integrate_17( TIN,TOUT, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )
+	     CASE (18)
+		    LS_NSEL=LU_NSEL_18
+			LS_NDEL=LU_NDEL_18	
+            CALL Integrate_18( TIN,TOUT, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )
+	     CASE (19)
+		    LS_NSEL=LU_NSEL_19
+			LS_NDEL=LU_NDEL_19	
+            CALL Integrate_19( TIN,TOUT, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )
+	     CASE (20)
+		    LS_NSEL=LU_NSEL_20
+			LS_NDEL=LU_NDEL_20	
+            CALL Integrate_20( TIN,TOUT, Prate, Lrate, ICNTRL, &
+                       RCNTRL, ISTATUS, RSTATE, IERR )
+				   
 		 CASE DEFAULT
 		    LS_NSEL=LU_NSEL_13
 			LS_NDEL=LU_NDEL_13				 
