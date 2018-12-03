@@ -58,8 +58,8 @@ SUBROUTINE INTEGRATE_1( TIN, TOUT, &
    ELSEWHERE!LS
 		VAR=Prate/Lrate+(VAR-Prate/Lrate)*EXP(-Lrate*deltaT)
    END WHERE!LS
-   WHERE(LS_L>=(10/deltaT))!LS
-         VAR_deleted=LS_P/LS_L
+   WHERE(Lrate>=(10/deltaT))!LS
+         VAR=Prate/Lrate
    END WHERE	    
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
