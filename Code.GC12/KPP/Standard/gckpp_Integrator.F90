@@ -58,7 +58,9 @@ SUBROUTINE INTEGRATE_1( TIN, TOUT, &
    ELSEWHERE!LS
 		VAR=Prate/Lrate+(VAR-Prate/Lrate)*EXP(-Lrate*deltaT)
    END WHERE!LS
-	    
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE	    
    !~~~> Debug option: show no of steps
    ! Ntotal = Ntotal + ISTATUS(Nstp)
    ! PRINT*,'NSTEPS=',ISTATUS(Nstp),' (',Ntotal,')','  O3=', VAR(ind_O3)
@@ -119,7 +121,10 @@ SUBROUTINE INTEGRATE_2( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_2(LU_NSEL_2,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_2)=VAR_selected
@@ -1309,7 +1314,10 @@ SUBROUTINE INTEGRATE_3( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_3(LU_NSEL_3,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_3)=VAR_selected
@@ -2499,7 +2507,10 @@ SUBROUTINE INTEGRATE_4( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_4(LU_NSEL_4,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_4)=VAR_selected
@@ -3689,7 +3700,10 @@ SUBROUTINE INTEGRATE_5( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_5(LU_NSEL_5,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_5)=VAR_selected
@@ -4879,7 +4893,10 @@ SUBROUTINE INTEGRATE_6( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_6(LU_NSEL_6,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_6)=VAR_selected
@@ -6069,7 +6086,10 @@ SUBROUTINE INTEGRATE_7( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_7(LU_NSEL_7,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_7)=VAR_selected
@@ -7259,7 +7279,10 @@ SUBROUTINE INTEGRATE_8( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_8(LU_NSEL_8,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_8)=VAR_selected
@@ -8449,7 +8472,10 @@ SUBROUTINE INTEGRATE_9( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_9(LU_NSEL_9,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_9)=VAR_selected
@@ -9639,7 +9665,10 @@ SUBROUTINE INTEGRATE_10( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_10(LU_NSEL_10,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_10)=VAR_selected
@@ -10829,7 +10858,10 @@ SUBROUTINE INTEGRATE_11( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_11(LU_NSEL_11,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_11)=VAR_selected
@@ -12019,7 +12051,10 @@ SUBROUTINE INTEGRATE_12( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_12(LU_NSEL_12,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_12)=VAR_selected
@@ -14382,7 +14417,10 @@ SUBROUTINE INTEGRATE_14( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_14(LU_NSEL_14,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_14)=VAR_selected
@@ -15572,7 +15610,10 @@ SUBROUTINE INTEGRATE_15( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_15(LU_NSEL_15,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_15)=VAR_selected
@@ -16762,7 +16803,10 @@ SUBROUTINE INTEGRATE_16( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_16(LU_NSEL_16,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_16)=VAR_selected
@@ -17952,7 +17996,10 @@ SUBROUTINE INTEGRATE_17( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_17(LU_NSEL_17,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_17)=VAR_selected
@@ -19142,7 +19189,10 @@ SUBROUTINE INTEGRATE_18( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_18(LU_NSEL_18,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_18)=VAR_selected
@@ -20332,7 +20382,10 @@ SUBROUTINE INTEGRATE_19( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_19(LU_NSEL_19,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_19)=VAR_selected
@@ -21522,7 +21575,10 @@ SUBROUTINE INTEGRATE_20( TIN, TOUT, &
 		VAR_deleted=VAR_deleted+deltaT*(LS_P-LS_L*VAR_deleted)
    ELSEWHERE!LS
 		VAR_deleted=LS_P/LS_L+(VAR_deleted-LS_P/LS_L)*EXP(-LS_L*deltaT)
-   END WHERE!LS   
+   END WHERE!LS
+   WHERE(LS_L>=(10/deltaT))!LS
+         VAR_deleted=LS_P/LS_L
+   END WHERE
    CALL Rosenbrock_20(LU_NSEL_20,VAR_selected,VAR_deleted,TIN,TOUT,ATOL,RTOL,&
           RCNTRL,ICNTRL,RSTATUS,ISTATUS,IERR)		
    VAR(select_ind_20)=VAR_selected
