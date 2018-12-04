@@ -14,3 +14,4 @@ Code.GC12_Nov20: The code works for 10 tyeps of chemistry regimes.
 Code.GC12_Nov21: The code works for 15 tyeps of chemistry regimes.
 Code.GC12_Nov21_afternoon: The code works for 15 tyeps of chemistry regimes. I have reduced the number of input parameters.
 Code.GC12_Nov25: The code works for 15 tyeps of chemistry regimes. I consider both fast and slow species in FUN and Jac_SP functions.
+Code.GC12_Dec04: The code works for 15 tyeps of chemistry regimes. I consider both fast and slow species in FUN and Jac_SP functions. But the model may be wrong in clean regions and in the stratosphere.
