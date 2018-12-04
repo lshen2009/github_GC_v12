@@ -237,7 +237,7 @@ CONTAINS
     REAL(dp)               :: RSTATE     (                  20               )
     REAL(dp)               :: GLOB_RCONST(IIPAR,JJPAR,LLPAR,NREACT           )
     REAL(fp)               :: Before     (IIPAR,JJPAR,LLPAR,State_Chm%nAdvect)
-	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR)
+	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR),Lrate2(NVAR)
 
     ! For tagged CO saving
     REAL(fp)               :: LCH4, PCO_TOT, PCO_CH4, PCO_NMVOC
@@ -618,7 +618,7 @@ CONTAINS
     !$OMP PRIVATE  ( SO4_FRAC, IERR,     RCNTRL,  START, FINISH, ISTATUS    )&
     !$OMP PRIVATE  ( RSTATE,   SpcID,    KppID,   F,     P                  )&
     !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC                 ) &
-	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate ) &
+	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate, Lrate2 ) &
     !$OMP REDUCTION( +:ITIM                                                 )&
     !$OMP REDUCTION( +:RTIM                                                 )&
     !$OMP REDUCTION( +:TOTSTEPS                                             )&
@@ -886,17 +886,13 @@ CONTAINS
 	   !lshen added this
 	   !IF (new_hour) THEN
 	   !IF (MOD(NHMS,2000)==0) then	  
-	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
+	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate, Lrate2)
 		 LS_type=Determine_type(Prate,Lrate)
 		! State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)		
 		 
-		 !calculate the K
-		 WHERE ( ABS(VAR) >= 1e-30_fp)
-		     Lrate = -Lrate/VAR
-		 ELSEWHERE
-		     Lrate = 0.0_fp
-		 END WHERE		 
-	 
+		 !calculate the K		 
+		 Lrate = -Lrate2
+		 
 	     !State_Chm%LS_Prate(I,J,L,:)=Prate
 	     !State_Chm%LS_Lrate(I,J,L,:)=Lrate		 
 		 
