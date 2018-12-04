@@ -19506,7 +19506,7 @@ SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate, Lrate2)
   A(724) = RCT(724)*V(118)
 				
 				
-Prate(1) = 0
+  Prate(1) = 0
   Prate(2) = 0
   Prate(3) = 0
   Prate(4) = A(565)+2*A(570)+2*A(573)+2*A(576)
@@ -20469,38 +20469,38 @@ Prate(1) = 0
   Lrate2(1) = -RCT(700)
   Lrate2(2) = -RCT(701)
   Lrate2(3) = -RCT(702)
-  Lrate(4) = 0
-  Lrate(5) = 0
-  Lrate(6) = 0
-  Lrate(7) = 0
-  Lrate(8) = 0
-  Lrate(9) = 0
+  Lrate2(4) = 0
+  Lrate2(5) = 0
+  Lrate2(6) = 0
+  Lrate2(7) = 0
+  Lrate2(8) = 0
+  Lrate2(9) = 0
   Lrate2(10) = -RCT(593)
-  Lrate(11) = 0
-  Lrate(12) = 0
-  Lrate(13) = 0
-  Lrate(14) = 0
-  Lrate(15) = 0
-  Lrate(16) = 0
-  Lrate(17) = 0
+  Lrate2(11) = 0
+  Lrate2(12) = 0
+  Lrate2(13) = 0
+  Lrate2(14) = 0
+  Lrate2(15) = 0
+  Lrate2(16) = 0
+  Lrate2(17) = 0
   Lrate2(18) = -RCT(181)*V(231)-RCT(592)
-  Lrate(19) = 0
-  Lrate(20) = 0
-  Lrate(21) = 0
-  Lrate(22) = 0
-  Lrate(23) = 0
-  Lrate(24) = 0
-  Lrate(25) = 0
-  Lrate(26) = 0
-  Lrate(27) = 0
+  Lrate2(19) = 0
+  Lrate2(20) = 0
+  Lrate2(21) = 0
+  Lrate2(22) = 0
+  Lrate2(23) = 0
+  Lrate2(24) = 0
+  Lrate2(25) = 0
+  Lrate2(26) = 0
+  Lrate2(27) = 0
   Lrate2(28) = -RCT(139)*V(231)-RCT(591)
-  Lrate(29) = 0
-  Lrate(30) = 0
-  Lrate(31) = 0
-  Lrate(32) = 0
-  Lrate(33) = 0
-  Lrate(34) = 0
-  Lrate(35) = 0
+  Lrate2(29) = 0
+  Lrate2(30) = 0
+  Lrate2(31) = 0
+  Lrate2(32) = 0
+  Lrate2(33) = 0
+  Lrate2(34) = 0
+  Lrate2(35) = 0
   Lrate2(36) = -RCT(393)-RCT(576)-RCT(577)-RCT(578)-RCT(703)
   Lrate2(37) = -RCT(599)
   Lrate2(38) = -RCT(719)
@@ -20829,6 +20829,8 @@ Prate(1) = 0
                 &-RCT(396)*V(183)-RCT(397)*V(183)-RCT(669)
   Lrate2(234) = -0.91*RCT(299)*V(229)-RCT(324)*V(231)-RCT(540)*V(131)-RCT(543)*V(145)-RCT(545)*V(198)&
                 &-RCT(549)*V(196)-RCT(552)*V(186)-RCT(558)-RCT(559)
+
+
   
   !Diff=Prate+Lrate-Vdot
 END SUBROUTINE Fun_PL
