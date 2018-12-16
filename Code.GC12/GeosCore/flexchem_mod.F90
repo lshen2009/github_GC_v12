@@ -238,7 +238,8 @@ CONTAINS
     REAL(dp)               :: GLOB_RCONST(IIPAR,JJPAR,LLPAR,NREACT           )
     REAL(fp)               :: Before     (IIPAR,JJPAR,LLPAR,State_Chm%nAdvect)
 	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR),Lrate2(NVAR)
-
+	REAL(fp)               :: LS_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
+    REAL(fp)               :: LS_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
     ! For tagged CO saving
     REAL(fp)               :: LCH4, PCO_TOT, PCO_CH4, PCO_NMVOC
 
@@ -272,6 +273,8 @@ CONTAINS
     Day       =  Get_Day()    ! Current day
     Month     =  Get_Month()  ! Current month
     Year      =  Get_Year()   ! Current year
+    LS_Prate(:,:,:,:)=0.0_fp
+    LS_Lrate(:,:,:,:)=0.0_fp
 
     ! Turn heterogeneous chemistry and photolysis on/off here
     ! This is for testing only and may be removed later (mps, 4/26/16)
@@ -887,6 +890,8 @@ CONTAINS
 	   !IF (new_hour) THEN
 	   !IF (MOD(NHMS,2000)==0) then	  
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate, Lrate2)
+         LS_Prate(I,J,L,:)=Prate
+         LS_Lrate(I,J,L,:)=Lrate		 
 		 LS_type=Determine_type(Prate,Lrate)
 		! State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)		
 		 
@@ -1382,25 +1387,25 @@ CONTAINS
     ! Set FIRSTCHEM = .FALSE. -- we have gone thru one chem step
     FIRSTCHEM = .FALSE.
 
-  !print *,'lshen_test_new_hour',NHMS,new_hour
-  !if (new_hour) then    
-  !  YMDH=NYMD*100+NHMS/10000
-  !  print *,NYMD,NHMS,YMDH
-  !  write (outputname1, "(A15,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
-  !  write (outputname2, "(A15,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'		
-  !  OPEN(unit=1101,file=outputname1)
-  !  OPEN(unit=1102,file=outputname2)
-  !       DO L=1,LLPAR
-  !         DO J=1,JJPAR
-  !          DO I=1,IIPAR
-  !            write(1101,'(3I4,234E15.3)'), I,J,L,LS_Prate(I,J,L,:)
-  !            write(1102,'(3I4,234E15.3)'), I,J,L,LS_Lrate(I,J,L,:)
-  !          ENDDO
-  !         ENDDO
-  !       ENDDO
-  !  close(1101)!lshen
-  !  close(1102)
-  !endif
+  if (MOD(NHMS,60000)==0) then
+    print *,'lshen_archive_PL',NHMS,new_hour
+    YMDH=NYMD*100+NHMS/10000
+    print *,NYMD,NHMS,YMDH
+    write (outputname1, "(A15,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
+    write (outputname2, "(A15,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'          
+    OPEN(unit=1101,file=outputname1)
+    OPEN(unit=1102,file=outputname2)
+         DO L=1,LLPAR
+           DO J=1,JJPAR
+            DO I=1,IIPAR
+              write(1101,'(3I4,234E15.3)'), I,J,L,LS_Prate(I,J,L,:)
+              write(1102,'(3I4,234E15.3)'), I,J,L,LS_Lrate(I,J,L,:)
+            ENDDO
+           ENDDO
+         ENDDO
+    close(1101)!lshen
+    close(1102)
+  endif
   
   END SUBROUTINE Do_FlexChem
 !EOC
