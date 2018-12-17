@@ -890,6 +890,10 @@ CONTAINS
 	   !IF (new_hour) THEN
 	   !IF (MOD(NHMS,2000)==0) then	  
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate, Lrate2)
+		 IF(I==40 .and. J==20 .and. L==36) THEN
+		    print *,VAR(7),Prate(7),Lrate(7)
+			print *,VAR(110),Prate(110),Lrate(110)
+		 ENDIF
          LS_ALL_Prate(I,J,L,:)=Prate
          LS_ALL_Lrate(I,J,L,:)=Lrate		 
 		 LS_type=Determine_type(Prate,Lrate)
