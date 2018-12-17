@@ -246,7 +246,7 @@ CONTAINS
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
     INTEGER :: NHMS,NYMD,YMDH,FLAG
-    LOGICAL :: new_hour,flag
+    LOGICAL :: new_hour
 	character(len=1024) :: outputname1,outputname2,outputname3,outputname4
 	
     ! For testing only, may be removed later (mps, 4/26/16)
