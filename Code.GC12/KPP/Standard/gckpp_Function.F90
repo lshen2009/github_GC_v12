@@ -19697,6 +19697,7 @@ SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate, Lrate2, FLAG)
     print *,'Prate(107)',Prate(107)
     print *,'line1', A(358),A(543),A(546),A(547)
 	print *,'line2', A(548),A(550),A(552),A(553)
+	print *,'A(550)',RCT(550),V(196),V(227)
   ENDIF
   Prate(108) = 0
   Prate(109) = 0.5*A(57)
