@@ -18769,16 +18769,17 @@ SUBROUTINE Fun_20 ( VAR1,VAR2, F, RCT, Vdot)
 END SUBROUTINE Fun_20
 
 
-SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate, Lrate2)
+SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate, Lrate2, FLAG)
 
 ! V - Concentrations of variable species (local)
   REAL(kind=dp) :: V(NVAR)
+  INTEGER :: FLAG
 ! F - Concentrations of fixed species (local)
   REAL(kind=dp) :: F(NFIX)
 ! RCT - Rate constants (local)
   REAL(kind=dp) :: RCT(NREACT)
-  REAL(kind=dp) :: Prate(NVAR),Lrate(NVAR),Lrate2(NVAR)
-
+  REAL(kind=dp) :: Prate(NVAR),Lrate(NVAR),Lrate2(NVAR)  
+  
 ! Computation of equation rates
   A(1) = RCT(1)*V(221)*V(222)
   A(2) = RCT(2)*V(221)*V(231)
@@ -19692,6 +19693,11 @@ SUBROUTINE Fun_PL ( V, F, RCT, Prate, Lrate, Lrate2)
   Prate(106) = 0.5*A(57)
   Prate(107) = A(358)+A(543)+A(546)+A(547)+A(548)&
                 &+A(550)+A(552)+A(553)
+  IF (FLAG==1) THEN
+    print *,'Prate(107)',Prate(107)
+    print *,'line1', A(358),A(543),A(546),A(547)
+	print *,'line2', A(548),A(550),A(552),A(553)
+  ENDIF
   Prate(108) = 0
   Prate(109) = 0.5*A(57)
   Prate(110) = 0.44*A(185)+0.473*A(186)

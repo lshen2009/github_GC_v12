@@ -245,7 +245,7 @@ CONTAINS
 
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
-    INTEGER :: NHMS,NYMD,YMDH
+    INTEGER :: NHMS,NYMD,YMDH,FLAG
     LOGICAL :: new_hour,flag
 	character(len=1024) :: outputname1,outputname2,outputname3,outputname4
 	
@@ -889,11 +889,15 @@ CONTAINS
 	   !lshen added this
 	   !IF (new_hour) THEN
 	   !IF (MOD(NHMS,2000)==0) then	  
-	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate, Lrate2)
-		 IF(I==40 .and. J==20 .and. L==36) THEN
-		    print *,VAR(107),Prate(107),Lrate(107)
-			print *,VAR(190),Prate(190),Lrate(190)
-		 ENDIF
+	   FLAG=0
+	   IF(I==40 .and. J==20 .and. L==36) THEN
+	      FLAG=1
+	   ENDIF
+	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate, Lrate2, FLAG)
+		 !IF(I==40 .and. J==20 .and. L==36) THEN
+		  !  print *,VAR(107),Prate(107),Lrate(107)
+			!print *,VAR(190),Prate(190),Lrate(190)
+		 !ENDIF
          LS_ALL_Prate(I,J,L,:)=Prate
          LS_ALL_Lrate(I,J,L,:)=Lrate		 
 		 LS_type=Determine_type(Prate,Lrate)
