@@ -241,7 +241,7 @@ CONTAINS
 
     ! For tagged CO saving
     REAL(fp)               :: LCH4, PCO_TOT, PCO_CH4, PCO_NMVOC
-    REAL(fp)               :: COSSZA,SZA
+    REAL(fp)               :: COSSZA,SZA,PI180
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
     INTEGER :: NHMS,NYMD,YMDH
