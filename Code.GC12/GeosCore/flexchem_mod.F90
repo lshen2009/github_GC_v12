@@ -889,7 +889,9 @@ CONTAINS
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 		 LS_type=Determine_type(Prate,Lrate)
 		! State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)		
-		 
+		 IF (I==36 .and. J==23) THEN
+		   print *,'lshen_test_COS_SZA', State_Met%SUNCOSmid(I,J)
+		 ENDIF
 		 !calculate the K
 		 WHERE ( ABS(VAR) >= 1e-30_fp)
 		     Lrate = -Lrate/VAR
