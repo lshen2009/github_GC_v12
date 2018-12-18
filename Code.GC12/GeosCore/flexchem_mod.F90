@@ -890,19 +890,19 @@ CONTAINS
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 		 LS_type=Determine_type(Prate,Lrate)
 		! State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)		
-		 IF (I==36 .and. J==23 .and. L=36) THEN
+		 IF (I==36 .and. J==23 .and. L==36) THEN
 		   PI180  = PI/180.e+0_fp
 		   COSSZA=State_Met%SUNCOSmid(I,J)
 		   SZA    = acos(MIN(MAX(COSSZA,-1._fp),1._fp))/PI180
 		   print *,'lshen_test_COS_SZA',I,J, SZA,COSSZA
 		 ENDIF
-		 IF (I==36 .and. J==1 .and. L=36) THEN
+		 IF (I==36 .and. J==1 .and. L==36) THEN
 		   PI180  = PI/180.e+0_fp
 		   COSSZA=State_Met%SUNCOSmid(I,J)
 		   SZA    = acos(MIN(MAX(COSSZA,-1._fp),1._fp))/PI180
 		   print *,'lshen_test_COS_SZA',I,J, SZA,COSSZA
 		 ENDIF	
-		 IF (I==36 .and. J==90 .and. L=36) THEN
+		 IF (I==36 .and. J==90 .and. L==36) THEN
 		   PI180  = PI/180.e+0_fp
 		   COSSZA=State_Met%SUNCOSmid(I,J)
 		   SZA    = acos(MIN(MAX(COSSZA,-1._fp),1._fp))/PI180
