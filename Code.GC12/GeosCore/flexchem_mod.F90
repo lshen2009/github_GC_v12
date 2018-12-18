@@ -123,7 +123,7 @@ CONTAINS
     USE GC_GRID_MOD,          ONLY : GET_YMID
     USE GEOS_Timers_Mod
     USE Input_Opt_Mod,        ONLY : OptInput
-    USE PhysConstants,        ONLY : AVO
+    USE PhysConstants,        ONLY : AVO,PI
     USE PRESSURE_MOD        
     USE Species_Mod,          ONLY : Species
     USE State_Chm_Mod,        ONLY : ChmState
@@ -241,7 +241,7 @@ CONTAINS
 
     ! For tagged CO saving
     REAL(fp)               :: LCH4, PCO_TOT, PCO_CH4, PCO_NMVOC
-
+    REAL(fp)               :: COSSZA,SZA
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
     INTEGER :: NHMS,NYMD,YMDH
@@ -619,6 +619,7 @@ CONTAINS
     !$OMP PRIVATE  ( RSTATE,   SpcID,    KppID,   F,     P                  )&
     !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC                 ) &
 	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate ) &
+	!$OMP PRIVATE  ( SZA,PI180,COSSZA) &
     !$OMP REDUCTION( +:ITIM                                                 )&
     !$OMP REDUCTION( +:RTIM                                                 )&
     !$OMP REDUCTION( +:TOTSTEPS                                             )&
@@ -889,9 +890,18 @@ CONTAINS
 	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 		 LS_type=Determine_type(Prate,Lrate)
 		! State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)		
-		 IF (I==36 .and. J==23) THEN
-		   print *,'lshen_test_COS_SZA', State_Met%SUNCOSmid(I,J)
+		 IF (I==36 .and. J==23 .and. L=36) THEN
+		   PI180  = PI/180.e+0_fp
+		   COSSZA=State_Met%SUNCOSmid(I,J)
+		   SZA    = acos(MIN(MAX(COSSZA,-1._fp),1._fp))/PI180
+		   print *,'lshen_test_COS_SZA',I,J, SZA,COSSZA
 		 ENDIF
+		 IF (I==10 .and. J==23 .and. L=36) THEN
+		   PI180  = PI/180.e+0_fp
+		   COSSZA=State_Met%SUNCOSmid(I,J)
+		   SZA    = acos(MIN(MAX(COSSZA,-1._fp),1._fp))/PI180
+		   print *,'lshen_test_COS_SZA',I,J, SZA,COSSZA
+		 ENDIF		 
 		 !calculate the K
 		 WHERE ( ABS(VAR) >= 1e-30_fp)
 		     Lrate = -Lrate/VAR
