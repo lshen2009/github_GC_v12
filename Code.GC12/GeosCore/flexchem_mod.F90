@@ -237,16 +237,15 @@ CONTAINS
     REAL(dp)               :: RSTATE     (                  20               )
     REAL(dp)               :: GLOB_RCONST(IIPAR,JJPAR,LLPAR,NREACT           )
     REAL(fp)               :: Before     (IIPAR,JJPAR,LLPAR,State_Chm%nAdvect)
-	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR),Lrate2(NVAR)
-	REAL(fp)               :: LS_ALL_Prate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
-    REAL(fp)               :: LS_ALL_Lrate     (IIPAR,JJPAR,LLPAR,NVAR) !lshen
+	REAL(kind=dp)          :: Prate(NVAR),Lrate(NVAR)
+
     ! For tagged CO saving
     REAL(fp)               :: LCH4, PCO_TOT, PCO_CH4, PCO_NMVOC
 
     ! Objects
     TYPE(Species), POINTER :: SpcInfo
-    INTEGER :: NHMS,NYMD,YMDH,FLAG
-    LOGICAL :: new_hour
+    INTEGER :: NHMS,NYMD,YMDH
+    LOGICAL :: new_hour,flag
 	character(len=1024) :: outputname1,outputname2,outputname3,outputname4
 	
     ! For testing only, may be removed later (mps, 4/26/16)
@@ -273,8 +272,6 @@ CONTAINS
     Day       =  Get_Day()    ! Current day
     Month     =  Get_Month()  ! Current month
     Year      =  Get_Year()   ! Current year
-    LS_ALL_Prate(:,:,:,:)=0.0_fp
-    LS_ALL_Lrate(:,:,:,:)=0.0_fp
 
     ! Turn heterogeneous chemistry and photolysis on/off here
     ! This is for testing only and may be removed later (mps, 4/26/16)
@@ -621,7 +618,7 @@ CONTAINS
     !$OMP PRIVATE  ( SO4_FRAC, IERR,     RCNTRL,  START, FINISH, ISTATUS    )&
     !$OMP PRIVATE  ( RSTATE,   SpcID,    KppID,   F,     P                  )&
     !$OMP PRIVATE  ( LCH4,     PCO_TOT,  PCO_CH4, PCO_NMVOC                 ) &
-	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate, Lrate2,FLAG ) &
+	!$OMP PRIVATE  ( LS_type,  LS_NSEL,  LS_NDEL, Prate, Lrate ) &
     !$OMP REDUCTION( +:ITIM                                                 )&
     !$OMP REDUCTION( +:RTIM                                                 )&
     !$OMP REDUCTION( +:TOTSTEPS                                             )&
@@ -889,23 +886,17 @@ CONTAINS
 	   !lshen added this
 	   !IF (new_hour) THEN
 	   !IF (MOD(NHMS,2000)==0) then	  
-	   FLAG=0
-	   IF(I==40 .and. J==20 .and. L==36) THEN
-	      FLAG=1
-	   ENDIF
-	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate, Lrate2, FLAG)
-		 !IF(I==40 .and. J==20 .and. L==36) THEN
-		  !  print *,VAR(107),Prate(107),Lrate(107)
-			!print *,VAR(190),Prate(190),Lrate(190)
-		 !ENDIF
-         LS_ALL_Prate(I,J,L,:)=Prate
-         LS_ALL_Lrate(I,J,L,:)=Lrate		 
+	     CALL Fun_PL(VAR, FIX, RCONST, Prate, Lrate)
 		 LS_type=Determine_type(Prate,Lrate)
 		! State_Chm%LS_Alltype(I,J,L)=Determine_type(Prate,Lrate)		
 		 
-		 !calculate the K		 
-		 Lrate = -Lrate2
-		 
+		 !calculate the K
+		 WHERE ( ABS(VAR) >= 1e-30_fp)
+		     Lrate = -Lrate/VAR
+		 ELSEWHERE
+		     Lrate = 0.0_fp
+		 END WHERE		 
+	 
 	     !State_Chm%LS_Prate(I,J,L,:)=Prate
 	     !State_Chm%LS_Lrate(I,J,L,:)=Lrate		 
 		 
@@ -1395,25 +1386,25 @@ CONTAINS
     ! Set FIRSTCHEM = .FALSE. -- we have gone thru one chem step
     FIRSTCHEM = .FALSE.
 
-  if (MOD(NHMS,60000)==0) then
-    print *,'lshen_archive_PL',NHMS,new_hour
-    YMDH=NYMD*100+NHMS/10000
-    print *,NYMD,NHMS,YMDH
-    write (outputname1, "(A15,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
-    write (outputname2, "(A15,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'          
-    OPEN(unit=1101,file=outputname1)
-    OPEN(unit=1102,file=outputname2)
-         DO L=1,LLPAR
-           DO J=1,JJPAR
-            DO I=1,IIPAR
-              write(1101,'(3I4,234E15.3)'), I,J,L,LS_ALL_Prate(I,J,L,:)
-              write(1102,'(3I4,234E15.3)'), I,J,L,LS_ALL_Lrate(I,J,L,:)
-            ENDDO
-           ENDDO
-         ENDDO
-    close(1101)!lshen
-    close(1102)
-  endif
+  !print *,'lshen_test_new_hour',NHMS,new_hour
+  !if (new_hour) then    
+  !  YMDH=NYMD*100+NHMS/10000
+  !  print *,NYMD,NHMS,YMDH
+  !  write (outputname1, "(A15,I10,A4)") "PL/lshen_Prate_", YMDH,'.txt'
+  !  write (outputname2, "(A15,I10,A4)") "PL/lshen_Lrate_", YMDH,'.txt'		
+  !  OPEN(unit=1101,file=outputname1)
+  !  OPEN(unit=1102,file=outputname2)
+  !       DO L=1,LLPAR
+  !         DO J=1,JJPAR
+  !          DO I=1,IIPAR
+  !            write(1101,'(3I4,234E15.3)'), I,J,L,LS_Prate(I,J,L,:)
+  !            write(1102,'(3I4,234E15.3)'), I,J,L,LS_Lrate(I,J,L,:)
+  !          ENDDO
+  !         ENDDO
+  !       ENDDO
+  !  close(1101)!lshen
+  !  close(1102)
+  !endif
   
   END SUBROUTINE Do_FlexChem
 !EOC

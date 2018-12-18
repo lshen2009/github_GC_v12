@@ -157,7 +157,7 @@ MODULE GCKPP_HETRATES
 ! !DEFINED PARAMETERS:
 !
   REAL(fp), PARAMETER :: HetMinLife = 1.e-3_fp
-
+  !REAL(fp), PARAMETER :: HetMinLife = 1.e-5_fp
   ! Critical RH for uptake of GLYX, MGLYX, and GLYC:
   REAL(fp), PARAMETER :: CRITRH = 35.0e+0_fp
 
