@@ -893,7 +893,7 @@ CONTAINS
 		   PI180  = PI/180.e+0_fp
 		   COSSZA=State_Met%SUNCOSmid(I,J)
 		   SZA    = acos(MIN(MAX(COSSZA,-1._fp),1._fp))/PI180
-         IF(SZA>=90 .and. SZA<=100) THEN
+         IF(SZA>=90 .and. SZA<=95) THEN
 		 !IF(SZA>=89 .and. SZA<=92) THEN
 		   LS_type=13
 		 ENDIF
