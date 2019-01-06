@@ -20212,7 +20212,7 @@ FUNCTION Determine_type (Prate,Lrate) RESULT( flag )
   !		CONTINUE
   !	 END IF
   flag=all_types(ap)
-  END DO 
+  !END DO 
   
 END FUNCTION Determine_type
 
