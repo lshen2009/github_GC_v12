@@ -20206,11 +20206,12 @@ FUNCTION Determine_type (Prate,Lrate) RESULT( flag )
   PP(10)=SUM(Vdot(LS_ind_10))  
   WHERE (PP>=1) PP=1
   ap=sum(LS_bin_base*PP)
-  DO I=1,20
-     IF (LS_group(I)==ap) THEN
-	    flag=I
-		CONTINUE
-	 END IF
+  !DO I=1,20
+  !   IF (LS_group(I)==ap) THEN
+  !    flag=I
+  !		CONTINUE
+  !	 END IF
+  flag=all_types(ap)
   END DO 
   
 END FUNCTION Determine_type
