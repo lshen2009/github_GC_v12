@@ -895,6 +895,9 @@ CONTAINS
          IF(SZA>=90 .and. SZA<=100 .and. L>=20) THEN		 
 		   LS_type=13
 		 ENDIF
+		 IF(I==36 .and. J==23 .and. L>=4 .and. L<=30) THEN
+		   print *, L, LS_type
+		 ENDIF		 
 		 !calculate the K
 		 WHERE ( ABS(VAR) >= 1e-30_fp)
 		     Lrate = -Lrate/VAR
