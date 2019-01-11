@@ -20206,8 +20206,8 @@ FUNCTION Determine_type (Prate,Lrate) RESULT( flag )
   PP(10)=SUM(Vdot(LS_ind_10))  
   WHERE (PP>=1) PP=1
   ap=sum(LS_bin_base*PP)
-  flag=all_types(ap)
-  if(flag>10)flag=13!set to full chemistry
+  flag=all_types(ap+1)
+  if(flag>20)flag=13!set to full chemistry
   
 END FUNCTION Determine_type
 
